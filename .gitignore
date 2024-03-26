@@ -13,3 +13,5 @@ nohup.out
 fnCallId__fnSym_address.json/
 
 fnCallId__fnSym_address.parquet/
+
+*.jar
