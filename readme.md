@@ -4,6 +4,8 @@
 ##### docker
 
 ```shell
+docker pull neo4j:4.4.32-community
+
 docker run -d -p 7474:7474 -p 7687:7687 --name neo4j -e "NEO4J_AUTH=neo4j/123456" neo4j:4.4.32-community
 ```
 
