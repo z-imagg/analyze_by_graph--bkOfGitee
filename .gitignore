@@ -17,3 +17,5 @@ fnCallId__fnSym_address.parquet/
 *.jar
 
 *.db
+
+*.db-journal
