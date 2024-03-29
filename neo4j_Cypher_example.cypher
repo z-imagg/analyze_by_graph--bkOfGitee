@@ -13,34 +13,12 @@ call db.schema.visualization();
 
 acted_in = (:Person)-[:ACTED_IN]->(:Movie)
 
-//查询函数 其内部没有调用任何其他函数
-// 即 最底层函数
-// 即 叶子函数
-MATCH (fromLog:V_FnCallLog)-[:E_NxtTmPnt]->(toLog:V_FnCallLog)
-WHERE   (fromLog)-[:E_FnEL]->(toLog)
-RETURN fromLog,toLog
-LIMIT 10
 
-
-
-// 
-MATCH (fromLog:V_FnCallLog)-[:E_NxtTmPnt]->(toLog:V_FnCallLog)
-WHERE   (fromLog)-[:E_FnEL]->(toLog)
-RETURN COUNT(fromLog) AS 叶子函数调用次数
-// 叶子函数调用次数 223353
-
-
-MATCH (fromLog:V_FnCallLog)-[:E_NxtTmPnt]->(toLog:V_FnCallLog)
-WHERE   (fromLog)-[:E_FnEL]->(toLog)
-RETURN COUNT(DISTINCT fromLog.fnSym_address) AS 叶子函数个数
-// 叶子函数个数 977
-
-// 叶子函数 深度设置为0
+// 叶子函数 深度deepth设置为0
 MATCH (fromLog:V_FnCallLog)-[:E_NxtTmPnt]->(toLog:V_FnCallLog)
 WHERE   (fromLog)-[:E_FnEL]->(toLog)
 SET fromLog.deepth = 0, toLog.deepth = 0
 // Set 446706 properties, completed after 3084 ms.
-
 
 // 查询  深度为0 的 日志
 //  即 叶子函数
