@@ -54,8 +54,10 @@ all( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = 0 )
 AND (NOT exists(fromLog.deepth) )
 // 终点toLog 无 深度字段deepth
 AND (NOT exists(toLog.deepth)  )
-//开发调试时用 的范围条件, 生产时 请屏蔽
-// AND fromLog.fnCallId < 10000 AND  toLog.fnCallId < 10000
+//neo4j的索引, 为何 范围条件 比 精确条件 快?
+AND fromLog.fnCallId < 10000 AND  toLog.fnCallId < 10000   //范围条件
+// AND fromLog.fnCallId <= 11 AND  toLog.fnCallId1 <= 11      //范围条件
+// AND fromLog.fnCallId = 11 AND  toLog.fnCallId = 11     //精确条件
 //以下只能有一行
 // RETURN fromLog AS 起点, nodes(path)[1..-1] AS 中间节点, toLog AS 终点
 return path
