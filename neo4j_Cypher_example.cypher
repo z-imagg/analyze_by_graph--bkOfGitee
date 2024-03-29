@@ -48,10 +48,8 @@ CREATE INDEX FOR (n:V_FnCallLog) ON (n.fnCallId)
 // 指定 起点fromLog 终点toLog 的 fnCallId , 以 阻止 组合爆炸, 可以 快速执行完
 MATCH path = (fromLog:V_FnCallLog {fnCallId:11} )-[:E_NxtTmPnt*1..]->(toLog:V_FnCallLog {fnCallId:11})
 WHERE 
-// 起点fromLog 和 终点toLog 是同一个函数调用 的 进入和退出
-fromLog.fnCallId = toLog.fnCallId
 // 所有 中间点 的深度为0 即 所有 中间点 为 叶子节点
-AND all( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = 0 )
+all( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = 0 )
 // 起点fromLog 无 深度字段deepth
 AND (NOT exists(fromLog.deepth) )
 // 终点toLog 无 深度字段deepth
