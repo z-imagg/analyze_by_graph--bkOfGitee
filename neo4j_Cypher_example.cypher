@@ -11,7 +11,6 @@
 // 查看 所有 节点 边 类型 
 call db.schema.visualization();
 
-acted_in = (:Person)-[:ACTED_IN]->(:Movie)
 
 ////////////////// 深度为0的函数(叶子函数)
 // 叶子函数 深度deepth设置为0
