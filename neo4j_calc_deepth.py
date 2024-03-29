@@ -63,8 +63,8 @@ def update_deepth(sess:Session,fnCallIdLs:typing.List[int],this_deepth:int):
         updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
         if updateRowCnt > 0:
             print(f"匹配目标深度{this_deepth}; 更新{updateRowCnt}行日志; fnCallId={fnCallId},fnSym_name={fnSym_name}")
-        else:
-            print(f"非目标深度{this_deepth}; 无更新日志; fnCallId={fnCallId},fnSym_name={fnSym_name}, ")
+        # else:
+            # print(f"非目标深度{this_deepth}; 无更新日志; fnCallId={fnCallId},fnSym_name={fnSym_name}, ")
 
     
     
@@ -80,11 +80,11 @@ def _main():
 
     try:
         with driver.session(database=NEO4J_DB) as sess:
-            _2d_fnCallIdLs:typing.List[typing.List[int]]=query_2dFnCallIdLs_noDeepth(sess)
-            for k,fnCallIdLs in enumerate(_2d_fnCallIdLs):
-                update_deepth(sess,fnCallIdLs,this_deepth=1)
-        # calc_deepth(driver,this_deepth=2)
-        # ...
+            for deepth_j in range(1,10):
+                _2d_fnCallIdLs:typing.List[typing.List[int]]=query_2dFnCallIdLs_noDeepth(sess)
+                for k,fnCallIdLs in enumerate(_2d_fnCallIdLs):
+                    update_deepth(sess,fnCallIdLs,this_deepth=deepth_j)
+            
     except (Exception,) as  err:
         import traceback
         traceback.print_exception(err)
