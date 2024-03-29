@@ -11,6 +11,8 @@
 // 查看 所有 节点 边 类型 
 call db.schema.visualization();
 
+// 查看 所有 索引
+call db.indexes();
 
 ////////////////// 深度为0的函数(叶子函数)
 // 叶子函数 深度deepth设置为0
@@ -37,6 +39,9 @@ return COUNT(log) AS 叶子函数调用次数
 
 // 给 点类型V_FnCallLog的字段deepth 创建索引
 CREATE INDEX FOR (n:V_FnCallLog) ON (n.deepth)
+
+// 创建索引:  点类型V_FnCallLog 的 字段deepth 
+CREATE INDEX FOR (n:V_FnCallLog) ON (n.fnCallId)
 
 //查询 深度为1的函数调用
 // 从 起点fromLog 中间经过了 至少1个 边E_NxtTmPnt时刻点 到达 终点toLog
