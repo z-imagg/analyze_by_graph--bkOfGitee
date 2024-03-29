@@ -2,14 +2,32 @@ from neo4j import GraphDatabase, RoutingControl
 from neo4j import Driver
 from neo4j import Record
 
+
+
 NEO4J_DB="neo4j"
 
+#开发用, 将某个 fnCallId 的 deepth 打回 为 空, 供继续 开发调试 
+"""
+MATCH (log:V_FnCallLog )
+WHERE   log.fnCallId = 522501
+// set log.deepth = NULL
+// return和set是可以共存的
+return log
+// RETURN TRUE
+
+"""
+
+Cypher_query_max_fnCallId="""
+MATCH (logV:V_FnCallLog )
+WHERE   logV.deepth is NULL
+return max(logV.fnCallId) as max_fnCallId
+"""
 Cypher_query_no_deepth="""
 MATCH (logV:V_FnCallLog )
 WHERE   logV.deepth is NULL
-return logV
+return distinct logV.fnCallId
 ORDER BY logV.fnCallId DESC
-limit 4 //开发调试用
+// limit 4 //开发调试用
 """
 
 #来自文件 neo4j_Cypher_example.cypher
@@ -24,9 +42,10 @@ AND (NOT exists(fromLog.deepth) )
 AND (NOT exists(toLog.deepth)  )
 //neo4j的索引, 为何 范围条件 比 精确条件 快?
 // 范围条件
-AND fromLog.fnCallId <= $fnCallId AND  toLog.fnCallId <= $fnCallId      
+// AND fromLog.fnCallId <= $fnCallId AND  toLog.fnCallId <= $fnCallId     
+AND  $fnCallId=fromLog.fnCallId  AND   $fnCallId=toLog.fnCallId
 SET fromLog.deepth = $this_deepth, toLog.deepth = $this_deepth
-RETURN TRUE
+RETURN fromLog,toLog
 """
 #neo4j 计算函数调用日志节点 深度
 def calc_deepth(driver:Driver,this_deepth:int):
@@ -35,12 +54,11 @@ def calc_deepth(driver:Driver,this_deepth:int):
         ls=sess.run(query=Cypher_query_no_deepth)
         log:Record
         for log in ls:
-            log.get("fnCallId");log.value("fnCallId");log.data()
-            row=log.data()["logV"]
-            fnCallId=row["fnCallId"]
+            # log.get("fnCallId");log.value("fnCallId");log.data()
+            fnCallId=log.data()["logV.fnCallId"]
             # fnCallId=11
             
-            updateResult=driver.execute_query(
+            updateRs=driver.execute_query(
         Cypher_update_deepth,
 
         fnCallId=fnCallId,
@@ -48,8 +66,12 @@ def calc_deepth(driver:Driver,this_deepth:int):
 
         database_=NEO4J_DB,)
             # updateResult.records.__getitem__(0)[0]
-            #没有异常,就认为更新成功
-            print(f"更新fnCallId={fnCallId}的深度为this_deepth={this_deepth}")
+            updateRowCnt:int=updateRs.records[0].__len__() if len(updateRs.records)>0 else 0
+            if updateRowCnt > 0:
+                print(f"更新记录行数为{updateRowCnt}, 更新fnCallId={fnCallId}的深度为{this_deepth}")
+            else:
+                print(f"无记录行被更新,fnCallId={fnCallId}不符合深度为{this_deepth}")
+
         
             pass
     
