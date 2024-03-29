@@ -41,7 +41,8 @@ CREATE INDEX FOR (n:V_FnCallLog) ON (n.deepth)
 
 //查询 深度为1的函数调用
 // 从 起点fromLog 中间经过了 至少1个 边E_NxtTmPnt时刻点 到达 终点toLog
-MATCH path = (fromLog:V_FnCallLog)-[:E_NxtTmPnt*1..]->(toLog:V_FnCallLog)
+// 指定 起点fromLog 终点toLog 的 fnCallId , 以 阻止 组合爆炸, 可以 快速执行完
+MATCH path = (fromLog:V_FnCallLog {fnCallId:11} )-[:E_NxtTmPnt*1..]->(toLog:V_FnCallLog {fnCallId:11})
 WHERE 
 // 起点fromLog 和 终点toLog 是同一个函数调用 的 进入和退出
 fromLog.fnCallId = toLog.fnCallId
@@ -57,5 +58,3 @@ AND (NOT exists(toLog.deepth)  )
 // RETURN fromLog AS 起点, nodes(path)[1..-1] AS 中间节点, toLog AS 终点
 return path
 // return nodes(path)
-//开发调试时用 的范围条件, 生产时 请屏蔽
-// limit 10  //limit 14 是上限, 超出 14  将导致 调用栈 过长 而 异常终止执行,  有组合爆炸即14的阶乘的感觉 . 且 很久都执行不完
