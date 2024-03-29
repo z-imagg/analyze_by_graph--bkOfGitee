@@ -25,7 +25,7 @@ return distinct logV.fnSym_name as fnSym_name
 
 #来自文件 neo4j_Cypher_example.cypher
 Cypher_update_deepth="""
-MATCH path = (fromLog:V_FnCallLog {fnCallId:$fnCallId} )-[:E_NxtTmPnt*1..]->(toLog:V_FnCallLog {fnCallId:$fnCallId})
+MATCH path = (fromLog:V_FnCallLog {fnCallId:$fnCallId} )-[:E_NxtTmPnt*1..10]->(toLog:V_FnCallLog {fnCallId:$fnCallId})
 WHERE 
 // 1. 存在 中间时刻点 深度比该深度小1 
 any( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = $this_deepth-1 )
