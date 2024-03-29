@@ -23,7 +23,6 @@ fnCallIdLs_noDeepth_query="""
 MATCH (logV:V_FnCallLog )
 WHERE   logV.deepth is NULL
 return distinct logV.fnCallId  as _fnCallId
-// limit 1000 //开发用,生成不要打开
 """
 fnSym_name__queryBy_fnCallId="""
 MATCH (logV:V_FnCallLog )
@@ -35,15 +34,19 @@ return distinct logV.fnSym_name as fnSym_name
 Cypher_update_deepth="""
 MATCH path = (fromLog:V_FnCallLog {fnCallId:$fnCallId} )-[:E_NxtTmPnt*1..]->(toLog:V_FnCallLog {fnCallId:$fnCallId})
 WHERE 
-// 所有 中间点 的深度为0 即 所有 中间点 为 叶子节点
-all( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth <= $this_deepth-1 )
+// 1. 存在 中间时刻点 深度比该深度小1 
+any( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = $this_deepth-1 )
+// 且 
+// 2.所有中间时刻点 深度 都 已知 
+//    即 所有中间时刻点 深度 都 小于等于 该深度-1 , 因为 当前所有已知深度 就是 小于等于 该深度-1
+// 可以表明 起点和终点 为 该深度, 这是 深度准确定义吧
+AND all( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth  is not null )
 // 起点fromLog 无 深度字段deepth
 AND (NOT exists(fromLog.deepth) )
 // 终点toLog 无 深度字段deepth
 AND (NOT exists(toLog.deepth)  )
 //neo4j的索引, 为何 范围条件 比 精确条件 快?
 // 范围条件
-// AND fromLog.fnCallId <= $fnCallId AND  toLog.fnCallId <= $fnCallId     
 AND  $fnCallId=fromLog.fnCallId  AND   $fnCallId=toLog.fnCallId
 SET fromLog.deepth = $this_deepth, toLog.deepth = $this_deepth
 // RETURN fromLog,toLog
