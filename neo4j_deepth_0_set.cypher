@@ -13,3 +13,6 @@ MATCH (fromLog:V_FnCallLog)-[:E_FnEL]->(toLog:V_FnCallLog)
 WHERE   (fromLog)-[:E_NxtTmPnt]->(toLog)
 SET fromLog.deepth = 0, toLog.deepth = 0                      //增字段 // Set 446706 properties 
 return count(fromLog)   as 叶子调用次数, COUNT(DISTINCT fromLog.fnSym_address) AS 叶子函数个数
+
+// 叶子调用次数│叶子函数个数│
+// │223353   │977   │
