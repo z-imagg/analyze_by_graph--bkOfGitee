@@ -1,6 +1,7 @@
 from neo4j import GraphDatabase, RoutingControl
 from neo4j import Driver
 from neo4j import Record,Result,Session
+from neo4j.graph import Node
 import pandas
 import typing
 import numpy
@@ -20,12 +21,12 @@ return distinct logV.fnCallId  as _fnCallId
 fnSym_name__queryBy_fnCallId="""
 MATCH (logV:V_FnCallLog )
 WHERE   logV.fnCallId =$fnCallId
-return distinct logV.fnSym_name as fnSym_name
+return  logV 
 """
 
 #来自文件 neo4j_Cypher_example.cypher
 Cypher_update_deepth="""
-MATCH path = (fromLog:V_FnCallLog {fnCallId:$fnCallId} )-[:E_NxtTmPnt*1..10]->(toLog:V_FnCallLog {fnCallId:$fnCallId})
+MATCH path = (fromLog:V_FnCallLog {fnCallId:$fnCallId} )-[:E_NxtTmPnt* 1 .. __tmPntLength__ ]->(toLog:V_FnCallLog {fnCallId:$fnCallId})
 WHERE 
 // 1. 存在 中间时刻点 深度比该深度小1 
 any( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = $this_deepth-1 )
@@ -58,9 +59,22 @@ def query_2dFnCallIdLs_noDeepth(sess:Session, granularity=100)->typing.List[typi
 #neo4j 计算函数调用日志节点 深度
 def update_deepth(sess:Session,fnCallIdLs:typing.List[int],this_deepth:int):
     for fnCallId in fnCallIdLs: 
-        fnSym_name:str=sess.run(query=fnSym_name__queryBy_fnCallId, fnCallId=fnCallId).to_df().to_dict(orient="records")[0]["fnSym_name"]
+        logLs=sess.run(query=fnSym_name__queryBy_fnCallId, fnCallId=fnCallId).to_df().to_dict(orient="records")
+        logEnter:Node=logLs[0]["logV"]
+        logLeave:Node=logLs[1]["logV"]
+        assert logEnter["fnSym_name"] == logLeave["fnSym_name"]
+        fnSym_name:str=logEnter["fnSym_name"]
+        
+        tmPntEnter:int=logEnter["tmPnt"]
+        tmPntLeave:int=logLeave["tmPnt"]
+        #中间时刻节点 个数 取 中间时刻点个数最大个数,  越到上层越吃亏
+        tmPntLength:int = tmPntLeave-(tmPntEnter-1)
+
         #更新深度
-        updateRs:Result=sess.run( query=Cypher_update_deepth,  fnCallId=fnCallId, this_deepth=this_deepth )
+        updateRs:Result=sess.run( 
+query=Cypher_update_deepth.replace("__tmPntLength__", f"{tmPntLength}"),  
+fnCallId=fnCallId,  this_deepth=this_deepth 
+)
         updateRs_df:pandas.DataFrame=updateRs.to_df()
         #被更新的记录行数
         updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
