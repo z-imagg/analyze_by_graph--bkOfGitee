@@ -13,12 +13,14 @@ call db.schema.visualization();
 
 acted_in = (:Person)-[:ACTED_IN]->(:Movie)
 
-
+////////////////// 深度为0的函数(叶子函数)
 // 叶子函数 深度deepth设置为0
-MATCH (fromLog:V_FnCallLog)-[:E_NxtTmPnt]->(toLog:V_FnCallLog)
-WHERE   (fromLog)-[:E_FnEL]->(toLog)
-SET fromLog.deepth = 0, toLog.deepth = 0
-// Set 446706 properties, completed after 3084 ms.
+MATCH (fromLog:V_FnCallLog)-[:E_FnEL]->(toLog:V_FnCallLog)
+WHERE   (fromLog)-[:E_NxtTmPnt]->(toLog)
+//以下只能有一行
+// return count(fromLog)   as 叶子调用次数                      //查询   // 223353        
+// RETURN COUNT(DISTINCT fromLog.fnSym_address) AS 叶子函数个数 //查询   // 977
+SET fromLog.deepth = 0, toLog.deepth = 0                      //增字段 // Set 446706 properties 
 
 // 查询  深度为0 的 日志
 //  即 叶子函数
