@@ -8,16 +8,6 @@ import numpy
 
 NEO4J_DB="neo4j"
 
-#开发用, 将某个 fnCallId 的 deepth 打回 为 空, 供继续 开发调试 
-"""
-MATCH (log:V_FnCallLog )
-WHERE   log.fnCallId = 522501
-// set log.deepth = NULL
-// return和set是可以共存的
-return log
-// RETURN TRUE
-
-"""
 
 fnCallIdLs_noDeepth_query="""
 MATCH (logV:V_FnCallLog )
