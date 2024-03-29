@@ -80,8 +80,8 @@ fnCallId=fnCallId,  this_deepth=this_deepth
         updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
         if updateRowCnt > 0:
             print(f"{nowDateTimeTxt()},匹配目标深度{this_deepth}; 更新{updateRowCnt}行日志; fnCallId={fnCallId},fnSym_name={fnSym_name}", flush=True)
-        else:
-            print(f"{nowDateTimeTxt()},非目标深度{this_deepth}; 无更新日志; fnCallId={fnCallId},fnSym_name={fnSym_name}, ", flush=True)
+        # else:
+        #     print(f"{nowDateTimeTxt()},非目标深度{this_deepth}; 无更新日志; fnCallId={fnCallId},fnSym_name={fnSym_name}, ", flush=True)
 
     
     
