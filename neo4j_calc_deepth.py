@@ -1,7 +1,9 @@
 from neo4j import GraphDatabase, RoutingControl
 from neo4j import Driver
-from neo4j import Record,Result
-
+from neo4j import Record,Result,Session
+import pandas
+import typing
+import numpy
 
 
 NEO4J_DB="neo4j"
@@ -17,10 +19,11 @@ return log
 
 """
 
-Cypher_query_max_fnCallId="""
+fnCallIdLs_noDeepth_query="""
 MATCH (logV:V_FnCallLog )
 WHERE   logV.deepth is NULL
-return max(logV.fnCallId) as max_fnCallId
+return distinct logV.fnCallId  as _fnCallId
+// limit 1000 //开发用,生成不要打开
 """
 fnCallIdLs_query1Page_noDeepth="""
 MATCH (logV:V_FnCallLog )
@@ -49,25 +52,29 @@ SET fromLog.deepth = $this_deepth, toLog.deepth = $this_deepth
 // RETURN fromLog,toLog
 return count(fromLog)+count(toLog) AS updated_rows
 """
-#neo4j 计算函数调用日志节点 深度
-def calc_deepth(driver:Driver,this_deepth:int):
-    with driver.session(database=NEO4J_DB) as sess:
-        fnCallIdLs:Result=sess.run(query=fnCallIdLs_query1Page_noDeepth, fnCallId_end_incld=522492,pageSize=100)
-        log:Record
-        for log in fnCallIdLs:
-            fnCallId=log.data()["logV.fnCallId"]
-            #更新深度
-            updateRs=sess.run( query=Cypher_update_deepth,  fnCallId=fnCallId, this_deepth=this_deepth )
-            #被更新的记录行数
-            updRsData=updateRs.data()
-            updateRowCnt:int=updRsData[0]["updated_rows"] #if len(updRsData)>0  else 0
-            if updateRowCnt > 0:
-                print(f"更新记录行数为{updateRowCnt}, 更新fnCallId={fnCallId}的深度为{this_deepth}")
-            else:
-                print(f"无记录行被更新,fnCallId={fnCallId}不符合深度为{this_deepth}")
 
-        
-            pass
+def query_2dFnCallIdLs_noDeepth(sess:Session, granularity=100)->typing.List[typing.List[int]]:
+    reslt:Result=sess.run(query=fnCallIdLs_noDeepth_query)
+    reslt_df:pandas.DataFrame=reslt.to_df()
+    # fnCallIdLs = reslt_df.to_dict()["_fnCallId"]
+    ndarray_ls=numpy.array_split(reslt_df["_fnCallId"].to_list(),granularity)
+    _2d_ls=[list(k) for k in ndarray_ls]
+    return _2d_ls
+
+#neo4j 计算函数调用日志节点 深度
+def update_deepth(sess:Session,fnCallIdLs:typing.List[int],this_deepth:int):
+    for fnCallId in fnCallIdLs: 
+        #更新深度
+        updateRs:Result=sess.run( query=Cypher_update_deepth,  fnCallId=fnCallId, this_deepth=this_deepth )
+        updateRs_df:pandas.DataFrame=updateRs.to_df()
+        #被更新的记录行数
+        updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
+        if updateRowCnt > 0:
+            print(f"更新记录行数为{updateRowCnt}, 更新fnCallId={fnCallId}的深度为{this_deepth}")
+        else:
+            print(f"无记录行被更新,fnCallId={fnCallId}不符合深度为{this_deepth}")
+
+    
     
 
 
@@ -80,7 +87,10 @@ def _main():
     assert isinstance(driver, Driver) == True
 
     try:
-        calc_deepth(driver,this_deepth=1)
+        with driver.session(database=NEO4J_DB) as sess:
+            _2d_fnCallIdLs:typing.List[typing.List[int]]=query_2dFnCallIdLs_noDeepth(sess)
+            for k,fnCallIdLs in enumerate(_2d_fnCallIdLs):
+                update_deepth(sess,fnCallIdLs,this_deepth=1)
         # calc_deepth(driver,this_deepth=2)
         # ...
     except (Exception,) as  err:
