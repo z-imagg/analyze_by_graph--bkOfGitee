@@ -1,6 +1,7 @@
 from neo4j import GraphDatabase, RoutingControl
 from neo4j import Driver
 from neo4j import Record,Result,Session
+from neo4j.graph import Node
 import pandas
 import typing
 import numpy
@@ -25,10 +26,10 @@ WHERE   logV.deepth is NULL
 return distinct logV.fnCallId  as _fnCallId
 // limit 1000 //开发用,生成不要打开
 """
-fnSym_name__queryBy_fnCallId="""
+log_queryBy_fnCallId="""
 MATCH (logV:V_FnCallLog )
 WHERE   logV.fnCallId =$fnCallId
-return distinct logV.fnSym_name as fnSym_name
+return   logV 
 """
 
 #来自文件 neo4j_Cypher_example.cypher
@@ -61,7 +62,16 @@ def query_2dFnCallIdLs_noDeepth(sess:Session, granularity=100)->typing.List[typi
 #neo4j 计算函数调用日志节点 深度
 def update_deepth(sess:Session,fnCallIdLs:typing.List[int],this_deepth:int):
     for fnCallId in fnCallIdLs: 
-        fnSym_name:str=sess.run(query=fnSym_name__queryBy_fnCallId, fnCallId=fnCallId).to_df().to_dict(orient="records")[0]["fnSym_name"]
+        _logLs=sess.run(query=log_queryBy_fnCallId, fnCallId=fnCallId).to_df().to_dict(orient="records")
+        assert _logLs[0]["logV"]["fnCallId"] == _logLs[1]["logV"]["fnCallId"]
+        log:Node=_logLs[0] ["logV"]
+        deepth = log._properties.get("deepth",None)
+        fnSym_name = log["fnSym_name"]
+        if deepth is not None and deepth == this_deepth:
+            print(f"跳过相同深度{this_deepth};  fnCallId={fnCallId},fnSym_name={fnSym_name}")
+            continue
+        
+
         #更新深度
         updateRs:Result=sess.run( query=Cypher_update_deepth,  fnCallId=fnCallId, this_deepth=this_deepth )
         updateRs_df:pandas.DataFrame=updateRs.to_df()
