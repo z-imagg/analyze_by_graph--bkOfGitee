@@ -58,4 +58,4 @@ AND (NOT exists(toLog.deepth)  )
 return path
 // return nodes(path)
 //开发调试时用 的范围条件, 生产时 请屏蔽
-// limit 10
+// limit 10  //limit 14 是上限, 超出 14  将导致 调用栈 过长 而 异常终止执行,  有组合爆炸即14的阶乘的感觉 . 且 很久都执行不完
