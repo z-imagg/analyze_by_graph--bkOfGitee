@@ -53,8 +53,9 @@ return count(fromLog)+count(toLog) AS updated_rows
 def query_2dFnCallIdLs_noDeepth(sess:Session, granularity=100)->typing.List[typing.List[int]]:
     reslt:Result=sess.run(query=fnCallIdLs_noDeepth_query)
     reslt_df:pandas.DataFrame=reslt.to_df()
-    # fnCallIdLs = reslt_df.to_dict()["_fnCallId"]
-    ndarray_ls=numpy.array_split(reslt_df["_fnCallId"].to_list(),granularity)
+    _1d_ls:typing.List[int]=reslt_df["_fnCallId"].to_list()
+    print(f"无深度字段的函数调用数目为:{len(_1d_ls)}")
+    ndarray_ls=numpy.array_split(_1d_ls,granularity)
     _2d_ls=[list(k) for k in ndarray_ls]
     return _2d_ls
 
