@@ -1,6 +1,6 @@
 from neo4j import GraphDatabase, RoutingControl
 from neo4j import Driver
-from neo4j import Record
+from neo4j import Record,Result
 
 
 
@@ -22,11 +22,12 @@ MATCH (logV:V_FnCallLog )
 WHERE   logV.deepth is NULL
 return max(logV.fnCallId) as max_fnCallId
 """
-Cypher_query_no_deepth="""
+fnCallIdLs_query1Page_noDeepth="""
 MATCH (logV:V_FnCallLog )
 WHERE   logV.deepth is NULL
+AND logV.fnCallId > $fnCallId_end_incld-$pageSize AND logV.fnCallId <= $fnCallId_end_incld
 return distinct logV.fnCallId
-ORDER BY logV.fnCallId DESC
+// ORDER BY logV.fnCallId DESC
 // limit 4 //开发调试用
 """
 
@@ -45,28 +46,21 @@ AND (NOT exists(toLog.deepth)  )
 // AND fromLog.fnCallId <= $fnCallId AND  toLog.fnCallId <= $fnCallId     
 AND  $fnCallId=fromLog.fnCallId  AND   $fnCallId=toLog.fnCallId
 SET fromLog.deepth = $this_deepth, toLog.deepth = $this_deepth
-RETURN fromLog,toLog
+// RETURN fromLog,toLog
+return count(fromLog)+count(toLog) AS updated_rows
 """
 #neo4j 计算函数调用日志节点 深度
 def calc_deepth(driver:Driver,this_deepth:int):
-    ls_=driver.execute_query(query_=Cypher_query_no_deepth, database_=NEO4J_DB)
     with driver.session(database=NEO4J_DB) as sess:
-        ls=sess.run(query=Cypher_query_no_deepth)
+        fnCallIdLs:Result=sess.run(query=fnCallIdLs_query1Page_noDeepth, fnCallId_end_incld=522492,pageSize=100)
         log:Record
-        for log in ls:
-            # log.get("fnCallId");log.value("fnCallId");log.data()
+        for log in fnCallIdLs:
             fnCallId=log.data()["logV.fnCallId"]
-            # fnCallId=11
-            
-            updateRs=driver.execute_query(
-        Cypher_update_deepth,
-
-        fnCallId=fnCallId,
-        this_deepth=this_deepth,
-
-        database_=NEO4J_DB,)
-            # updateResult.records.__getitem__(0)[0]
-            updateRowCnt:int=updateRs.records[0].__len__() if len(updateRs.records)>0 else 0
+            #更新深度
+            updateRs=sess.run( query=Cypher_update_deepth,  fnCallId=fnCallId, this_deepth=this_deepth )
+            #被更新的记录行数
+            updRsData=updateRs.data()
+            updateRowCnt:int=updRsData[0]["updated_rows"] #if len(updRsData)>0  else 0
             if updateRowCnt > 0:
                 print(f"更新记录行数为{updateRowCnt}, 更新fnCallId={fnCallId}的深度为{this_deepth}")
             else:
