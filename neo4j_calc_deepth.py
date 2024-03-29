@@ -25,13 +25,10 @@ WHERE   logV.deepth is NULL
 return distinct logV.fnCallId  as _fnCallId
 // limit 1000 //开发用,生成不要打开
 """
-fnCallIdLs_query1Page_noDeepth="""
+fnSym_name__queryBy_fnCallId="""
 MATCH (logV:V_FnCallLog )
-WHERE   logV.deepth is NULL
-AND logV.fnCallId > $fnCallId_end_incld-$pageSize AND logV.fnCallId <= $fnCallId_end_incld
-return distinct logV.fnCallId
-// ORDER BY logV.fnCallId DESC
-// limit 4 //开发调试用
+WHERE   logV.fnCallId =$fnCallId
+return distinct logV.fnSym_name as fnSym_name
 """
 
 #来自文件 neo4j_Cypher_example.cypher
@@ -64,15 +61,16 @@ def query_2dFnCallIdLs_noDeepth(sess:Session, granularity=100)->typing.List[typi
 #neo4j 计算函数调用日志节点 深度
 def update_deepth(sess:Session,fnCallIdLs:typing.List[int],this_deepth:int):
     for fnCallId in fnCallIdLs: 
+        fnSym_name:str=sess.run(query=fnSym_name__queryBy_fnCallId, fnCallId=fnCallId).to_df().to_dict(orient="records")[0]["fnSym_name"]
         #更新深度
         updateRs:Result=sess.run( query=Cypher_update_deepth,  fnCallId=fnCallId, this_deepth=this_deepth )
         updateRs_df:pandas.DataFrame=updateRs.to_df()
         #被更新的记录行数
         updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
         if updateRowCnt > 0:
-            print(f"更新记录行数为{updateRowCnt}, 更新fnCallId={fnCallId}的深度为{this_deepth}")
+            print(f"匹配目标深度{this_deepth}; 更新{updateRowCnt}行日志; fnCallId={fnCallId},fnSym_name={fnSym_name}")
         else:
-            print(f"无记录行被更新,fnCallId={fnCallId}不符合深度为{this_deepth}")
+            print(f"非目标深度{this_deepth}; 无更新日志; fnCallId={fnCallId},fnSym_name={fnSym_name}, ")
 
     
     
