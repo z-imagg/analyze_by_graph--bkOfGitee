@@ -50,7 +50,7 @@ def query_2dFnCallIdLs_noDeepth(sess:Session, granularity=100)->typing.List[typi
     reslt:Result=sess.run(query=fnCallIdLs_noDeepth_query)
     reslt_df:pandas.DataFrame=reslt.to_df()
     _1d_ls:typing.List[int]=reslt_df["_fnCallId"].to_list()
-    print(f"{nowDateTimeTxt()},无深度字段的函数调用数目为:{len(_1d_ls)}")
+    print(f"{nowDateTimeTxt()},无深度字段的函数调用数目为:{len(_1d_ls)}", flush=True)
     ndarray_ls=numpy.array_split(_1d_ls,granularity)
     _2d_ls=[list(k) for k in ndarray_ls]
     return _2d_ls
@@ -65,9 +65,9 @@ def update_deepth(sess:Session,fnCallIdLs:typing.List[int],this_deepth:int):
         #被更新的记录行数
         updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
         if updateRowCnt > 0:
-            print(f"{nowDateTimeTxt()},匹配目标深度{this_deepth}; 更新{updateRowCnt}行日志; fnCallId={fnCallId},fnSym_name={fnSym_name}")
+            print(f"{nowDateTimeTxt()},匹配目标深度{this_deepth}; 更新{updateRowCnt}行日志; fnCallId={fnCallId},fnSym_name={fnSym_name}", flush=True)
         # else:
-            # print(f"{nowDateTimeTxt()},非目标深度{this_deepth}; 无更新日志; fnCallId={fnCallId},fnSym_name={fnSym_name}, ")
+            # print(f"{nowDateTimeTxt()},非目标深度{this_deepth}; 无更新日志; fnCallId={fnCallId},fnSym_name={fnSym_name}, ", flush=True)
 
     
     
