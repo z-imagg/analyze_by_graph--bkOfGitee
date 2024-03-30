@@ -5,47 +5,23 @@ from neo4j.graph import Node
 import pandas
 import typing
 import numpy
+from pathlib import Path
 
 from datetime import datetime
 def nowDateTimeTxt():
     return datetime.now()   .strftime( '%Y-%m-%d %H:%M:%S %f' )
 
+def readTxt(filePath:str) ->str :
+    txt = Path(filePath).read_text()
+    return txt
+
 NEO4J_DB="neo4j"
 
 
-fnCallIdLs_noDeepth_query="""
-MATCH (logV:V_FnCallLog )
-WHERE   logV.deepth is NULL
-return distinct logV.fnCallId  as _fnCallId
-"""
-fnSym_name__queryBy_fnCallId="""
-MATCH (logV:V_FnCallLog )
-WHERE   logV.fnCallId =$fnCallId
-return  logV 
-"""
+fnCallIdLs_noDeepth_query=readTxt("cypher_src/fnCallIdLs_noDeepth_query.cypher") 
+fnSym_name__queryBy_fnCallId=readTxt("cypher_src/fnSym_name__queryBy_fnCallId.cypher") 
 
-#来自文件 neo4j_Cypher_example.cypher
-Cypher_update_deepth="""
-MATCH path = (fromLog:V_FnCallLog {fnCallId:$fnCallId} )-[:E_NxtTmPnt* 1 .. __tmPntLength__ ]->(toLog:V_FnCallLog {fnCallId:$fnCallId})
-WHERE 
-// 1. 存在 中间时刻点 深度比该深度小1 
-any( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = $this_deepth-1 )
-// 且 
-// 2.所有中间时刻点 深度 都 已知 
-//    即 所有中间时刻点 深度 都 小于等于 该深度-1 , 因为 当前所有已知深度 就是 小于等于 该深度-1
-// 可以表明 起点和终点 为 该深度, 这是 深度准确定义吧
-AND all( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth  is not null )
-// 起点fromLog 无 深度字段deepth
-AND fromLog.deepth is null
-// 终点toLog 无 深度字段deepth
-AND toLog.deepth is null
-//neo4j的索引, 为何 范围条件 比 精确条件 快?
-// 范围条件
-AND  $fnCallId=fromLog.fnCallId  AND   $fnCallId=toLog.fnCallId
-SET fromLog.deepth = $this_deepth, toLog.deepth = $this_deepth
-// RETURN fromLog,toLog
-return count(fromLog)+count(toLog) AS updated_rows
-"""
+Cypher_update_deepth=readTxt("cypher_src/Cypher_update_deepth.cypher") 
 
 def query_2dFnCallIdLs_noDeepth(sess:Session, granularity=100)->typing.List[typing.List[int]]:
     reslt:Result=sess.run(query=fnCallIdLs_noDeepth_query)
