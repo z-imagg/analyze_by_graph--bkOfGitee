@@ -5,7 +5,7 @@ WHERE
   fromLog.fnCallId  = toLog.fnCallId
 //深度k定义:
 // 1. 存在 中间时刻点 深度为k-1 
-and any( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = $this_deepth-1 )
+and any( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = $deepthK-1 )
 // 且 
 // 2.所有中间时刻点 深度 都 小于等于 k-1
 //    等价于 所有中间时刻点 深度 是 已知的    
@@ -16,6 +16,6 @@ AND all( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth  is not null )
 // 起点fromLog 无 深度字段deepth , 终点toLog 无 深度字段deepth
 AND fromLog.deepth is null and toLog.deepth is null
 // 放开以下set语句,则变成设置深度为1了
-SET fromLog.deepth = $this_deepth, toLog.deepth = $this_deepth
+SET fromLog.deepth = $deepthK, toLog.deepth = $deepthK
 // RETURN path
 return count(fromLog)+count(toLog) AS updated_rows
