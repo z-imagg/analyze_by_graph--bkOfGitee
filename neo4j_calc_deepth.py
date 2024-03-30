@@ -72,28 +72,28 @@ def query__max_tmLen__by_fnAdr(sess:Session, fnAdr:str)->int:
     return max_tmLen
 
 #neo4j 计算函数调用日志节点 深度
-def update_deepth(sess:Session,fnAdr:str,max_tmLen:int,this_deepth:int):
+def update_deepth(sess:Session,fnAdr:str,max_tmLen:int,deepthK:int):
     print(f"update_deepth，fnAdr={fnAdr}",end=";;")
     try:
 
         #更新深度
         updateRs:Result=sess.run( 
 query=update_deepth_by_fnAdr__tmLen.replace("__tmLen__", f"{max_tmLen+1}"),   #保险起见  宽一点 用 max_tmLen+1
-fnAdr=fnAdr,  deepthK=this_deepth 
+fnAdr=fnAdr,  deepthK=deepthK 
 )
         updateRs_df:pandas.DataFrame=updateRs.to_df()
         #被更新的记录行数
         updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
         if updateRowCnt > 0:
-            print(f"{nowDateTimeTxt()},匹配深度{this_deepth},max_tmLen={max_tmLen}; 更新{updateRowCnt}行日志;   ", flush=True)
+            print(f"{nowDateTimeTxt()},匹配深度{deepthK},max_tmLen={max_tmLen}; 更新{updateRowCnt}行日志;   ", flush=True)
         else:
-            print(f"{nowDateTimeTxt()},非匹深度{this_deepth},max_tmLen={max_tmLen}; 无更新日志;    ", flush=True)
+            print(f"{nowDateTimeTxt()},非匹深度{deepthK},max_tmLen={max_tmLen}; 无更新日志;    ", flush=True)
             # print("")
 
 
     except (Exception,) as  err:
         LV=locals()
-        print(f"发生错误,fnAdr={fnAdr},max_tmLen={max_tmLen}, this_deepth={this_deepth} ")
+        print(f"发生错误,fnAdr={fnAdr},max_tmLen={max_tmLen}, deepthK={deepthK} ")
         import traceback
         traceback.print_exception(err)
 
@@ -112,14 +112,14 @@ def _main():
             #标记 叶子函数 ：  新增深度字段deepth，并设置深度数值为0
             update__deepth_0_set(sess)
             
-            for deepth_k in range(1,10):
+            for deepthK in range(1,10):
                 #查询 函数地址们fnAdrLs
                 fnAdrLs:typing.List[str]=query__unique_fnAdr_ls(sess)
                 for j,fnAdrJ in enumerate(fnAdrLs):
                     #查询 该函数地址 的 调用过程持续时间长度max_tmLen
                     max_tmLen:int=query__max_tmLen__by_fnAdr(sess,fnAdrJ)
                     #已知 深度k-1 更新深度k,   给定 函数地址， 给定 调用过程持续时间长度（为了阻止neo4j查询发生组合爆炸）
-                    update_deepth(sess,fnAdrJ,max_tmLen,this_deepth=deepth_k)
+                    update_deepth(sess,fnAdrJ,max_tmLen,deepthK=deepthK)
             
     except (Exception,) as  err:
         import traceback
