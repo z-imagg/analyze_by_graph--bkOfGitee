@@ -1,5 +1,6 @@
-//查询函数地址列表(不重复)
+//查询函数地址列表(不重复)(无deepth字段)
 match (log:V_FnCallLog)
+WHERE   log.deepth is NULL
 return distinct log.fnAdr as fnAdr 
 // ...                    as 函数地址
 // limit 3 //仅开发环境， 不可用于生产环境

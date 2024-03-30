@@ -21,7 +21,7 @@ def readTxt(filePath:str) ->str :
 NEO4J_DB="neo4j"
 
 deepth_0_set=readTxt("cypher_src/deepth_0_set.cypher") 
-unique_fnAdr_ls=readTxt("cypher_src/unique_fnAdr_ls.cypher") 
+unique_fnAdr_ls__no_deepth=readTxt("cypher_src/unique_fnAdr_ls__no_deepth.cypher") 
 max_tmLen__by_fnAdr=readTxt("cypher_src/max_tmLen__by_fnAdr.cypher") 
 
 update_deepth_by_fnAdr__tmLen=readTxt("cypher_src/update_deepth_by_fnAdr__tmLen.cypher") 
@@ -36,7 +36,7 @@ def update__deepth_0_set(sess:Session)->int:
     return 叶子调用次数
 
 def query__unique_fnAdr_ls(sess:Session)->typing.List[str]:
-    reslt:Result=sess.run(query=unique_fnAdr_ls)
+    reslt:Result=sess.run(query=unique_fnAdr_ls__no_deepth)
     reslt_df:pandas.DataFrame=reslt.to_df()
     fnAdr_ls:typing.List[str]=reslt_df["fnAdr"].to_list()
     print(f"{nowDateTimeTxt()},函数地址个数:{len(fnAdr_ls)}", flush=True)
