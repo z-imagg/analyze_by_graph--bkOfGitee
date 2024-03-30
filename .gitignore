@@ -19,3 +19,7 @@ fnCallId__fnSym_address.parquet/
 *.db
 
 *.db-journal
+
+*.log.*
+
+*.log
