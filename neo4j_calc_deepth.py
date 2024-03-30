@@ -77,7 +77,7 @@ def cypher__update_deepth__Bnull_repeatK_Lnull(repeatCnt:int):
         lines=fr.readlines()
         newLines=[replaceLn(ln,repeatCnt) for ln in lines]
         _new_cypher_txt:str="".join(newLines)
-        print(f"_new_cypher_txt=【{_new_cypher_txt}】")
+        # print(f"_new_cypher_txt=【{_new_cypher_txt}】")
         return _new_cypher_txt
 
     raise Exception(f"不应该走到这里,repeatCnt={repeatCnt}")
@@ -111,12 +111,12 @@ def update_deepth__kp1_by_k(sess:Session,deepthK:int)->int:
 
 def update_deepth__Bnull_repeatK_Lnull(sess:Session,deepthK:int)->int:
     #根据 模式(起空_重复点k_终空) ， 已知 深度k 递推的 求 深度k+1
-    for i in range(1,19):
-        cypher_txt:str=cypher__update_deepth__Bnull_repeatK_Lnull(i)
+    for repeatCnt in range(1,19): #19是拍脑袋的，有可能不够
+        cypher_txt:str=cypher__update_deepth__Bnull_repeatK_Lnull(repeatCnt)
         reslt:Result=sess.run(query=cypher_txt, K=deepthK)
         reslt_df:pandas.DataFrame=reslt.to_df()
         路径数目:int=reslt_df["路径数目"].to_list()[0]
-        print(f"update_deepth__kp1_by_k__Left_0tok {nowDateTimeTxt()}, 四点深度递推模式(左自由深度)，已知深度k={deepthK}求深度k+1, 路径数目:{路径数目} ", flush=True)
+        print(f"update_deepth__Bnull_repeatK_Lnull {nowDateTimeTxt()}, 模式(起空_重复点k_终空)，重复{repeatCnt}个点k,已知深度k={deepthK}求深度k+1, 路径数目:{路径数目} ", flush=True)
     return 路径数目
 
 def cnt_deepth_null(sess:Session)->int:
