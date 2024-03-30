@@ -12,9 +12,9 @@ AND all( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth  is not null )
 AND fromLog.deepth is null
 // 终点toLog 无 深度字段deepth
 AND toLog.deepth is null
-//neo4j的索引, 为何 范围条件 比 精确条件 快?
-// 范围条件
+// 精确条件
 AND  $fnCallId=fromLog.fnCallId  AND   $fnCallId=toLog.fnCallId
 SET fromLog.deepth = $this_deepth, toLog.deepth = $this_deepth
+// 以下return只能有一行
 // RETURN fromLog,toLog
 return count(fromLog)+count(toLog) AS updated_rows
