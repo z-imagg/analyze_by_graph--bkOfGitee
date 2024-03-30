@@ -40,11 +40,22 @@ def readTxt(filePath:str) ->str :
 
 NEO4J_DB="neo4j"
 
+init_deepth_as_null=readTxt("cypher_src/init_deepth_as_null.cypher") 
+
 deepth_0_set=readTxt("cypher_src/deepth_0_set.cypher") 
 unique_fnAdr_ls__no_deepth=readTxt("cypher_src/unique_fnAdr_ls__no_deepth.cypher") 
 max_tmLen__by_fnAdr=readTxt("cypher_src/max_tmLen__by_fnAdr.cypher") 
 
 update_deepth_by_fnAdr__tmLen=readTxt("cypher_src/update_deepth_by_fnAdr__tmLen.cypher") 
+
+def update__init_deepth_as_null(sess:Session)->bool:
+    for i in range(0,10):
+        reslt:Result=sess.run(query=init_deepth_as_null, fnCallId_remainder10=i)
+        reslt_df:pandas.DataFrame=reslt.to_df()
+        更新记录数:int=reslt_df["更新记录数"].to_list()[0]
+        print(f"update__init_deepth_as_null, {nowDateTimeTxt()},全体置空deepth字段, 更新记录数:{更新记录数} ", flush=True)
+    return True
+
 
 def update__deepth_0_set(sess:Session)->int:
     #标记 叶子函数 ：  新增深度字段deepth，并设置深度数值为0
@@ -52,7 +63,7 @@ def update__deepth_0_set(sess:Session)->int:
     reslt_df:pandas.DataFrame=reslt.to_df()
     叶子调用次数:int=reslt_df["叶子调用次数"].to_list()[0]
     叶子函数个数:int=reslt_df["叶子函数个数"].to_list()[0]
-    print(f"{nowDateTimeTxt()},设置深度0, 叶子调用次数:{叶子调用次数},叶子函数个数:{叶子函数个数}", flush=True)
+    print(f"update__deepth_0_set， {nowDateTimeTxt()},设置深度0, 叶子调用次数:{叶子调用次数},叶子函数个数:{叶子函数个数}", flush=True)
     return 叶子调用次数
 
 def query__unique_fnAdr_ls(sess:Session)->typing.List[str]:
@@ -109,6 +120,8 @@ def _main():
 
     try:
         with driver.session(database=NEO4J_DB) as sess:
+            #全体置空deepth字段
+            update__init_deepth_as_null(sess)
             #标记 叶子函数 ：  新增深度字段deepth，并设置深度数值为0
             update__deepth_0_set(sess)
             
