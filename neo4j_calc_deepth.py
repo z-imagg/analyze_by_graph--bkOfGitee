@@ -59,6 +59,7 @@ def query_2dFnCallIdLs_noDeepth(sess:Session, granularity=100)->typing.List[typi
 #neo4j 计算函数调用日志节点 深度
 def update_deepth(sess:Session,fnCallIdLs:typing.List[int],this_deepth:int):
     for fnCallId in fnCallIdLs: 
+        print(f"fnCallId={fnCallId}",end=";;")
         try:
             logLs=sess.run(query=fnSym_name__queryBy_fnCallId, fnCallId=fnCallId).to_df().to_dict(orient="records")
             logEnter:Node=logLs[0]["logV"]
