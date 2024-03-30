@@ -8,8 +8,12 @@
 // 浏览器 打开 neo4j 终端 http://localhost:7474/browser/ , 执行以下脚本
 
 
-// 叶子函数 深度deepth设置为0
+//标记 叶子函数 ：  新增深度字段deepth，并设置深度数值为0
+
+// 叶子定义 ：
+//   1. 作为一次函数调用 的 起点fromLog 和 终点toLog
 MATCH (fromLog:V_FnCallLog)-[:E_FnEL]->(toLog:V_FnCallLog)
+//   2. 从 起点fromLog 到 终点toLog 只有一个 时刻点tmPnt
 WHERE   (fromLog)-[:E_NxtTmPnt]->(toLog)
 SET fromLog.deepth = 0, toLog.deepth = 0                      //增字段 // Set 446706 properties 
 return count(fromLog)   as 叶子调用次数, COUNT(DISTINCT fromLog.fnSym_address) AS 叶子函数个数
