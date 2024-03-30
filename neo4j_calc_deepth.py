@@ -41,12 +41,11 @@ def readTxt(filePath:str) ->str :
 NEO4J_DB="neo4j"
 
 init_deepth_as_null=readTxt("cypher_src/init_deepth_as_null.cypher") 
-
 deepth_0_set=readTxt("cypher_src/deepth_0_set.cypher") 
-unique_fnAdr_ls__no_deepth=readTxt("cypher_src/unique_fnAdr_ls__no_deepth.cypher") 
-max_tmLen__by_fnAdr=readTxt("cypher_src/max_tmLen__by_fnAdr.cypher") 
 
-update_deepth_by_fnAdr__tmLen=readTxt("cypher_src/update_deepth_by_fnAdr__tmLen.cypher") 
+cypher__update_deepth__kp1_by_k=readTxt("cypher_src/update_deepth__kp1_by_k.cypher") 
+cypher__cnt_deepth_null=readTxt("cypher_src/cnt_deepth_null.cypher") 
+
 
 def update__init_deepth_as_null(sess:Session)->bool:
     for i in range(0,10):
@@ -66,47 +65,22 @@ def update__deepth_0_set(sess:Session)->int:
     print(f"update__deepth_0_set， {nowDateTimeTxt()},设置深度0, 叶子调用次数:{叶子调用次数},叶子函数个数:{叶子函数个数}", flush=True)
     return 叶子调用次数
 
-def query__unique_fnAdr_ls(sess:Session)->typing.List[str]:
-    reslt:Result=sess.run(query=unique_fnAdr_ls__no_deepth)
+def update_deepth__kp1_by_k(sess:Session,deepthK:int)->int:
+    #根据 四点深度递推模式 ， 已知 深度k 递推的 求 深度k+1
+    reslt:Result=sess.run(query=cypher__update_deepth__kp1_by_k, K=deepthK)
     reslt_df:pandas.DataFrame=reslt.to_df()
-    fnAdr_ls:typing.List[str]=reslt_df["fnAdr"].to_list()
-    print(f"query__unique_fnAdr_ls， {nowDateTimeTxt()},函数地址个数:{len(fnAdr_ls)}", flush=True)
-    return fnAdr_ls
+    路径数目:int=reslt_df["路径数目"].to_list()[0]
+    print(f"update_deepth__kp1_by_k {nowDateTimeTxt()}, 四点深度递推模式，已知深度k={deepthK}求深度k+1, 路径数目:{路径数目} ", flush=True)
+    return 路径数目
 
-def query__max_tmLen__by_fnAdr(sess:Session, fnAdr:str)->int:
-    print(f"query__max_tmLen, {nowDateTimeTxt()}, fnAdr:{fnAdr}", flush=True, end=";; ")
-    reslt:Result=sess.run(query=max_tmLen__by_fnAdr , fnAdr=fnAdr)
+
+def cnt_deepth_null(sess:Session)->int:
+    reslt:Result=sess.run(query=cypher__cnt_deepth_null)
     reslt_df:pandas.DataFrame=reslt.to_df()
-    _ls:typing.List[str]=reslt_df["max_tmLen"].to_list()
-    max_tmLen:int=_ls[0]
-    print(f"{nowDateTimeTxt()},  max_tmLen:{max_tmLen}", flush=True)
-    return max_tmLen
+    深度为空的节点个数:int=reslt_df["深度为空的节点个数"].to_list()[0]
+    print(f"cnt_deepth_null {nowDateTimeTxt()},深度为空的节点个数:{深度为空的节点个数}", flush=True)
+    return 深度为空的节点个数
 
-#neo4j 计算函数调用日志节点 深度
-def update_deepth(sess:Session,fnAdr:str,max_tmLen:int,deepthK:int):
-    print(f"update_deepth，fnAdr={fnAdr}",end=";;")
-    try:
-
-        #更新深度
-        updateRs:Result=sess.run( 
-query=update_deepth_by_fnAdr__tmLen.replace("__tmLen__", f"{max_tmLen+1}"),   #保险起见  宽一点 用 max_tmLen+1
-fnAdr=fnAdr,  deepthK=deepthK 
-)
-        updateRs_df:pandas.DataFrame=updateRs.to_df()
-        #被更新的记录行数
-        updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
-        if updateRowCnt > 0:
-            print(f"{nowDateTimeTxt()},匹配深度{deepthK},max_tmLen={max_tmLen}; 更新{updateRowCnt}行日志;   ", flush=True)
-        else:
-            print(f"{nowDateTimeTxt()},非匹深度{deepthK},max_tmLen={max_tmLen}; 无更新日志;    ", flush=True)
-            # print("")
-
-
-    except (Exception,) as  err:
-        LV=locals()
-        print(f"发生错误,fnAdr={fnAdr},max_tmLen={max_tmLen}, deepthK={deepthK} ")
-        import traceback
-        traceback.print_exception(err)
 
 
 
@@ -125,14 +99,15 @@ def _main():
             #标记 叶子函数 ：  新增深度字段deepth，并设置深度数值为0
             update__deepth_0_set(sess)
             
-            for deepthK in range(1,10):
-                #查询 函数地址们fnAdrLs
-                fnAdrLs:typing.List[str]=query__unique_fnAdr_ls(sess)
-                for j,fnAdrJ in enumerate(fnAdrLs):
-                    #查询 该函数地址 的 调用过程持续时间长度max_tmLen
-                    max_tmLen:int=query__max_tmLen__by_fnAdr(sess,fnAdrJ)
-                    #已知 深度k-1 更新深度k,   给定 函数地址， 给定 调用过程持续时间长度（为了阻止neo4j查询发生组合爆炸）
-                    update_deepth(sess,fnAdrJ,max_tmLen,deepthK=deepthK)
+            for deepthK in range(0,100):
+                路径数目:int = update_deepth__kp1_by_k(sess,deepthK=deepthK)
+                if 路径数目 == 0 :
+                    print(f"深度{deepthK}下，四点深度递推模式 无匹配，因此深度更新结束")
+                    break
+            
+            深度为空的节点个数:int=cnt_deepth_null(sess)
+            if 深度为空的节点个数 > 0 :
+                print(f"请您思考，为何还有节点的深度为空？深度为空的节点个数={深度为空的节点个数}")
             
     except (Exception,) as  err:
         import traceback
