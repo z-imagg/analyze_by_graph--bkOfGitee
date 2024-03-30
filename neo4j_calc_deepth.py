@@ -26,6 +26,15 @@ max_tmLen__by_fnAdr=readTxt("cypher_src/max_tmLen__by_fnAdr.cypher")
 
 update_deepth_by_fnAdr__tmLen=readTxt("cypher_src/update_deepth_by_fnAdr__tmLen.cypher") 
 
+def update__deepth_0_set(sess:Session)->int:
+    #标记 叶子函数 ：  新增深度字段deepth，并设置深度数值为0
+    reslt:Result=sess.run(query=deepth_0_set)
+    reslt_df:pandas.DataFrame=reslt.to_df()
+    叶子调用次数:int=reslt_df["叶子调用次数"].to_list()[0]
+    叶子函数个数:int=reslt_df["叶子函数个数"].to_list()[0]
+    print(f"{nowDateTimeTxt()},叶子调用次数:{叶子调用次数},叶子函数个数:{叶子函数个数}", flush=True)
+    return 叶子调用次数
+
 def query__unique_fnAdr_ls(sess:Session)->typing.List[str]:
     reslt:Result=sess.run(query=unique_fnAdr_ls)
     reslt_df:pandas.DataFrame=reslt.to_df()
@@ -79,13 +88,16 @@ def _main():
     try:
         with driver.session(database=NEO4J_DB) as sess:
             #标记 叶子函数 ：  新增深度字段deepth，并设置深度数值为0
-            reslt__deepth_0_set:Result=sess.run(query=deepth_0_set)
+            update__deepth_0_set(sess)
             
-            for deepth_j in range(1,10):
+            for deepth_k in range(1,10):
+                #查询 函数地址们fnAdrLs
                 fnAdrLs:typing.List[str]=query__unique_fnAdr_ls(sess)
-                for k,fnAdrK in enumerate(fnAdrLs):
-                    max_tmLen:int=query__max_tmLen__by_fnAdr(sess,fnAdrK)
-                    update_deepth(sess,fnAdrK,max_tmLen,this_deepth=deepth_j)
+                for j,fnAdrJ in enumerate(fnAdrLs):
+                    #查询 该函数地址 的 调用过程持续时间长度max_tmLen
+                    max_tmLen:int=query__max_tmLen__by_fnAdr(sess,fnAdrJ)
+                    #已知 深度k-1 更新深度k,   给定 函数地址， 给定 调用过程持续时间长度（为了阻止neo4j查询发生组合爆炸）
+                    update_deepth(sess,fnAdrJ,max_tmLen,this_deepth=deepth_k)
             
     except (Exception,) as  err:
         import traceback
