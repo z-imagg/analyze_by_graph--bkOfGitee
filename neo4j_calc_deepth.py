@@ -59,32 +59,39 @@ def query_2dFnCallIdLs_noDeepth(sess:Session, granularity=100)->typing.List[typi
 #neo4j 计算函数调用日志节点 深度
 def update_deepth(sess:Session,fnCallIdLs:typing.List[int],this_deepth:int):
     for fnCallId in fnCallIdLs: 
-        logLs=sess.run(query=fnSym_name__queryBy_fnCallId, fnCallId=fnCallId).to_df().to_dict(orient="records")
-        logEnter:Node=logLs[0]["logV"]
-        logLeave:Node=logLs[1]["logV"]
-        assert logEnter["fnSym_name"] == logLeave["fnSym_name"]
-        fnSym_name:str=logEnter["fnSym_name"]
-        
-        tmPntEnter:int=logEnter["tmPnt"]
-        tmPntLeave:int=logLeave["tmPnt"]
-        #中间时刻节点 个数 取 中间时刻点个数最大个数,  越到上层越吃亏
-        tmPntLength:int = tmPntLeave-(tmPntEnter-1)
+        try:
+            logLs=sess.run(query=fnSym_name__queryBy_fnCallId, fnCallId=fnCallId).to_df().to_dict(orient="records")
+            logEnter:Node=logLs[0]["logV"]
+            logLeave:Node=logLs[1]["logV"]
+            assert logEnter["fnSym_name"] == logLeave["fnSym_name"]
+            fnSym_name:str=logEnter["fnSym_name"]
+            
+            tmPntEnter:int=logEnter["tmPnt"]
+            tmPntLeave:int=logLeave["tmPnt"]
+            #中间时刻节点 个数 取 中间时刻点个数最大个数,  越到上层越吃亏
+            tmPntLength:int = tmPntLeave-(tmPntEnter-1)
 
-        #更新深度
-        updateRs:Result=sess.run( 
-query=Cypher_update_deepth.replace("__tmPntLength__", f"{tmPntLength}"),  
-fnCallId=fnCallId,  this_deepth=this_deepth 
-)
-        updateRs_df:pandas.DataFrame=updateRs.to_df()
-        #被更新的记录行数
-        updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
-        if updateRowCnt > 0:
-            print(f"{nowDateTimeTxt()},匹配目标深度{this_deepth}; 更新{updateRowCnt}行日志; fnCallId={fnCallId},fnSym_name={fnSym_name}", flush=True)
-        # else:
-        #     print(f"{nowDateTimeTxt()},非目标深度{this_deepth}; 无更新日志; fnCallId={fnCallId},fnSym_name={fnSym_name}, ", flush=True)
+            #更新深度
+            updateRs:Result=sess.run( 
+    query=Cypher_update_deepth.replace("__tmPntLength__", f"{tmPntLength}"),  
+    fnCallId=fnCallId,  this_deepth=this_deepth 
+    )
+            updateRs_df:pandas.DataFrame=updateRs.to_df()
+            #被更新的记录行数
+            updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
+            if updateRowCnt > 0:
+                print(f"{nowDateTimeTxt()},匹配目标深度{this_deepth}; 更新{updateRowCnt}行日志; fnCallId={fnCallId},fnSym_name={fnSym_name}", flush=True)
+            # else:
+            #     print(f"{nowDateTimeTxt()},非目标深度{this_deepth}; 无更新日志; fnCallId={fnCallId},fnSym_name={fnSym_name}, ", flush=True)
 
     
-    
+        except (Exception,) as  err:
+            LV=locals()
+            print(f"发生错误,fnCallId={fnCallId},tmPntEnter={LV.get('tmPntEnter','')}, tmPntLeave={LV.get('tmPntLeave','')} ")
+            import traceback
+            traceback.print_exception(err)
+
+
 
 
 def _main():
