@@ -45,6 +45,8 @@ def readTxt(filePath:str) ->str :
 NEO4J_DB="neo4j"
 
 init_deepth_as_null=readTxt("cypher_src/init_deepth_as_null.cypher") 
+calc_fnCallLog_tmLen_by_fnAdr=readTxt("cypher_src/calc_fnCallLog_tmLen_by_fnAdr.cypher") 
+newField__tmLen_byFnCallId=readTxt("cypher_src/newField__tmLen_byFnCallId.cypher") 
 
 deepth_0_set=readTxt("cypher_src/deepth_0_set.cypher") 
 unique_fnAdr_ls__no_deepth=readTxt("cypher_src/unique_fnAdr_ls__no_deepth.cypher") 
@@ -58,6 +60,30 @@ def update__init_deepth_as_null(sess:Session)->bool:
         reslt_df:pandas.DataFrame=reslt.to_df()
         更新记录数:int=reslt_df["更新记录数"].to_list()[0]
         print(f"update__init_deepth_as_null, {nowDateTimeTxt()},全体置空deepth字段, 更新记录数:{更新记录数} ", flush=True)
+    return True
+
+
+def query__calc_fnCallLog_tmLen_by_fnAdr(sess:Session,fnAdr:str)->typing.Dict[int,typing.List[int]]:
+    #给定 地址， 查询其 函数调用日志 们 各自 的 时间长度 tmLen
+    reslt:Result=sess.run(query=calc_fnCallLog_tmLen_by_fnAdr, fnAdr=fnAdr)
+    reslt_df:pandas.DataFrame=reslt.to_df() 
+    grouped_df:pandas.DataFrame = reslt_df.groupby('tmLen')['fnCallId'].apply(list).reset_index()
+    dct_tmLen2callId:typing.Dict[int,typing.List[int]] = dict(zip(grouped_df['tmLen'], grouped_df['fnCallId']))
+
+    records:typing.List[typing.Dict]=reslt_df.to_dict(orient="records") #只用于打印个数
+    print(f"query__calc_fnCallLog_tmLen_by_fnAdr {nowDateTimeTxt()}, records.len:{len(records)} ", flush=True)
+    
+    return dct_tmLen2callId
+
+
+def update_newField__tmLen_byFnCallId( sess:Session, dct_tmLen2callId:typing.Dict[int,typing.List[int]] )->int:
+    for tmLen,fnCallIdLs in dct_tmLen2callId.items():
+        #对 给定的 fnCallId们 新增字段tmLen
+        reslt:Result=sess.run(query=newField__tmLen_byFnCallId, fnCallIdLs=fnCallIdLs, tmLen=tmLen)
+        reslt_df:pandas.DataFrame=reslt.to_df()  
+        日志个数:int=reslt_df["日志个数"].to_list()[0]
+        函数个数:int=reslt_df["函数个数"].to_list()[0]
+        print(f"update_newField__tmLen_byFnCallId {nowDateTimeTxt()}； 参数， tmLen={tmLen}， fnCallId个数={len(fnCallIdLs)}；结果 ，日志个数:{日志个数}, 函数个数:{函数个数} ", flush=True)
     return True
 
 
@@ -131,7 +157,7 @@ def _main():
 
     try:
         with driver.session(database=NEO4J_DB) as sess:
-            #全体置空deepth字段
+            #全体置空 deepth字段、tmLen字段
             update__init_deepth_as_null(sess)
             #标记 叶子函数 ：  新增深度字段deepth，并设置深度数值为0
             update__deepth_0_set(sess)
@@ -140,6 +166,11 @@ def _main():
                 #查询 函数地址们fnAdrLs
                 fnAdrLs:typing.List[str]=query__unique_fnAdr_ls(sess)
                 for j,fnAdrJ in enumerate(fnAdrLs):
+                    #给定 地址， 查询其 函数调用日志 们 各自 的 时间长度 tmLen
+                    dct_tmLen2callId:typing.Dict[int,typing.List[int]]=query__calc_fnCallLog_tmLen_by_fnAdr(sess,fnAdrJ)
+                    update_newField__tmLen_byFnCallId(sess,dct_tmLen2callId)
+                for j,fnAdrJ in enumerate(fnAdrLs):
+
                     #查询 该函数地址 的 调用过程持续时间长度max_tmLen
                     min_tmLen,max_tmLen=query__max_tmLen__by_fnAdr(sess,fnAdrJ)
                     #已知 深度k-1 更新深度k,   给定 函数地址， 给定 调用过程持续时间长度（为了阻止neo4j查询发生组合爆炸）
