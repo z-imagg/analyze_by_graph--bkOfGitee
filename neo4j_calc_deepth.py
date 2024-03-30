@@ -52,7 +52,7 @@ def update__init_deepth_as_neg1(sess:Session)->bool:
         reslt:Result=sess.run(query=init_deepth_as_neg1, fnCallId_remainder10=i)
         reslt_df:pandas.DataFrame=reslt.to_df()
         更新记录数:int=reslt_df["更新记录数"].to_list()[0]
-        print(f"{update__init_deepth_as_neg1()},设置深度0, 更新记录数:{更新记录数} ", flush=True)
+        print(f"update__init_deepth_as_neg1, {nowDateTimeTxt()},设置深度0, 更新记录数:{更新记录数} ", flush=True)
     return True
 
 def update__deepth_0_set(sess:Session)->int:
