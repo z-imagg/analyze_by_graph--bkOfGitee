@@ -59,5 +59,6 @@ with
 MATCH path= (B_kp1:V_FnCallLog {direct: FnEnter }) - [t1:E_NxtTmPnt] -> (B_k:V_FnCallLog { direct: FnEnter, deepth: k} ) - [f:E_FnEL] -> (L:V_FnCallLog { direct: FnLeave, deepth: k}) - [t2:E_NxtTmPnt] -> (L_kp1:V_FnCallLog { direct: FnLeave} )
 WHERE  
 B_kp1.deepth is null  and L_kp1.deepth is null
-return  path
-limit 10
+set B_kp1.deepth = kp1 , L_kp1.deepth = kp1
+return  count(path)
+// limit 10
