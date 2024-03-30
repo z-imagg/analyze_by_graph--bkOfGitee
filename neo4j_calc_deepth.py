@@ -43,10 +43,12 @@ def query__unique_fnAdr_ls(sess:Session)->typing.List[str]:
     return fnAdr_ls
 
 def query__max_tmLen__by_fnAdr(sess:Session, fnAdr:str)->int:
+    print(f"开始query__max_tmLen, {nowDateTimeTxt()}, fnAdr:{fnAdr}", flush=True)
     reslt:Result=sess.run(query=max_tmLen__by_fnAdr , fnAdr=fnAdr)
     reslt_df:pandas.DataFrame=reslt.to_df()
     _ls:typing.List[str]=reslt_df["max_tmLen"].to_list()
     max_tmLen:int=_ls[0]
+    print(f"结束query__max_tmLen, {nowDateTimeTxt()}, fnAdr:{fnAdr},max_tmLen:{max_tmLen}", flush=True)
     return max_tmLen
 
 #neo4j 计算函数调用日志节点 深度
