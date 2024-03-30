@@ -14,5 +14,6 @@ MATCH path=
 WHERE  
 B_kp1.deepth is null  
 and L_kp1.deepth is null
+and B_kp1.fnCallId = L_kp1.fnCallId
 set B_kp1.deepth = kp1 , L_kp1.deepth = kp1
 return  count(path) as 路径数目
