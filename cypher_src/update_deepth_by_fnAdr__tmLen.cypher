@@ -1,5 +1,5 @@
 //深度1定义 定fnAdr 定时tmPnt差(定时刻点长)
-MATCH path = (fromLog:V_FnCallLog {fnAdr:$fnAdr} )-[:E_NxtTmPnt* 1 .. __tmLen__ ]->(toLog:V_FnCallLog {fnAdr:$fnAdr})  // fnAdr = "0x7ffff74349cb" , tmLen = 5
+MATCH path = (fromLog:V_FnCallLog {fnAdr:$fnAdr} )-[:E_NxtTmPnt* __min_tmLen__ .. __max_tmLen__ ]->(toLog:V_FnCallLog {fnAdr:$fnAdr})  // fnAdr = "0x7ffff74349cb" , tmLen = 5
 WHERE 
 // 同一次函数调用
   fromLog.fnCallId  = toLog.fnCallId

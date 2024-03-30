@@ -9,5 +9,5 @@ WITH fnCallId, collect(tmPnt) AS tmPnts
 // tmPnts[0] 是 函数进入 时刻点 ,  tmPnts[1] 是 函数退出 时刻点; tmLen是此次函数调用持续的时间长度
 WITH fnCallId, tmPnts[1] - tmPnts[0] AS tmLen
 // RETURN fnCallId, tmLen
-RETURN   max(tmLen) AS max_tmLen
+RETURN min(tmLen) AS min_tmLen,  max(tmLen) AS max_tmLen
 // maxMaxDifference 5
