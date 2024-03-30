@@ -3,6 +3,8 @@ MATCH path = (fromLog:V_FnCallLog {fnAdr:$fnAdr} )-[:E_NxtTmPnt* __min_tmLen__ .
 WHERE 
 // 同一次函数调用
   fromLog.fnCallId  = toLog.fnCallId
+and fromLog.tmLen <= __max_tmLen__ and fromLog.tmLen >= __min_tmLen__
+and toLog.tmLen <= __max_tmLen__ and toLog.tmLen >= __min_tmLen__
 //深度k定义:
 // 1. 存在 中间时刻点 深度为k-1 
 and any( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = $deepthK-1 )

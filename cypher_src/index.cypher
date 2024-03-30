@@ -1,6 +1,7 @@
 
 // CREATE INDEX FOR (n:V_FnCallLog) ON (n.logId)  // .ipynb中创建的索引
 
+CREATE INDEX FOR (n:V_FnCallLog) ON (n.tmLen)
 CREATE INDEX FOR (n:V_FnCallLog) ON (n.deepth)
 CREATE INDEX FOR (n:V_FnCallLog) ON (n.fnCallId)
 
