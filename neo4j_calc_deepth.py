@@ -108,9 +108,9 @@ fnAdr=fnAdr,  deepthK=deepthK
         #被更新的记录行数
         updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
         if updateRowCnt > 0:
-            print(f"{nowDateTimeTxt()},匹配深度{deepthK},max_tmLen={max_tmLen}; 更新{updateRowCnt}行日志;   ", flush=True)
+            print(f"{nowDateTimeTxt()},匹配深度{deepthK},tmLen范围=[{min_tmLen},{max_tmLen}],[{_min_tmLen},{_max_tmLen}]; 更新{updateRowCnt}行日志;   ", flush=True)
         else:
-            print(f"{nowDateTimeTxt()},非匹深度{deepthK},max_tmLen={max_tmLen}; 无更新日志;    ", flush=True)
+            print(f"{nowDateTimeTxt()},非匹深度{deepthK},tmLen范围=[{min_tmLen},{max_tmLen}],[{_min_tmLen},{_max_tmLen}]; 无更新日志;    ", flush=True)
             # print("")
 
 
