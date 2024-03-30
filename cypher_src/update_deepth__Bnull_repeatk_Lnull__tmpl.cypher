@@ -9,20 +9,14 @@ $K+1 as kp1
 MATCH path= 
 (B_kp1:V_FnCallLog {direct: FnEnter }) 
 
-// Begin_j 点k路径（模板）
-- [tJ:E_NxtTmPnt] -> 
-(BJ:V_FnCallLog where BJ.direct=FnEnter   ) - [fJ:E_FnEL] -> (LJ:V_FnCallLog where LJ.direct=FnLeave  ) 
-// End_j
+- [tJ:E_NxtTmPnt] -> (BJ:V_FnCallLog where BJ.direct=FnEnter   ) - [fJ:E_FnEL] -> (LJ:V_FnCallLog where LJ.direct=FnLeave  )  // 点k路径（模板）
 
 - [t2:E_NxtTmPnt] -> (L_kp1:V_FnCallLog { direct: FnLeave} )
 WHERE  
 B_kp1.deepth is null  // 起空
 and  L_kp1.deepth is null // 终空
 
-// Begin_j 点k条件（模板）
-and  BJ.deepth <= k and BJ.deepth >= 0       and  LJ.deepth <= k and LJ.deepth >= 0
-and BJ.fnCallId == LJ.fnCallId
-// End_j
+and  BJ.deepth <= k and BJ.deepth >= 0       and  LJ.deepth <= k and LJ.deepth >= 0  and BJ.fnCallId == LJ.fnCallId // 点k条件（模板）
 
 set B_kp1.deepth = kp1 , L_kp1.deepth = kp1
 return  count(path) as 路径数目
