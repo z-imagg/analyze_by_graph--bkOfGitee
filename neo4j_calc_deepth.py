@@ -9,11 +9,15 @@ import pandas
 import typing
 import numpy
 from pathlib import Path
+from datetime import datetime,timedelta
+
+#不平衡的时刻点 ，来自 .ipynb 
+notBalancedTmPntLs= [1044967]
 
 import threading
 thrdVarDct = threading.local()
 
-from datetime import datetime,timedelta
+
 def nowDateTimeTxt():
     #通用时间差 为  当前时刻 减去 本线程的前一个时刻
     _now=datetime.now()
@@ -73,32 +77,40 @@ def query__unique_fnAdr_ls(sess:Session)->typing.List[str]:
     print(f"query__unique_fnAdr_ls， {nowDateTimeTxt()},函数地址个数:{len(fnAdr_ls)}", flush=True)
     return fnAdr_ls
 
-def query__max_tmLen__by_fnAdr(sess:Session, fnAdr:str)->int:
+def query__max_tmLen__by_fnAdr(sess:Session, fnAdr:str)->typing.Tuple[int,int]:
     print(f"query__max_tmLen, {nowDateTimeTxt()}, fnAdr:{fnAdr}", flush=True, end=";; ")
     reslt:Result=sess.run(query=max_tmLen__by_fnAdr , fnAdr=fnAdr)
     reslt_df:pandas.DataFrame=reslt.to_df()
-    _ls:typing.List[str]=reslt_df["max_tmLen"].to_list()
-    max_tmLen:int=_ls[0]
-    print(f"{nowDateTimeTxt()},  max_tmLen:{max_tmLen}", flush=True)
-    return max_tmLen
+    min_tmLen:int=reslt_df["min_tmLen"].to_list()[0]
+    max_tmLen:int=reslt_df["max_tmLen"].to_list()[0]
+    print(f"{nowDateTimeTxt()},  min_tmLen:{min_tmLen}, max_tmLen:{max_tmLen}", flush=True)
+    return min_tmLen,max_tmLen
 
 #neo4j 计算函数调用日志节点 深度
-def update_deepth(sess:Session,fnAdr:str,max_tmLen:int,deepthK:int):
+def update_deepth(sess:Session,fnAdr:str,min_tmLen:int, max_tmLen:int,deepthK:int):
     print(f"update_deepth，fnAdr={fnAdr}",end=";;")
     try:
 
         #更新深度
+        # 原本 ： 时刻点是连续的整数， 即 两点之间的时刻点个数 == 两点时刻点数值之差
+        # 但是 由于 不平衡点 在 前置.ipynb处理 中 被删除了，  导致   两点之间的时刻点个数 + 此路径中 被删除的 不平衡点个数 == 两点时刻点数值之差
+        # 即 待求量 == 两点之间的时刻点个数 < 两点时刻点数值之差 ==  min_tmLen、 max_tmLen
+        # 因此 范围 [min_tmLen, max_tmLen] 一定比 真实待求量范围 宽泛， 因此  没有遗漏  即 结果正确， 所以 不用修复 也不用收紧
+        #  当然 理论上 应该收紧一点 性能稍微高一丢丢， 但是没必要
+        cypherTxt=update_deepth_by_fnAdr__tmLen\
+.replace("__min_tmLen__", f"{min_tmLen}")\
+.replace("__max_tmLen__", f"{max_tmLen}")
         updateRs:Result=sess.run( 
-query=update_deepth_by_fnAdr__tmLen.replace("__tmLen__", f"{max_tmLen+1}"),   #保险起见  宽一点 用 max_tmLen+1
+query=cypherTxt,   #保险起见  宽一点 用 max_tmLen+1
 fnAdr=fnAdr,  deepthK=deepthK 
 )
         updateRs_df:pandas.DataFrame=updateRs.to_df()
         #被更新的记录行数
         updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
         if updateRowCnt > 0:
-            print(f"{nowDateTimeTxt()},匹配深度{deepthK},max_tmLen={max_tmLen}; 更新{updateRowCnt}行日志;   ", flush=True)
+            print(f"{nowDateTimeTxt()},匹配深度{deepthK},tmLen范围=[{min_tmLen},{max_tmLen}]; 更新{updateRowCnt}行日志;   ", flush=True)
         else:
-            print(f"{nowDateTimeTxt()},非匹深度{deepthK},max_tmLen={max_tmLen}; 无更新日志;    ", flush=True)
+            print(f"{nowDateTimeTxt()},非匹深度{deepthK},tmLen范围=[{min_tmLen},{max_tmLen}]; 无更新日志;    ", flush=True)
             # print("")
 
 
@@ -107,7 +119,6 @@ fnAdr=fnAdr,  deepthK=deepthK
         print(f"发生错误,fnAdr={fnAdr},max_tmLen={max_tmLen}, deepthK={deepthK} ")
         import traceback
         traceback.print_exception(err)
-
 
 
 def _main():
@@ -130,9 +141,9 @@ def _main():
                 fnAdrLs:typing.List[str]=query__unique_fnAdr_ls(sess)
                 for j,fnAdrJ in enumerate(fnAdrLs):
                     #查询 该函数地址 的 调用过程持续时间长度max_tmLen
-                    max_tmLen:int=query__max_tmLen__by_fnAdr(sess,fnAdrJ)
+                    min_tmLen,max_tmLen=query__max_tmLen__by_fnAdr(sess,fnAdrJ)
                     #已知 深度k-1 更新深度k,   给定 函数地址， 给定 调用过程持续时间长度（为了阻止neo4j查询发生组合爆炸）
-                    update_deepth(sess,fnAdrJ,max_tmLen,deepthK=deepthK)
+                    update_deepth(sess,fnAdrJ,min_tmLen,max_tmLen,deepthK=deepthK)
             
     except (Exception,) as  err:
         import traceback
