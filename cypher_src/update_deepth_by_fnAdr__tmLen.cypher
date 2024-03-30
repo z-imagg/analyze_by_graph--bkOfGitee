@@ -3,12 +3,14 @@ MATCH path = (fromLog:V_FnCallLog {fnAdr:$fnAdr} )-[:E_NxtTmPnt* 1 .. __tmLen__ 
 WHERE 
 // 同一次函数调用
   fromLog.fnCallId  = toLog.fnCallId
-// 1. 存在 中间时刻点 深度比该深度小1 
+//深度k定义:
+// 1. 存在 中间时刻点 深度为k-1 
 and any( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = $this_deepth-1 )
 // 且 
-// 2.所有中间时刻点 深度 都 已知 
-//    即 所有中间时刻点 深度 都 小于等于 该深度-1 , 因为 当前所有已知深度 就是 小于等于 该深度-1
-// 可以表明 起点和终点 为 该深度, 这是 深度准确定义吧
+// 2.所有中间时刻点 深度 都 小于等于 k-1
+//    等价于 所有中间时刻点 深度 是 已知的    
+//       由于 逐步求解深度 即 深度0、深度1、深度2、...、深度k-1、深度k,  而 此时 在求深度k ， 因此 已知深度 只能是 从0到k-1
+// 从1、2 可以表明 起点和终点 深度为k, 这是 深度k的准确定义吧
 AND all( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth  is not null )
 
 // 起点fromLog 无 深度字段deepth , 终点toLog 无 深度字段deepth
