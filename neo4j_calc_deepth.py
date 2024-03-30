@@ -82,8 +82,9 @@ def update_deepth(sess:Session,fnCallIdLs:typing.List[int],this_deepth:int):
             updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
             if updateRowCnt > 0:
                 print(f"{nowDateTimeTxt()},匹配目标深度{this_deepth}; 更新{updateRowCnt}行日志; fnCallId={fnCallId},fnSym_name={fnSym_name}", flush=True)
-            # else:
-            #     print(f"{nowDateTimeTxt()},非目标深度{this_deepth}; 无更新日志; fnCallId={fnCallId},fnSym_name={fnSym_name}, ", flush=True)
+            else:
+                # print(f"{nowDateTimeTxt()},非目标深度{this_deepth}; 无更新日志; fnCallId={fnCallId},fnSym_name={fnSym_name}, ", flush=True)
+                print("")
 
     
         except (Exception,) as  err:
@@ -91,7 +92,6 @@ def update_deepth(sess:Session,fnCallIdLs:typing.List[int],this_deepth:int):
             print(f"发生错误,fnCallId={fnCallId},tmPntEnter={LV.get('tmPntEnter','')}, tmPntLeave={LV.get('tmPntLeave','')} ")
             import traceback
             traceback.print_exception(err)
-
 
 
 
