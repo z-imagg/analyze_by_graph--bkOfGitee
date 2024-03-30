@@ -24,3 +24,11 @@ WITH reduce(sum = 0, node IN mids | sum + (CASE WHEN node.deepth IS NULL THEN -1
 return deepthSum
 limit 10
 // limit 20 // 也很慢
+
+
+// 分组: fnCallId为key, log数组为value
+// fnCallId:logs
+MATCH (log:V_FnCallLog {fnAdr:"0x7ffff74349cb"})  
+WITH  log.fnCallId AS fnCallId , collect(log) as logs
+RETURN  fnCallId,logs
+limit 10
