@@ -26,20 +26,21 @@ limit 10
 // limit 20 // 也很慢
 
 
-// 有模式： 深度为0的点 的 前一时刻的点 的深度未知
-// 有模式： 深度为0的点 的 前一时刻t的点 的深度未知, 那么该时刻t有可能是深度为1的点
-MATCH path=(fromLog:V_FnCallLog)-[:E_NxtTmPnt]->(toLog:V_FnCallLog) //后面的是方便开发调试观看加的  -[:E_NxtTmPnt]->(toLog2:V_FnCallLog)
-WHERE  fromLog.deepth is null and   toLog.deepth=0
-return  path
-limit 10
-
-// 更进一步， 限制方向
-// 有模式： 深度为0的点 的 前一时刻的点 的深度未知
-// 有模式： 深度为0的点 的 前一时刻t的点 的深度未知, 那么该时刻t有可能是深度为1的点
+// 有模式： 深度为0的进入点 的 前一时刻t的进入点 的深度未知, 那么该时刻t有可能是深度为1的进入点
 with 
 1 AS FnEnter,
 2 as FnLeave
 MATCH path=(depMayBeK:V_FnCallLog {direct: FnEnter }) - [:E_NxtTmPnt]->(depKsub1:V_FnCallLog {deepth:0, direct: FnEnter} )  //后面的是方便开发调试观看加的 - [:E_NxtTmPnt]->(toLog2:V_FnCallLog)
+WHERE  depMayBeK.deepth is null  
+return  path
+limit 10
+
+
+// 有模式： 深度为0的离开点 的 后一时刻t的离开点 的深度未知, 那么该时刻t有可能是深度为1的离开点
+with 
+1 AS FnEnter,
+2 as FnLeave
+MATCH path=(depKsub1:V_FnCallLog {deepth:0,direct: FnLeave }) - [:E_NxtTmPnt]->(depMayBeK:V_FnCallLog { direct: FnLeave} ) - [:E_NxtTmPnt]->(toLog2:V_FnCallLog)
 WHERE  depMayBeK.deepth is null  
 return  path
 limit 10
