@@ -94,12 +94,11 @@ def update_deepth(sess:Session,fnAdr:str,min_tmLen:int, max_tmLen:int,deepthK:in
         #更新深度
         # 原本 ： 时刻点是连续的整数， 即 两点之间的时刻点个数 == 两点时刻点数值之差
         # 但是 由于 不平衡点 在 前置.ipynb处理 中 被删除了，  导致   两点之间的时刻点个数 + 此路径中 被删除的 不平衡点个数 == 两点时刻点数值之差
-        # 因此 无脑的将 查找区间 左右扩大 不平衡点数 长度 即可
+        # 而参数 min_tmLen、 max_tmLen 分别 是  两点时刻点数值之差 最小值、最大值 ，  因此 需要 修正 最小值、不需要修正最大值
         _min_tmLen=max(min_tmLen-NotBlncTmPntCnt,1)
-        _max_tmLen=max_tmLen+NotBlncTmPntCnt
         cypherTxt=update_deepth_by_fnAdr__tmLen\
 .replace("__min_tmLen__", f"{_min_tmLen}")\
-.replace("__max_tmLen__", f"{_max_tmLen}")
+.replace("__max_tmLen__", f"{max_tmLen}")
         updateRs:Result=sess.run( 
 query=cypherTxt,   #保险起见  宽一点 用 max_tmLen+1
 fnAdr=fnAdr,  deepthK=deepthK 
@@ -108,9 +107,9 @@ fnAdr=fnAdr,  deepthK=deepthK
         #被更新的记录行数
         updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
         if updateRowCnt > 0:
-            print(f"{nowDateTimeTxt()},匹配深度{deepthK},tmLen范围=[{min_tmLen},{max_tmLen}],[{_min_tmLen},{_max_tmLen}]; 更新{updateRowCnt}行日志;   ", flush=True)
+            print(f"{nowDateTimeTxt()},匹配深度{deepthK},tmLen范围=[{_min_tmLen};{min_tmLen},{max_tmLen}]; 更新{updateRowCnt}行日志;   ", flush=True)
         else:
-            print(f"{nowDateTimeTxt()},非匹深度{deepthK},tmLen范围=[{min_tmLen},{max_tmLen}],[{_min_tmLen},{_max_tmLen}]; 无更新日志;    ", flush=True)
+            print(f"{nowDateTimeTxt()},非匹深度{deepthK},tmLen范围=[{_min_tmLen};{min_tmLen},{max_tmLen}]; 无更新日志;    ", flush=True)
             # print("")
 
 
