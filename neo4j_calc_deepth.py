@@ -39,21 +39,21 @@ def query__unique_fnAdr_ls(sess:Session)->typing.List[str]:
     reslt:Result=sess.run(query=unique_fnAdr_ls__no_deepth)
     reslt_df:pandas.DataFrame=reslt.to_df()
     fnAdr_ls:typing.List[str]=reslt_df["fnAdr"].to_list()
-    print(f"{nowDateTimeTxt()},函数地址个数:{len(fnAdr_ls)}", flush=True)
+    print(f"query__unique_fnAdr_ls， {nowDateTimeTxt()},函数地址个数:{len(fnAdr_ls)}", flush=True)
     return fnAdr_ls
 
 def query__max_tmLen__by_fnAdr(sess:Session, fnAdr:str)->int:
-    print(f"开始query__max_tmLen, {nowDateTimeTxt()}, fnAdr:{fnAdr}", flush=True)
+    print(f"query__max_tmLen, {nowDateTimeTxt()}, fnAdr:{fnAdr}", flush=True, end=";; ")
     reslt:Result=sess.run(query=max_tmLen__by_fnAdr , fnAdr=fnAdr)
     reslt_df:pandas.DataFrame=reslt.to_df()
     _ls:typing.List[str]=reslt_df["max_tmLen"].to_list()
     max_tmLen:int=_ls[0]
-    print(f"结束query__max_tmLen, {nowDateTimeTxt()}, fnAdr:{fnAdr},max_tmLen:{max_tmLen}", flush=True)
+    print(f"{nowDateTimeTxt()},  max_tmLen:{max_tmLen}", flush=True)
     return max_tmLen
 
 #neo4j 计算函数调用日志节点 深度
 def update_deepth(sess:Session,fnAdr:str,max_tmLen:int,this_deepth:int):
-    print(f"fnAdr={fnAdr}",end=";;")
+    print(f"update_deepth，fnAdr={fnAdr}",end=";;")
     try:
 
         #更新深度
@@ -67,8 +67,8 @@ fnAdr=fnAdr,  this_deepth=this_deepth
         if updateRowCnt > 0:
             print(f"{nowDateTimeTxt()},匹配深度{this_deepth},max_tmLen={max_tmLen}; 更新{updateRowCnt}行日志;   ", flush=True)
         else:
-            # print(f"{nowDateTimeTxt()},非匹深度{this_deepth},max_tmLen={max_tmLen}; 无更新日志;    ", flush=True)
-            print("")
+            print(f"{nowDateTimeTxt()},非匹深度{this_deepth},max_tmLen={max_tmLen}; 无更新日志;    ", flush=True)
+            # print("")
 
 
     except (Exception,) as  err:
