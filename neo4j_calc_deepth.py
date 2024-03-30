@@ -40,11 +40,20 @@ def readTxt(filePath:str) ->str :
 
 NEO4J_DB="neo4j"
 
+init_deepth_as_neg1=readTxt("cypher_src/init_deepth_as_neg1.cypher") 
 deepth_0_set=readTxt("cypher_src/deepth_0_set.cypher") 
 unique_fnAdr_ls__no_deepth=readTxt("cypher_src/unique_fnAdr_ls__no_deepth.cypher") 
 max_tmLen__by_fnAdr=readTxt("cypher_src/max_tmLen__by_fnAdr.cypher") 
 
 update_deepth_by_fnAdr__tmLen=readTxt("cypher_src/update_deepth_by_fnAdr__tmLen.cypher") 
+
+def update__init_deepth_as_neg1(sess:Session)->bool:
+    for i in range(0,10):
+        reslt:Result=sess.run(query=init_deepth_as_neg1, fnCallId_remainder10=i)
+        reslt_df:pandas.DataFrame=reslt.to_df()
+        更新记录数:int=reslt_df["更新记录数"].to_list()[0]
+        print(f"{update__init_deepth_as_neg1()},设置深度0, 更新记录数:{更新记录数} ", flush=True)
+    return True
 
 def update__deepth_0_set(sess:Session)->int:
     #标记 叶子函数 ：  新增深度字段deepth，并设置深度数值为0
@@ -109,6 +118,8 @@ def _main():
 
     try:
         with driver.session(database=NEO4J_DB) as sess:
+            #全体增加deepth字段（-1）
+            update__init_deepth_as_neg1(sess)
             #标记 叶子函数 ：  新增深度字段deepth，并设置深度数值为0
             update__deepth_0_set(sess)
             
