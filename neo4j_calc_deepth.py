@@ -44,6 +44,7 @@ init_deepth_as_null=readTxt("cypher_src/init_deepth_as_null.cypher")
 deepth_0_set=readTxt("cypher_src/deepth_0_set.cypher") 
 
 cypher__update_deepth__kp1_by_k=readTxt("cypher_src/update_deepth__kp1_by_k.cypher") 
+cypher__update_deepth__kp1_by_k__Left_0tok=readTxt("cypher_src/update_deepth__kp1_by_k__Left_0tok.cypher") 
 cypher__cnt_deepth_null=readTxt("cypher_src/cnt_deepth_null.cypher") 
 
 
@@ -74,6 +75,14 @@ def update_deepth__kp1_by_k(sess:Session,deepthK:int)->int:
     return 路径数目
 
 
+def update_deepth__kp1_by_k__Left_0tok(sess:Session,deepthK:int)->int:
+    #根据 四点深度递推模式(左自由深度) ， 已知 深度k 递推的 求 深度k+1
+    reslt:Result=sess.run(query=cypher__update_deepth__kp1_by_k__Left_0tok, K=deepthK)
+    reslt_df:pandas.DataFrame=reslt.to_df()
+    路径数目:int=reslt_df["路径数目"].to_list()[0]
+    print(f"update_deepth__kp1_by_k__Left_0tok {nowDateTimeTxt()}, 四点深度递推模式(左自由深度)，已知深度k={deepthK}求深度k+1, 路径数目:{路径数目} ", flush=True)
+    return 路径数目
+
 def cnt_deepth_null(sess:Session)->int:
     reslt:Result=sess.run(query=cypher__cnt_deepth_null)
     reslt_df:pandas.DataFrame=reslt.to_df()
@@ -101,7 +110,8 @@ def _main():
             
             for deepthK in range(0,100):
                 路径数目:int = update_deepth__kp1_by_k(sess,deepthK=deepthK)
-                if 路径数目 == 0 :
+                路径数目_左自由深度:int = update_deepth__kp1_by_k__Left_0tok(sess,deepthK=deepthK)
+                if 路径数目 == 0 and 路径数目_左自由深度 == 0:
                     print(f"深度{deepthK}下，四点深度递推模式 无匹配，因此深度更新结束")
                     break
             
