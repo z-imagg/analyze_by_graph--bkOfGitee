@@ -58,7 +58,7 @@ def update_deepth(sess:Session,fnAdr:str,max_tmLen:int,this_deepth:int):
 
         #更新深度
         updateRs:Result=sess.run( 
-query=update_deepth_by_fnAdr__tmLen.replace("__tmLen__", f"{max_tmLen}"),  
+query=update_deepth_by_fnAdr__tmLen.replace("__tmLen__", f"{max_tmLen+1}"),   #保险起见  宽一点 用 max_tmLen+1
 fnAdr=fnAdr,  this_deepth=this_deepth 
 )
         updateRs_df:pandas.DataFrame=updateRs.to_df()
