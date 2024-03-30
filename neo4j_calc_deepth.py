@@ -32,7 +32,7 @@ def update__deepth_0_set(sess:Session)->int:
     reslt_df:pandas.DataFrame=reslt.to_df()
     叶子调用次数:int=reslt_df["叶子调用次数"].to_list()[0]
     叶子函数个数:int=reslt_df["叶子函数个数"].to_list()[0]
-    print(f"{nowDateTimeTxt()},叶子调用次数:{叶子调用次数},叶子函数个数:{叶子函数个数}", flush=True)
+    print(f"{nowDateTimeTxt()},设置深度0, 叶子调用次数:{叶子调用次数},叶子函数个数:{叶子函数个数}", flush=True)
     return 叶子调用次数
 
 def query__unique_fnAdr_ls(sess:Session)->typing.List[str]:
@@ -63,9 +63,9 @@ fnAdr=fnAdr,  this_deepth=this_deepth
         #被更新的记录行数
         updateRowCnt:int=updateRs_df.to_dict(orient="records")[0]["updated_rows"] #if len(updRsData)>0  else 0
         if updateRowCnt > 0:
-            print(f"{nowDateTimeTxt()},匹配目标深度{this_deepth},max_tmLen={max_tmLen}; 更新{updateRowCnt}行日志;   ", flush=True)
+            print(f"{nowDateTimeTxt()},匹配深度{this_deepth},max_tmLen={max_tmLen}; 更新{updateRowCnt}行日志;   ", flush=True)
         else:
-            # print(f"{nowDateTimeTxt()},非目标深度{this_deepth},max_tmLen={max_tmLen}; 无更新日志;    ", flush=True)
+            # print(f"{nowDateTimeTxt()},非匹深度{this_deepth},max_tmLen={max_tmLen}; 无更新日志;    ", flush=True)
             print("")
 
 
