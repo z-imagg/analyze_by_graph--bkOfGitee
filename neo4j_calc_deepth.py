@@ -1,3 +1,8 @@
+
+#  先手工到neo4j web控制台 http://localhost:7474 执行 neo4j_deepth_0_set.cypher, 以标定深度0的节点们
+#  本文作用： 已知深度k-1，更新深度k；给定函数调用id
+#  基本能用但慢
+
 from neo4j import GraphDatabase, RoutingControl
 from neo4j import Driver
 from neo4j import Record,Result,Session
