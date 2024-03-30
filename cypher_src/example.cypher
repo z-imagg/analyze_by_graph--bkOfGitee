@@ -32,3 +32,11 @@ MATCH (log:V_FnCallLog {fnAdr:"0x7ffff74349cb"})
 WITH  log.fnCallId AS fnCallId , collect(log) as logs
 RETURN  fnCallId,logs
 limit 10
+
+// 分组: fnCallId为key,  value : log数组、logs[1].tmPnt-log[0].tmPnt
+// fnCallId:logs
+MATCH (log:V_FnCallLog {fnAdr:"0x7ffff74349cb"})  
+WITH  log.fnCallId AS fnCallId , collect(log) as logs
+WITH fnCallId, logs, logs[1].tmPnt - logs[0].tmPnt AS tmLen
+RETURN  fnCallId,logs,tmLen
+limit 10
