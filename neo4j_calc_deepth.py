@@ -29,15 +29,16 @@ update_deepth_by_fnAdr__tmLen=readTxt("cypher_src/update_deepth_by_fnAdr__tmLen.
 def query__unique_fnAdr_ls(sess:Session)->typing.List[str]:
     reslt:Result=sess.run(query=unique_fnAdr_ls)
     reslt_df:pandas.DataFrame=reslt.to_df()
-    _1d_ls:typing.List[str]=reslt_df["fnAdr"].to_list()
-    print(f"{nowDateTimeTxt()},无深度字段的函数调用数目为:{len(_1d_ls)}", flush=True)
-    return _1d_ls
+    fnAdr_ls:typing.List[str]=reslt_df["fnAdr"].to_list()
+    print(f"{nowDateTimeTxt()},函数地址个数:{len(fnAdr_ls)}", flush=True)
+    return fnAdr_ls
 
 def query__max_tmLen__by_fnAdr(sess:Session, fnAdr:str)->int:
     reslt:Result=sess.run(query=max_tmLen__by_fnAdr , fnAdr=fnAdr)
     reslt_df:pandas.DataFrame=reslt.to_df()
-    _1d_ls:typing.List[str]=reslt_df["max_tmLen"].to_list()
-    return _1d_ls[0]
+    _ls:typing.List[str]=reslt_df["max_tmLen"].to_list()
+    max_tmLen:int=_ls[0]
+    return max_tmLen
 
 #neo4j 计算函数调用日志节点 深度
 def update_deepth(sess:Session,fnAdr:str,max_tmLen:int,this_deepth:int):
