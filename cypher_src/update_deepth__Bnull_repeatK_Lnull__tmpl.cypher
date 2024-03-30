@@ -1,4 +1,4 @@
-//  起空_重复点k_终空 ： 入d==k+1  重复'--tJ-->BJ--fJ-->LJ'  --t2-->  出d=k+1
+//  起空_重复点k_终空 ： 入d==k+1  重复'--tJ-->BJ--fJ-->LJ'  --tL-->  出d=k+1
 //  已知 深度k 递推的 求 深度k+1
 with 
 1 AS FnEnter, //Enter == Begin == B
@@ -11,7 +11,7 @@ MATCH path=
 
 - [tJ:E_NxtTmPnt] -> (BJ:V_FnCallLog where BJ.direct=FnEnter   ) - [fJ:E_FnEL] -> (LJ:V_FnCallLog where LJ.direct=FnLeave  )  //点k路径（模板）
 
-- [t2:E_NxtTmPnt] -> (L_kp1:V_FnCallLog { direct: FnLeave} )
+- [tL:E_NxtTmPnt] -> (L_kp1:V_FnCallLog { direct: FnLeave} )
 WHERE  
 B_kp1.deepth is null  // 起空
 and  L_kp1.deepth is null // 终空

@@ -65,9 +65,9 @@ def newXJ(_ln:str,J:int):
     return ln
 
 def replaceLn(ln:str,repeatCnt:int)->str:
-    if ln .endswith("//点k路径（模板）") or ln.endswith("//点k条件（模板）"):
+    if ln .endswith("//点k路径（模板）\n") or ln.endswith("//点k条件（模板）\n"):
         _=[newXJ(ln,J) for J in range(0,repeatCnt)]
-        newLn="\n".join(_)
+        newLn="".join(_)
         return newLn
     else:
         return ln
@@ -76,7 +76,7 @@ def cypher__update_deepth__Bnull_repeatK_Lnull(repeatCnt:int):
     with open("cypher_src/update_deepth__Bnull_repeatK_Lnull__tmpl.cypher") as fr:
         lines=fr.readlines()
         newLines=[replaceLn(ln,repeatCnt) for ln in lines]
-        _new_cypher_txt:str="\n".join(newLines)
+        _new_cypher_txt:str="".join(newLines)
         print(f"_new_cypher_txt=【{_new_cypher_txt}】")
         return _new_cypher_txt
 
