@@ -17,7 +17,7 @@ def readTxt(filePath:str) ->str :
 
 NEO4J_DB="neo4j"
 
-
+deepth_0_set=readTxt("cypher_src/deepth_0_set.cypher") 
 fnCallIdLs_noDeepth_query=readTxt("cypher_src/fnCallIdLs_noDeepth_query.cypher") 
 fnSym_name__queryBy_fnCallId=readTxt("cypher_src/fnSym_name__queryBy_fnCallId.cypher") 
 
@@ -81,6 +81,9 @@ def _main():
 
     try:
         with driver.session(database=NEO4J_DB) as sess:
+            #标记 叶子函数 ：  新增深度字段deepth，并设置深度数值为0
+            reslt__deepth_0_set:Result=sess.run(query=deepth_0_set)
+            
             for deepth_j in range(1,10):
                 _2d_fnCallIdLs:typing.List[typing.List[int]]=query_2dFnCallIdLs_noDeepth(sess)
                 for k,fnCallIdLs in enumerate(_2d_fnCallIdLs):
