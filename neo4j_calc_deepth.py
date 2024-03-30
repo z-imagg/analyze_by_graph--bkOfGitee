@@ -36,9 +36,9 @@ any( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth = $this_deepth-1 )
 // 可以表明 起点和终点 为 该深度, 这是 深度准确定义吧
 AND all( nodeK in nodes(path)[1..-1] WHERE   nodeK.deepth  is not null )
 // 起点fromLog 无 深度字段deepth
-AND (NOT exists(fromLog.deepth) )
+AND fromLog.deepth is null
 // 终点toLog 无 深度字段deepth
-AND (NOT exists(toLog.deepth)  )
+AND toLog.deepth is null
 //neo4j的索引, 为何 范围条件 比 精确条件 快?
 // 范围条件
 AND  $fnCallId=fromLog.fnCallId  AND   $fnCallId=toLog.fnCallId
