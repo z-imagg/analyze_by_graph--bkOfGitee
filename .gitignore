@@ -25,3 +25,5 @@ fnCallId__fnSym_address.parquet/
 *.log
 
 __pycache__/
+
+cypher_tmpl_reander_out/**
