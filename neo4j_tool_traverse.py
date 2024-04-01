@@ -17,6 +17,8 @@ cypher__isLeaf=readTxt("cypher_src/isLeaf.cypher")
 cypher__getChild=readTxt("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher") 
 
 
+
+from cypher_tmpl_render import cypherTmplRender
 from neo4j_tool import neo4j_update, neo4j_query
 
 class NTT:
@@ -33,8 +35,8 @@ class NTT:
         return neo4j_query(self.sess,"isLeaf",cypher__getL,fnCallId=fnCallId)
 
     def getChild_len_i(self,fnCallId,len_i:int):
-        return neo4j_query(self.sess,"getL",cypher__getL,fnCallId=fnCallId)
-
+        cypherTxt=cypherTmplRender("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher",len_i, "//直接调用平链元素(模板)(match)\n", "//开发调试用，生产不要使用\n")
+        return neo4j_query(self.sess,f"getChild_len_i_{len_i}",cypherTxt,fnCallId=fnCallId)
 
     def getChild(self,fnCallId):
         tnPnt_delta=100
