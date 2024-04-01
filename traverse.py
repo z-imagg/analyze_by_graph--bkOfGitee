@@ -62,7 +62,7 @@ if __name__=="__main__":
 
     try:
         with driver.session(database=NEO4J_DB) as sess:
-            RE=NTT(sess).getE(1)
+            RE=NTT(sess).getE_byFnCallId(1)
             BzDeepth(sess).V(RE)
             # BzWriteDeepth().V(RE)
             # BzWriteWidth().V(RE)

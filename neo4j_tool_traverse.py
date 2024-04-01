@@ -25,11 +25,12 @@ class NTT:
     def __init__(self,sess:Session) -> None:
         self.sess:Session= sess
 
-    def getE(self,fnCallId):
+    def getE_byFnCallId(self,fnCallId):
         return neo4j_query_1field1row(self.sess,"getE",cypher__getE,params={"fnCallId":fnCallId},filedName="logV")
 
-    def getL(self,fnCallId):
-        return neo4j_query(self.sess,"getL",cypher__getL,params={"fnCallId":fnCallId})
+    def getL(self,RE):
+        fnCallId=RE["fnCallId"]
+        return neo4j_query_1field1row(self.sess,"getL",cypher__getL,params={"fnCallId":fnCallId},filedName="logV")
 
     def isLeaf(self,fnCallId):
         return neo4j_query(self.sess,"isLeaf",cypher__getL,params={"fnCallId":fnCallId})
