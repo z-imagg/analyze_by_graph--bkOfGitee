@@ -57,7 +57,7 @@ class BzWrite成份(TraverseAbs):
 if __name__=="__main__":
     from neo4j import Driver,GraphDatabase
     from neo4j_tool_traverse import NTT
-
+    RootFnCallId=51#1,5,49
     NEO4J_DB="neo4j"
     URI = "neo4j://localhost:7687"
     AUTH = ("neo4j", "123456")
@@ -67,7 +67,7 @@ if __name__=="__main__":
 
     try:
         with driver.session(database=NEO4J_DB) as sess:
-            RE:Node=NTT(sess).getE_byFnCallId(1)
+            RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
             BzDeepth(sess).V(RE)
             # BzWriteDeepth().V(RE)
             # BzWriteWidth().V(RE)
