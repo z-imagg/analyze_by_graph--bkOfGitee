@@ -16,10 +16,14 @@ class TraverseAbs(ABC):
         self.N:NTT= NTT(sess)
 
     def V(tz,RE:Node):
+        fnCallId=RE['fnCallId']
+        print(f"开始遍历 fnCallId={fnCallId},",end=" ")
         RL:Node=tz.N.getL(RE)
         if tz.N.isLeaf(RE):
+            print(f"是叶子")
             return tz.bz(RE,RL,True,None,None)
         C=tz.N.getChild(RE)
+        print(f"孩子个数{len(C)}")
         S=[tz.V(CkE) for CkE in C]
         return tz.bz(RE,RL,False,S,C)
 
