@@ -41,14 +41,22 @@ class NTT:
 
     def getChild_len_i(self,fnCallId,len_i:int):
         cypherTxt=cypherTmplRender("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher",len_i, "//直接调用平链元素(模板)(match)\n", "//直接调用平链元素(模板)(where)\n")
-        return neo4j_query_1field1row(self.sess, f"getChild_len_i_{len_i}", cypherTxt, params={"fnCallId":fnCallId}, filedName="路径")
+        return neo4j_query_1field1row(self.sess, f"getChild_len_i_{len_i}", cypherTxt, params={"fnCallId":fnCallId}, filedName="路径") , cypherTxt
 
     def getChild(self,RE:Node):
         fnCallId=RE["fnCallId"]
         tnPnt_delta=100
         for i in range(1,tnPnt_delta+1):
-            c=self.getChild_len_i(fnCallId,i)
+            c,cypherTxt=self.getChild_len_i(fnCallId,i)
             if c is not None: 
+                self._found_child_save_cypherTxt(fnCallId,i,cypherTxt)
                 return c
         return None
+    
+    def _found_child_save_cypherTxt(self,fnCallId,i,cypherTxt)->None:
+        outDir="./cypher_tmpl_reander_out/"
+        Path(outDir).mkdir(parents=True,exist_ok=True)
+        Path(f"{outDir}/query__fE_t__fEL_t_multipleK__t_fL__{fnCallId}__{i}.cypher").write_text(cypherTxt)
+        # print(cypherTxt)
+        return
 
