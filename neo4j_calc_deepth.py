@@ -9,6 +9,7 @@ import pandas
 import typing
 import numpy
 from pathlib import Path
+from cypher_tmpl_render import cypherTmplRender
 
 from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
 from file_tool import readTxt
@@ -21,41 +22,8 @@ deepth_0_set=readTxt("cypher_src/deepth_0_set.cypher")
 cypher__update_deepth__kp1_by_k=readTxt("cypher_src/update_deepth__kp1_by_k.cypher") 
 cypher__cnt_deepth_null=readTxt("cypher_src/cnt_deepth_null.cypher") 
 
-def newXJ(_ln:str,J:int):
-    
-    ln=_ln
-
-    tJ=f"t{J}"
-    ln=ln.replace("tJ",tJ)
-
-    BJ=f"B{J}"
-    ln=ln.replace("BJ",BJ)
-
-    fJ=f"f{J}"
-    ln=ln.replace("fJ",fJ)
-    
-    LJ=f"L{J}"
-    ln=ln.replace("LJ",LJ)
-
-    return ln
-
-def replaceLn(ln:str,repeatCnt:int)->str:
-    if ln .endswith("//点k路径（模板）\n") or ln.endswith("//点k条件（模板）\n"):
-        _=[newXJ(ln,J) for J in range(0,repeatCnt)]
-        newLn="".join(_)
-        return newLn
-    else:
-        return ln
-        
 def cypher__update_deepth__Bnull_repeatK_Lnull(repeatCnt:int):
-    with open("cypher_src/update_deepth__Bnull_repeatK_Lnull__tmpl.cypher") as fr:
-        lines=fr.readlines()
-        newLines=[replaceLn(ln,repeatCnt) for ln in lines]
-        _new_cypher_txt:str="".join(newLines)
-        # print(f"_new_cypher_txt=【{_new_cypher_txt}】")
-        return _new_cypher_txt
-
-    raise Exception(f"不应该走到这里,repeatCnt={repeatCnt}")
+    return cypherTmplRender("cypher_src/update_deepth__Bnull_repeatK_Lnull__tmpl.cypher",repeatCnt,"//点k路径（模板）\n","//点k条件（模板）\n")
 
 def update__init_deepth_as_null(sess:Session)->bool:
     for i in range(0,10):
