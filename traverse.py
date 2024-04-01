@@ -8,14 +8,15 @@ from abc import abstractmethod,ABC
 from neo4j import Session
 from neo4j_tool_traverse import NTT
 
+from neo4j.graph import Node
 
 class TraverseAbs(ABC):
     def __init__(self,sess:Session) -> None:
         super().__init__()
         self.N:NTT= NTT(sess)
 
-    def V(tz,RE):
-        RL=tz.N.getL(RE)
+    def V(tz,RE:Node):
+        RL:Node=tz.N.getL(RE)
         if tz.N.isLeaf(RE):
             return tz.bz(RE,RL,True,None,None)
         C=tz.N.getChild(RE,RL)
@@ -62,7 +63,7 @@ if __name__=="__main__":
 
     try:
         with driver.session(database=NEO4J_DB) as sess:
-            RE=NTT(sess).getE_byFnCallId(1)
+            RE:Node=NTT(sess).getE_byFnCallId(1)
             BzDeepth(sess).V(RE)
             # BzWriteDeepth().V(RE)
             # BzWriteWidth().V(RE)

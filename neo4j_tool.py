@@ -1,7 +1,7 @@
 # from neo4j import GraphDatabase, RoutingControl
 # from neo4j import Driver
 # from neo4j import Record
-# from neo4j.graph import Node
+from neo4j.graph import Node
 from neo4j import Result,Session
 import pandas
 import typing
@@ -22,12 +22,12 @@ def neo4j_query(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typi
     print(f"neo4j_query 【{title}】, {nowDateTimeTxt()}, 查询结果尺寸:{reslt_df.size} ", flush=True)
     return reslt_df
 
-def neo4j_query_1field1row(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typing.Any],filedName:str )->pandas.DataFrame:
+def neo4j_query_1field1row(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typing.Any],filedName:str )->Node:
     reslt:Result=sess.run(query=cypherTxt, parameters=params)
     reslt_df:pandas.DataFrame=reslt.to_df()
     rowLs=reslt_df[filedName].to_list()  #[0]
     if len(rowLs)>0 : 
         assert len(rowLs) == 1, f"neo4j_query_1field1row 必须只能有1条记录,实际行数={len(rowLs)}"
-    val=rowLs[0]
+    val:Node=rowLs[0]
     print(f"neo4j_query_1field1row 【{title}】, {nowDateTimeTxt()}, 查询结果:{val} ", flush=True)
     return val

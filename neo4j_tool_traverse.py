@@ -25,15 +25,16 @@ class NTT:
     def __init__(self,sess:Session) -> None:
         self.sess:Session= sess
 
-    def getE_byFnCallId(self,fnCallId):
+    def getE_byFnCallId(self,fnCallId:int)->Node:
         return neo4j_query_1field1row(self.sess,"getE",cypher__getE,params={"fnCallId":fnCallId},filedName="logV")
 
-    def getL(self,RE):
+    def getL(self,RE:Node)->Node:
         fnCallId=RE["fnCallId"]
         return neo4j_query_1field1row(self.sess,"getL",cypher__getL,params={"fnCallId":fnCallId},filedName="logV")
 
-    def isLeaf(self,fnCallId):
-        匹配起点个数= neo4j_query_1field1row(self.sess,"isLeaf",cypher__getL,params={"fnCallId":fnCallId},filedName="匹配起点个数")
+    def isLeaf(self,RE)->bool:
+        fnCallId=RE["fnCallId"]
+        匹配起点个数= neo4j_query_1field1row(self.sess,"isLeaf",cypher__isLeaf,params={"fnCallId":fnCallId},filedName="匹配起点个数")
         if 匹配起点个数>0:
             assert 匹配起点个数 ==1
         return 匹配起点个数 == 0
