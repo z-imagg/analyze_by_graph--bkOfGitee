@@ -48,5 +48,7 @@ class NTT:
         tnPnt_delta=100
         for i in range(1,tnPnt_delta+1):
             c=self.getChild_len_i(fnCallId,i)
-            if c is not None: return c
+            if c is not None: 
+                return c
+        return None
 
