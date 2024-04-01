@@ -7,4 +7,4 @@ MATCH (fromLog:V_FnCallLog {fnCallId:$fnCallId, direct:FnEnter})-[:E_FnEL]->(toL
 //   2. 从 起点fromLog 到 终点toLog 只有一个 时刻点tmPnt
 WHERE   (fromLog)-[:E_NxtTmPnt]->(toLog)
 
-return count(fromLog) as 匹配节点个数, count(fromLog) =1 as 是叶子
+return count(fromLog) as 匹配起点个数  //, count(fromLog) =1 as 是叶子

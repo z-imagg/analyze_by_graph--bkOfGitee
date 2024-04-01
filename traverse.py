@@ -16,7 +16,7 @@ class TraverseAbs(ABC):
 
     def V(tz,RE):
         RL=tz.N.getL(RE)
-        if tz.N.isLeaf(RE,RL):
+        if tz.N.isLeaf(RE):
             return tz.bz(RE,RL,True,None,None)
         C=tz.N.getChild(RE,RL)
         S=[tz.V(CkE) for CkE,CkL in C]
