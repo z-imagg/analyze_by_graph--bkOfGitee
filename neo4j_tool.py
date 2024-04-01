@@ -19,5 +19,15 @@ def neo4j_update(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typ
 def neo4j_query(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typing.Any] )->pandas.DataFrame:
     reslt:Result=sess.run(query=cypherTxt, parameters=params)
     reslt_df:pandas.DataFrame=reslt.to_df()
-    print(f"{title}, {nowDateTimeTxt()}, 查询结果尺寸:{reslt_df.size} ", flush=True)
+    print(f"neo4j_query 【{title}】, {nowDateTimeTxt()}, 查询结果尺寸:{reslt_df.size} ", flush=True)
     return reslt_df
+
+def neo4j_query_1field1row(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typing.Any],filedName:str )->pandas.DataFrame:
+    reslt:Result=sess.run(query=cypherTxt, parameters=params)
+    reslt_df:pandas.DataFrame=reslt.to_df()
+    rowLs=reslt_df[filedName].to_list()  #[0]
+    if len(rowLs)>0 : 
+        assert len(rowLs) == 1, f"neo4j_query_1field1row 必须只能有1条记录,实际行数={len(rowLs)}"
+    val=rowLs[0]
+    print(f"neo4j_query_1field1row 【{title}】, {nowDateTimeTxt()}, 查询结果:{val} ", flush=True)
+    return val

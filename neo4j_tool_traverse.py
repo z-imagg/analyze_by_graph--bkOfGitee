@@ -19,14 +19,14 @@ cypher__getChild=readTxt("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cy
 
 
 from cypher_tmpl_render import cypherTmplRender
-from neo4j_tool import neo4j_update, neo4j_query
+from neo4j_tool import neo4j_update, neo4j_query,neo4j_query_1field1row
 
 class NTT:
     def __init__(self,sess:Session) -> None:
         self.sess:Session= sess
 
     def getE(self,fnCallId):
-        return neo4j_query(self.sess,"getE",cypher__getE,params={"fnCallId":fnCallId})
+        return neo4j_query_1field1row(self.sess,"getE",cypher__getE,params={"fnCallId":fnCallId},filedName="logV")
 
     def getL(self,fnCallId):
         return neo4j_query(self.sess,"getL",cypher__getL,params={"fnCallId":fnCallId})
