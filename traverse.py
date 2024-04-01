@@ -27,6 +27,9 @@ class TraverseAbs(ABC):
         raise Exception("你的抽象方法书写的不对，因为py应该自己确保不能调用此抽象方法，而不是靠我这个异常来确保")
 
 class BzDeepth(TraverseAbs):
+    def __init__(self, sess: Session) -> None:
+        super().__init__(sess)
+
     def bz(self,RE,RL,isLeaf:bool,deepth_ls:typing.List[int],_)->int:
         if isLeaf: return 0
         else:
@@ -47,9 +50,30 @@ class BzWrite成份(TraverseAbs):
 
 
 if __name__=="__main__":
-    BzDeepth().V(None)
-    # BzWriteDeepth().V(None)
-    # BzWriteWidth().V(None)
-    # BzWrite成份().V(None)
+    from neo4j import Driver,GraphDatabase
+    from neo4j_tool_traverse import NTT
+
+    NEO4J_DB="neo4j"
+    URI = "neo4j://localhost:7687"
+    AUTH = ("neo4j", "123456")
+
+    driver:Driver=GraphDatabase.driver(URI, auth=AUTH)
+    assert isinstance(driver, Driver) == True
+
+    try:
+        with driver.session(database=NEO4J_DB) as sess:
+            RE=NTT(sess).getE(1)
+            BzDeepth(sess).V(RE)
+            # BzWriteDeepth().V(RE)
+            # BzWriteWidth().V(RE)
+            # BzWrite成份().V(RE)
+    except (Exception,) as  err:
+        import traceback
+        traceback.print_exception(err)
+    finally:
+        #关闭neo4j的连接
+        driver.close() 
+
+
     
 

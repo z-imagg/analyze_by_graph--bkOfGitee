@@ -11,8 +11,7 @@ from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
 from file_tool import readTxt
 
 
-NEO4J_DB="neo4j"
-
+cypher__getE=readTxt("cypher_src/getE.cypher") 
 cypher__getL=readTxt("cypher_src/getL.cypher") 
 cypher__isLeaf=readTxt("cypher_src/isLeaf.cypher") 
 cypher__getChild=readTxt("cypher_src/getChild.cypher") 
@@ -23,6 +22,9 @@ from neo4j_tool import neo4j_update, neo4j_query
 class NTT:
     def __init__(self,sess:Session) -> None:
         self.sess:Session= sess
+
+    def getE(self,fnCallId):
+        return neo4j_query(self.sess,"getE",cypher__getE,fnCallId=fnCallId)
 
     def getL(self,fnCallId):
         return neo4j_query(self.sess,"getL",cypher__getL,fnCallId=fnCallId)
