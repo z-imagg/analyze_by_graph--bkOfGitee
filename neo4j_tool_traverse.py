@@ -14,7 +14,7 @@ from file_tool import readTxt
 cypher__getE=readTxt("cypher_src/getE.cypher") 
 cypher__getL=readTxt("cypher_src/getL.cypher") 
 cypher__isLeaf=readTxt("cypher_src/isLeaf.cypher") 
-cypher__getChild=readTxt("cypher_src/getChild.cypher") 
+cypher__getChild=readTxt("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher") 
 
 
 from neo4j_tool import neo4j_update, neo4j_query
