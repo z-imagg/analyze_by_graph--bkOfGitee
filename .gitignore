@@ -23,3 +23,5 @@ fnCallId__fnSym_address.parquet/
 *.log.*
 
 *.log
+
+__pycache__/
