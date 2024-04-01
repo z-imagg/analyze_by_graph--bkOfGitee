@@ -40,7 +40,7 @@ class NTT:
         return 匹配起点个数 == 1
 
     def getChild_len_i(self,fnCallId,len_i:int):
-        cypherTxt=cypherTmplRender("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher",len_i, "//直接调用平链元素(模板)(match)\n", "//开发调试用，生产不要使用\n")
+        cypherTxt=cypherTmplRender("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher",len_i, "//直接调用平链元素(模板)(match)\n", "//直接调用平链元素(模板)(where)\n")
         return neo4j_query(self.sess,f"getChild_len_i_{len_i}",cypherTxt,params={"fnCallId":fnCallId})
 
     def getChild(self,RE:Node):

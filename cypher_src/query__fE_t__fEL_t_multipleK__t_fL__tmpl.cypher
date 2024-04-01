@@ -9,7 +9,7 @@ MATCH path=
   (BJ:V_FnCallLog where BJ.direct=FnEnter   ) - [fJ:E_FnEL] -> (LJ:V_FnCallLog where LJ.direct=FnLeave  ) - [tJ:E_NxtTmPnt] -> //直接调用平链元素(模板)(match)
 
 (L:V_FnCallLog {fnCallId:$fnCallId,  direct: FnLeave} )
-WHERE  
+WHERE  true
 // B.fnCallId = L.fnCallId and B.fnCallId=166153 //开发调试用，生产不要使用
 
 and  BJ.fnCallId = LJ.fnCallId //直接调用平链元素(模板)(where)
