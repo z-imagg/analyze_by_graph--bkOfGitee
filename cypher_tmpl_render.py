@@ -22,8 +22,8 @@ def newXJ(_ln:str,J:int):
     return ln
 
 def replaceLn(ln:str,repeatCnt:int,tmplLnEndFlag1:str,tmplLnEndFlag2:str)->str:
-    if ln .endswith(tmplLnEndFlag1) or ln.endswith(tmplLnEndFlag2): #"//点k路径（模板）\n"  "//点k条件（模板）\n"
-        _=[newXJ(ln,J) for J in range(0,repeatCnt)]
+    if ln .endswith(f"{tmplLnEndFlag1}\n") or ln.endswith(f"{tmplLnEndFlag2}\n"): #"//点k路径（模板）\n"  "//点k条件（模板）\n"
+        _=[newXJ(ln,J).replace(tmplLnEndFlag1,"//渲染A").replace(tmplLnEndFlag2,"//渲染B") for J in range(0,repeatCnt)]
         newLn="".join(_)
         return newLn
     else:

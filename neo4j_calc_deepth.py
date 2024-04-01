@@ -23,7 +23,7 @@ cypher__update_deepth__kp1_by_k=readTxt("cypher_src/update_deepth__kp1_by_k.cyph
 cypher__cnt_deepth_null=readTxt("cypher_src/cnt_deepth_null.cypher") 
 
 def cypher__update_deepth__Bnull_repeatK_Lnull(repeatCnt:int):
-    return cypherTmplRender("cypher_src/update_deepth__Bnull_repeatK_Lnull__tmpl.cypher",repeatCnt,"//点k路径（模板）\n","//点k条件（模板）\n")
+    return cypherTmplRender("cypher_src/update_deepth__Bnull_repeatK_Lnull__tmpl.cypher",repeatCnt,"//点k路径（模板）","//点k条件（模板）")
 
 def update__init_deepth_as_null(sess:Session)->bool:
     for i in range(0,10):
