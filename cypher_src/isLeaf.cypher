@@ -1,9 +1,10 @@
 with 
+$fnCallId as param_fnCallId,
 1 AS FnEnter,
 2 as FnLeave
 // 叶子定义 ：
 //   1. 作为一次函数调用 的 起点fromLog 和 终点toLog
-MATCH (fromLog:V_FnCallLog {fnCallId:$fnCallId, direct:FnEnter})-[:E_FnEL]->(toLog:V_FnCallLog {fnCallId:$fnCallId, direct:FnLeave})
+MATCH (fromLog:V_FnCallLog {fnCallId:param_fnCallId, direct:FnEnter})-[:E_FnEL]->(toLog:V_FnCallLog {fnCallId:param_fnCallId, direct:FnLeave})
 //   2. 从 起点fromLog 到 终点toLog 只有一个 时刻点tmPnt
 WHERE   (fromLog)-[:E_NxtTmPnt]->(toLog)
 
