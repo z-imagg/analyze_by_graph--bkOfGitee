@@ -20,7 +20,7 @@ class TraverseAbs(ABC):
         if tz.N.isLeaf(RE):
             return tz.bz(RE,RL,True,None,None)
         C=tz.N.getChild(RE)
-        S=[tz.V(CkE) for CkE,CkL in C]
+        S=[tz.V(CkE) for CkE in C]
         return tz.bz(RE,RL,False,S,C)
 
     @abstractmethod

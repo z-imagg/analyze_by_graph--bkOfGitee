@@ -41,18 +41,33 @@ class NTT:
 
     def getChild_len_i(self,fnCallId,len_i:int):
         cypherTxt=cypherTmplRender("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher",len_i, "//直接调用平链元素(模板)(match)", "//直接调用平链元素(模板)(where)","//直接调用平链元素(模板)(return)")
-        return neo4j_query(self.sess, f"getChild_len_i_{len_i}", cypherTxt, params={"fnCallId":fnCallId}) , cypherTxt
+        # print(cypherTxt)
+        df:pandas.DataFrame=neo4j_query(self.sess, f"getChild_len_i_{len_i}", cypherTxt, params={"fnCallId":fnCallId})
+        records=df.to_dict(orient="records")
+        rowCnt=len(records) #rowCnt==行数
+        if rowCnt == 0:
+            return None,cypherTxt
+        if rowCnt>0:
+            assert rowCnt == 1, "给定fnCallId, 直接方法链条 只能有一个 （即df的行数==1）"
+        row0=records[0]#row0==首行
+        columnCnt=len(row0)#columnCnt==列数
+        B_cnt=columnCnt-1
+        B_ls=[row0[f"B{i}"] for i in range(B_cnt)]
+            
+        return  B_ls, cypherTxt
 
     def getChild(self,RE:Node):
-        c:Path; cypherTxt:str
+        child:typing.List[Node]; cypherTxt:str
         fnCallId=RE["fnCallId"]
-        tnPnt_delta=100
+        tnPnt_delta=100 #时刻点个数100 是拍脑袋写的 
         for len_i in range(1,tnPnt_delta+1):
-            c,cypherTxt=self.getChild_len_i(fnCallId,len_i)
-            if c is not None: 
+            child,cypherTxt=self.getChild_len_i(fnCallId,len_i)
+            if child is not None: 
                 self._found_child_save_cypherTxt(fnCallId,len_i,cypherTxt)
-                return c
-        return None
+                return child
+        
+        raise Exception(f"仍然未找到 直接方法链条， 已到达时刻点个数上限{tnPnt_delta}, fnCallId={fnCallId}")
+        # return None
     
     def _found_child_save_cypherTxt(self,fnCallId,len_i,cypherTxt)->None:
         outDir="./cypher_tmpl_reander_out/"
