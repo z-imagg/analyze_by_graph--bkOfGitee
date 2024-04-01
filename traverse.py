@@ -5,25 +5,22 @@
 import typing
 T = typing.TypeVar('T')
 from abc import abstractmethod,ABC
-class GT:
-    @staticmethod
-    def getL(RE):
-        pass
-    @staticmethod
-    def isLeaf(RE,RL)->bool:
-        pass
-    @staticmethod
-    def getChild(RE,RL):
-        pass
+from neo4j import Session
+from neo4j_tool_traverse import NTT
+
 
 class TraverseAbs(ABC):
-    def V(self,RE):
-        RL=GT.getL(RE)
-        if GT.isLeaf(RE,RL):
-            return self.bz(RE,RL,True,None,None)
-        C=GT.getChild(RE,RL)
-        S=[self.V(CkE) for CkE,CkL in C]
-        return self.bz(RE,RL,False,S,C)
+    def __init__(self,sess:Session) -> None:
+        super().__init__()
+        self.N:NTT= NTT(sess)
+
+    def V(tz,RE):
+        RL=tz.N.getL(RE)
+        if tz.N.isLeaf(RE,RL):
+            return tz.bz(RE,RL,True,None,None)
+        C=tz.N.getChild(RE,RL)
+        S=[tz.V(CkE) for CkE,CkL in C]
+        return tz.bz(RE,RL,False,S,C)
 
     @abstractmethod
     def bz(self,RE,RL,isLeaf:bool,S,C)->T:
