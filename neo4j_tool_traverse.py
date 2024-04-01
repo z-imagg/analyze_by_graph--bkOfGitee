@@ -32,7 +32,7 @@ class NTT:
         fnCallId=RE["fnCallId"]
         return neo4j_query_1field1row(self.sess,"getL",cypher__getL,params={"fnCallId":fnCallId},filedName="logV")
 
-    def isLeaf(self,RE)->bool:
+    def isLeaf(self,RE:Node)->bool:
         fnCallId=RE["fnCallId"]
         匹配起点个数= neo4j_query_1field1row(self.sess,"isLeaf",cypher__isLeaf,params={"fnCallId":fnCallId},filedName="匹配起点个数")
         if 匹配起点个数>0:
@@ -43,7 +43,8 @@ class NTT:
         cypherTxt=cypherTmplRender("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher",len_i, "//直接调用平链元素(模板)(match)\n", "//开发调试用，生产不要使用\n")
         return neo4j_query(self.sess,f"getChild_len_i_{len_i}",cypherTxt,params={"fnCallId":fnCallId})
 
-    def getChild(self,fnCallId):
+    def getChild(self,RE:Node):
+        fnCallId=RE["fnCallId"]
         tnPnt_delta=100
         for i in range(1,tnPnt_delta+1):
             c=self.getChild_len_i(fnCallId,i)
