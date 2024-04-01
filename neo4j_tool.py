@@ -26,8 +26,12 @@ def neo4j_query_1field1row(sess:Session,title:str,cypherTxt:str,params:typing.Di
     reslt:Result=sess.run(query=cypherTxt, parameters=params)
     reslt_df:pandas.DataFrame=reslt.to_df()
     rowLs=reslt_df[filedName].to_list()  #[0]
-    if len(rowLs)>0 : 
-        assert len(rowLs) == 1, f"neo4j_query_1field1row 必须只能有1条记录,实际行数={len(rowLs)}"
+    assert rowLs is not Node, "据说pandas.DataFrame.to_list一定不会返回None? 即使无也返回空列表?"
+    rowCnt=len(rowLs)
+    if rowCnt==0:
+        return None
+    if rowCnt>0 : 
+        assert rowCnt == 1, f"neo4j_query_1field1row 必须只能有1条记录,实际行数={rowCnt}"
     val:Node=rowLs[0]
     print(f"neo4j_query_1field1row 【{title}】, {nowDateTimeTxt()}, 查询结果:{val} ", flush=True)
     return val
