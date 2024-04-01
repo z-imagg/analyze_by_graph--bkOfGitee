@@ -14,4 +14,7 @@ WHERE  true
 
 and  BJ.fnCallId = LJ.fnCallId //直接调用平链元素(模板)(where)
 
-return  path as 路径
+return  
+path as 路径
+,BJ //直接调用平链元素(模板)(return)
+//结尾的换行是必须的,否则模板处理结果不对（实际情况是 若结尾无换行 则模板处理比较麻烦）
