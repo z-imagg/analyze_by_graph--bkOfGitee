@@ -26,17 +26,17 @@ class NTT:
         self.sess:Session= sess
 
     def getE(self,fnCallId):
-        return neo4j_query(self.sess,"getE",cypher__getE,fnCallId=fnCallId)
+        return neo4j_query(self.sess,"getE",cypher__getE,params={"fnCallId":fnCallId})
 
     def getL(self,fnCallId):
-        return neo4j_query(self.sess,"getL",cypher__getL,fnCallId=fnCallId)
+        return neo4j_query(self.sess,"getL",cypher__getL,params={"fnCallId":fnCallId})
 
     def isLeaf(self,fnCallId):
-        return neo4j_query(self.sess,"isLeaf",cypher__getL,fnCallId=fnCallId)
+        return neo4j_query(self.sess,"isLeaf",cypher__getL,params={"fnCallId":fnCallId})
 
     def getChild_len_i(self,fnCallId,len_i:int):
         cypherTxt=cypherTmplRender("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher",len_i, "//直接调用平链元素(模板)(match)\n", "//开发调试用，生产不要使用\n")
-        return neo4j_query(self.sess,f"getChild_len_i_{len_i}",cypherTxt,fnCallId=fnCallId)
+        return neo4j_query(self.sess,f"getChild_len_i_{len_i}",cypherTxt,params={"fnCallId":fnCallId})
 
     def getChild(self,fnCallId):
         tnPnt_delta=100
