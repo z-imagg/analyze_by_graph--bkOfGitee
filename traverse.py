@@ -24,7 +24,7 @@ class TraverseAbs(ABC):
         if tz.N.isLeaf(RE):
             print(f"是叶子")
             return tz.bz(RE,RL,True,None,None)
-        C=tz.N.getChild__by__query_tinySeg(RE)
+        C=tz.N.getChild__by__query_BJ_fJ_LJ_tJ_(RE)
         print(f"孩子个数{len(C)}")
         S=[tz.V(CkE) for CkE in C]
         return tz.bz(RE,RL,False,S,C)
