@@ -59,28 +59,5 @@ class NTT:
 
         raise Exception("不应该到这里")
     
-    def getChild_len_i(self,fnCallId,len_i:int):
-        cypherTxt=cypherTmplRender("cypher_src/query__tinySeg.cypher",len_i, "//直接调用平链元素(模板)(match)", "//直接调用平链元素(模板)(where)","//直接调用平链元素(模板)(return)")
-        # print(cypherTxt)
-        df:pandas.DataFrame=neo4j_query_1row(self.sess, f"getChild_len_i_{len_i}", cypherTxt, params={"fnCallId":fnCallId})
-        records=df.to_dict(orient="records")
-        rowCnt=len(records) #rowCnt==行数
-        if rowCnt == 0:
-            return None,cypherTxt
-        if rowCnt>0:
-            assert rowCnt == 1, "给定fnCallId, 直接方法链条 只能有一个 （即df的行数==1）"
-        row0=records[0]#row0==首行
-        columnCnt=len(row0)#columnCnt==列数
-        B_cnt=columnCnt-1
-        B_ls=[row0[f"B{i}"] for i in range(B_cnt)]
-            
-        return  B_ls, cypherTxt
-
     
-    def _found_child_save_cypherTxt(self,fnCallId,len_i,cypherTxt)->None:
-        outDir="./cypher_tmpl_reander_out/"
-        Path(outDir).mkdir(parents=True,exist_ok=True)
-        Path(f"{outDir}/query__fE_t__fEL_t_multipleK__t_fL__fnCallId_{fnCallId}__len_{len_i}.cypher").write_text(cypherTxt)
-        # print(cypherTxt)
-        return
 
