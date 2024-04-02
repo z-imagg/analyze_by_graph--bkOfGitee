@@ -22,8 +22,13 @@ class TraverseAbs(ABC):
     def __init__(self,sess:Session) -> None:
         super().__init__()
         self.N:NTT= NTT(sess)
+        
+        #记录遍历次数 （即调用遍历方法V的次数）, 主要用于观看遍历进度
+        self.Vi:int=0
 
     def V(tz,RE:Node):
+        tz.Vi+=1
+
         fnCallId=RE['fnCallId']
         print(f"开始遍历 fnCallId={fnCallId}；",end=" ")
         RL:Node=tz.N.getL(RE)
@@ -69,7 +74,7 @@ class BzWriteDeepth(TraverseAbs):
         
         d=0 if isLeaf  else 1+max(deepth_ls)
         neo4j_update(sess,"update_setFieldDeepth",BzWriteDeepth.cypher__update_setFieldDeepth,params={"prm_fnCallId":fnCallId,"prm_deepth":d},filedName="更新记录数")
-        print(f"fnCallId={fnCallId}写字段deepth={d}")
+        print(f"fnCallId={fnCallId}写字段deepth={d}; 第{self.Vi}次遍历")
         
         return d
 
