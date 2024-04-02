@@ -18,6 +18,7 @@ class BzDeepth(TraverseAbs):
     def __init__(self, sess: Session) -> None:
         super().__init__(sess)
 
+# 【业务函数】 计算深度
     def bz(self,RE,RL,isLeaf:bool,deepth_ls:typing.List[int],_)->int:
         E_fnCallId=RE['fnCallId']
         L_fnCallId=RL['fnCallId']
@@ -34,6 +35,7 @@ class BzWriteDeepth(TraverseAbs):
     def __init__(self, sess: Session) -> None:
         super().__init__(sess)
 
+# 【业务函数】 计算深度 并 写deepth字段为深度值
     def bz(self,RE,RL,isLeaf:bool,deepth_ls,_)->int:
 
 
@@ -76,9 +78,11 @@ if __name__=="__main__":
             #初始化: 全体置空deepth字段
             update__init_deepth_as_null(sess)
             
-            #遍历
+            # 起点RE
             RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
+            # 遍历过程中 计算深度
             # BzDeepth(sess).V(RE)
+            # 遍历过程中 计算深度 并 写deepth字段为深度值
             BzWriteDeepth(sess).V(RE)
             # BzWriteWidth().V(RE)
             # BzWrite成份().V(RE)
