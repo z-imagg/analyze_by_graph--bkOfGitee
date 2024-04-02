@@ -19,7 +19,7 @@ class TraverseAbs(ABC):
 
     def V(tz,RE:Node):
         fnCallId=RE['fnCallId']
-        print(f"开始遍历 fnCallId={fnCallId},",end=" ")
+        print(f"开始遍历 fnCallId={fnCallId}；",end=" ")
         RL:Node=tz.N.getL(RE)
         if tz.N.isLeaf(RE):
             print(f"是叶子")
