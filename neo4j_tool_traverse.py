@@ -42,15 +42,19 @@ class NTT:
 
 
     _LIMIT_SON_CNT:int = 10_0000  #拍脑袋写的，意思是 任何一个函数内容（循环展开后）不应该含有10_0000次函数调用
+    #【测试用例】fnCallId,  13 有直接孩子链 [14, 162005, 162007, 162026, 162033, 175635, 175640, 205785, 205790, 225167, 227838]
     def getChild__by__query_tinySeg(self,RE:Node)->bool:
         fnCallId=RE["fnCallId"]
         B2= neo4j_query_1field1row(self.sess,"query_入T入",cypher__query_入T入,params={"fnCallId":fnCallId},filedName="B2" )
-        ls=[B2] ; fnCallId_k=B2["fnCallId"]
+        ls=[] ; fnCallId_k=B2["fnCallId"]
         for _ in range(0,NTT._LIMIT_SON_CNT):
             B,t= neo4j_query_1row(self.sess,"query_tinySeg",cypher__query_tinySeg,params={"fnCallId":fnCallId_k},filedNameLs=["BJ","tJ"] )
             assert B is not None
             fnCallId_k=t["to_fnCallId"]
-            if fnCallId_k == fnCallId: return ls
+            if fnCallId_k == fnCallId: 
+                son_chain=[k["fnCallId"] for k in ls] #变量son_chain 只为测试用，无业务作用
+                print(f"【测试用例】 fnCallId={fnCallId} 有直接孩子链 son_chain={son_chain}")
+                return ls
             ls.append(B)
 
         raise Exception("不应该到这里")
