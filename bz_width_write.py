@@ -36,7 +36,7 @@ class BzWriteWidth(TraverseAbs):
         #叶子的width为0,非叶子的width为直接孩子个数
         width=0 if isLeaf  else len(sonLs)
         #写width字段
-        neo4j_update(self.sess,"update_setFieldWidth",BzWriteWidth.cypher__update_setFieldWidth,params={"prm_fnCallId":fnCallId,"prm_width":width},filedName="更新记录数")
+        neo4j_update(self.N.sess,"update_setFieldWidth",BzWriteWidth.cypher__update_setFieldWidth,params={"prm_fnCallId":fnCallId,"prm_width":width},filedName="更新记录数")
         print(f"BzWriteWidth.bz, {nowDateTimeTxt()}, fnCallId={fnCallId}写字段width={width}; 第{self.Vi}次遍历")
 
         #注意此返回是必须的, 否则 遍历器traverse.py.TraverseAbs.V中的'S=[...bz()...]'将得不到返回值

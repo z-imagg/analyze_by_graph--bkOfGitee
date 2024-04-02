@@ -38,7 +38,7 @@ class BzWriteDeepth(TraverseAbs):
         
         #叶子的deepth为0,非叶子的deepth为 1+直接孩子们的deepth的最大值
         d=0 if isLeaf  else 1+max(deepth_ls)
-        neo4j_update(sess,"update_setFieldDeepth",BzWriteDeepth.cypher__update_setFieldDeepth,params={"prm_fnCallId":fnCallId,"prm_deepth":d},filedName="更新记录数")
+        neo4j_update(self.N.sess,"update_setFieldDeepth",BzWriteDeepth.cypher__update_setFieldDeepth,params={"prm_fnCallId":fnCallId,"prm_deepth":d},filedName="更新记录数")
         print(f"BzWriteDeepth.bz, {nowDateTimeTxt()}, fnCallId={fnCallId}写字段deepth={d}; 第{self.Vi}次遍历")
         
         #注意此返回是必须的, 否则 遍历器traverse.py.TraverseAbs.V中的'S=[...bz()...]'将得不到返回值
