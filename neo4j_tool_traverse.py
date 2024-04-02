@@ -43,10 +43,11 @@ class NTT:
 
     _LIMIT_SON_CNT:int = 10_0000  #拍脑袋写的，意思是 任何一个函数内容（循环展开后）不应该含有10_0000次函数调用
     #【测试用例】fnCallId,  13 有直接孩子链 [14, 162005, 162007, 162026, 162033, 175635, 175640, 205785, 205790, 225167, 227838]
-    def getChild__by__query_BJ_fJ_LJ_tJ_(self,RE:Node)->bool:
-        fnCallId=RE["fnCallId"]
-        B2= neo4j_query_1field1row(self.sess,"query__起_t入_B0",cypher__query__起_t入_B0,params={"fnCallId":fnCallId},filedName="B2" )
-        ls=[] ; fnCallId_k=B2["fnCallId"]
+    def getChild__by__query_BJ_fJ_LJ_tJ_(self,RE:Node)->typing.List[Node]:
+        B:Node; #t:?
+        fnCallId:int=RE["fnCallId"]
+        B2:Node= neo4j_query_1field1row(self.sess,"query__起_t入_B0",cypher__query__起_t入_B0,params={"fnCallId":fnCallId},filedName="B2" )
+        ls:typing.List[Node]=[] ; fnCallId_k:int=B2["fnCallId"]
         for _ in range(0,NTT._LIMIT_SON_CNT):
             B,t= neo4j_query_1row(self.sess,f"往前拱到第{_}小节query_BJ_fJ_LJ_tJ_",cypher__query_BJ_fJ_LJ_tJ_,params={"fnCallId":fnCallId_k},filedNameLs=["BJ","tJ"] )
             assert B is not None
