@@ -22,6 +22,21 @@ def neo4j_query(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typi
     # print(f"neo4j_query 【{title}】, {nowDateTimeTxt()}, 查询结果尺寸:{reslt_df.size} ", flush=True)
     return reslt_df
 
+def neo4j_query_1row(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typing.Any],filedNameLs:typing.List[str] )->typing.Union[Node,Path]:
+    reslt:Result=sess.run(query=cypherTxt, parameters=params)
+    reslt_df:pandas.DataFrame=reslt.to_df()
+    records=reslt_df.to_dict(orient="records")
+    rowCnt=len(records) #rowCnt==行数
+    if rowCnt == 0:
+        return None,cypherTxt
+    #若有，则只能有1行
+    if rowCnt>0:
+        assert rowCnt == 1, f"rowCnt{rowCnt}!=1"
+
+    row0=records[0]#row0==首行
+    return [row0[fn] for fn in filedNameLs]
+
+
 def neo4j_query_1field1row(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typing.Any],filedName:str )->typing.Union[Node,Path]:
     reslt:Result=sess.run(query=cypherTxt, parameters=params)
     reslt_df:pandas.DataFrame=reslt.to_df()
