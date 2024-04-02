@@ -19,6 +19,27 @@ def lsIsEmpty(ls:typing.List[typing.Any])->bool:
     empty:bool = ls is None or len(ls) == 0
     return empty
 
+def assertSonLsEmptyWhenLeaf(isLeaf:bool,sonLs:typing.List[Node]):
+    #断言叶子的直接孩子们为空，目的是 检验本项目的其他地方逻辑是否有问题
+    if isLeaf:
+        assert lsIsEmpty(sonLs)
+
+def assertRE_fnCallId_eq_RL__return_fnCallId(RE:Node, RL:Node)->int:
+    #断言起点、终点fnCallId相同，目的是 检验本项目的其他地方逻辑是否有问题
+    E_fnCallId=RE['fnCallId']
+    L_fnCallId=RL['fnCallId']
+    assert E_fnCallId == L_fnCallId
+    fnCallId:int=E_fnCallId
+    return fnCallId
+
+def assertRE_fnAdr_eq_RL__return_fnAdr(RE:Node, RL:Node)->str:
+    #断言起点、终点fnAdr相同，目的是 检验本项目的其他地方逻辑是否有问题
+    E_fnAdr=RE['fnAdr']
+    L_fnAdr=RL['fnAdr']
+    assert E_fnAdr == L_fnAdr
+    fnAdr:str=E_fnAdr
+    return fnAdr
+
 class BzDeepth(TraverseAbs):
     def __init__(self, sess: Session) -> None:
         super().__init__(sess)
@@ -27,17 +48,13 @@ class BzDeepth(TraverseAbs):
     def bz(self, RE:Node, RL:Node, isLeaf:bool, S:typing.List[int], _)->int:
 
         #断言叶子的直接孩子们为空，目的是 检验本项目的其他地方逻辑是否有问题
-        sonLs:typing.List[Node] = _
-        if isLeaf:
-            assert lsIsEmpty(sonLs) 
+        assertSonLsEmptyWhenLeaf(isLeaf,_)
 
         #deepth数值列表即为S
         deepth_ls:typing.List[int]= S
-
+        
         #断言起点、终点fnCallId相同，目的是 检验本项目的其他地方逻辑是否有问题
-        E_fnCallId=RE['fnCallId']
-        L_fnCallId=RL['fnCallId']
-        assert E_fnCallId == L_fnCallId
+        fnCallId=assertRE_fnCallId_eq_RL__return_fnCallId(RE,RL)
 
         #叶子的deepth为0,非叶子的deepth为 1+直接孩子们的deepth的最大值
         d=0 if isLeaf  else 1+max(deepth_ls)
@@ -56,18 +73,13 @@ class BzWriteDeepth(TraverseAbs):
     def bz(self, RE:Node, RL:Node, isLeaf:bool, S:typing.List[int], _)->int:
 
         #断言叶子的直接孩子们为空，目的是 检验本项目的其他地方逻辑是否有问题
-        sonLs:typing.List[Node] = _
-        if isLeaf:
-            assert lsIsEmpty(sonLs)
+        assertSonLsEmptyWhenLeaf(isLeaf,_)
     
         #deepth数值列表即为S
         deepth_ls:typing.List[int]= S
 
         #断言起点、终点fnCallId相同，目的是 检验本项目的其他地方逻辑是否有问题
-        E_fnCallId=RE['fnCallId']
-        L_fnCallId=RL['fnCallId']
-        assert E_fnCallId == L_fnCallId
-        fnCallId=E_fnCallId
+        fnCallId=assertRE_fnCallId_eq_RL__return_fnCallId(RE,RL)
         
         #叶子的deepth为0,非叶子的deepth为 1+直接孩子们的deepth的最大值
         d=0 if isLeaf  else 1+max(deepth_ls)
@@ -86,15 +98,10 @@ class BzWriteWidth(TraverseAbs):
     def bz(self, RE:Node, RL:Node, isLeaf:bool, _, C:typing.List[Node])->Node:
 
         #断言叶子的直接孩子们为空，目的是 检验本项目的其他地方逻辑是否有问题
-        sonLs:typing.List[Node] = C
-        if isLeaf:
-            assert lsIsEmpty(sonLs) 
-
+        assertSonLsEmptyWhenLeaf(isLeaf,C)
+        
         #断言起点、终点fnCallId相同，目的是 检验本项目的其他地方逻辑是否有问题
-        E_fnCallId=RE['fnCallId']
-        L_fnCallId=RL['fnCallId']
-        assert E_fnCallId == L_fnCallId
-        fnCallId=E_fnCallId
+        fnCallId=assertRE_fnCallId_eq_RL__return_fnCallId(RE,RL)
 
         #叶子的width为0,非叶子的width为直接孩子个数
         width=0 if isLeaf  else len(sonLs)
@@ -136,12 +143,8 @@ class BzWrite成份(TraverseAbs):
 
     def bz(self, RE:Node, RL:Node, isLeaf:bool, S:typing.List[成份], _) -> 成份:
 
-
-        E_fnAdr=RE['fnAdr']
-        L_fnAdr=RL['fnAdr']
-        assert E_fnAdr == L_fnAdr
-
-        fnAdr=E_fnAdr
+        #断言起点、终点fnAdr相同，目的是 检验本项目的其他地方逻辑是否有问题
+        fnAdr=assertRE_fnAdr_eq_RL__return_fnAdr(RE,RL)
 
         markup=None
         if isLeaf:
