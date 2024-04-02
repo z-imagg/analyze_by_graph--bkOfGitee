@@ -50,11 +50,11 @@ class NTT:
         for _ in range(0,NTT._LIMIT_SON_CNT):
             B,t= neo4j_query_1row(self.sess,f"往前拱到第{_}小节query_BJ_fJ_LJ_tJ_",cypher__query_BJ_fJ_LJ_tJ_,params={"fnCallId":fnCallId_k},filedNameLs=["BJ","tJ"] )
             assert B is not None
-            ls.append(B)
+            ls.append(B) ; print(f"{B['fnCallId']}",end=", ")
             fnCallId_k=t["to_fnCallId"]
             if fnCallId_k == fnCallId: 
                 son_chain=[k["fnCallId"] for k in ls] #变量son_chain 只为测试用，无业务作用
-                print(f"【测试用例】 fnCallId={fnCallId} 有直接孩子链 son_chain={son_chain}")
+                # print(f"【测试用例】 fnCallId={fnCallId} 有直接孩子链 son_chain={son_chain}")
                 return ls
 
         raise Exception("不应该到这里")

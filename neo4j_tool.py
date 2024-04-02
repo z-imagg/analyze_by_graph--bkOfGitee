@@ -35,7 +35,7 @@ def neo4j_query_1row(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str
 
     row0=records[0]#row0==首行
     valLs= [row0[fn] for fn in filedNameLs]
-    print(f"neo4j_query_1row 【{title}】, {nowDateTimeTxt()}, 查询结果尺寸:{len(valLs)} ", flush=True)
+    # print(f"neo4j_query_1row 【{title}】, {nowDateTimeTxt()}, 查询结果尺寸:{len(valLs)} ", flush=True)
     return valLs
 
 def neo4j_query_1field1row(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typing.Any],filedName:str )->typing.Union[Node,Path]:
