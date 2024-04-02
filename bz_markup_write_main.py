@@ -43,8 +43,11 @@ class Markup:
         新.itmLs.extend(dct.items())
         return 新
 
+    def _to_json(self) -> dict:
+        return {'itmLs': [(item.fnAdr, item.cnt) for item in self.itmLs]}
+
     def jsonTxt(self)->str:
-        _jsonTxt:str=json.dumps(self)
+        _jsonTxt: str = json.dumps(self, default=lambda o: o._to_json())
         return _jsonTxt
 
 class BzWriteMarkup(TraverseAbs):
