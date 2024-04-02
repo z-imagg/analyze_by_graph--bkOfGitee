@@ -28,5 +28,6 @@ MATCH path=
 WHERE   BJ.fnCallId = LJ.fnCallId
 
 return  
-path as 路径
-,BJ
+path as 路径,
+BJ,
+tJ
