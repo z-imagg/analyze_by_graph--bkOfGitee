@@ -5,6 +5,7 @@
 #【返回类型说明】 V的返回类型 == bz的返回类型 , S的类型==[bz的返回类型]
 #【备注】 V == traverse.py.TraverseAbs.V,  S == traverse.py.TraverseAbs.S
 
+from collections import defaultdict
 import typing
 from neo4j import Session
 from neo4j.graph import Node
@@ -19,7 +20,7 @@ class BzDeepth(TraverseAbs):
         super().__init__(sess)
 
 # 【业务函数】 计算深度
-    def bz(self,RE,RL,isLeaf:bool,S,_)->int:
+    def bz(self, RE:Node, RL:Node, isLeaf:bool, S:typing.List[int], _)->int:
         #deepth数值列表即为S
         deepth_ls:typing.List[int]= S
 
@@ -39,7 +40,7 @@ class BzWriteDeepth(TraverseAbs):
         super().__init__(sess)
 
 # 【业务函数】 计算深度 并 写deepth字段为深度值
-    def bz(self,RE,RL,isLeaf:bool,S,_)->int:
+    def bz(self, RE:Node, RL:Node, isLeaf:bool, S:typing.List[int], _)->int:
         #deepth数值列表即为S
         deepth_ls:typing.List[int]= S
 
@@ -58,12 +59,57 @@ class BzWriteDeepth(TraverseAbs):
         return d
 
 class BzWriteWidth(TraverseAbs):
-    def bz(self,RE,RL,isLeaf:bool,_,childLs):
+    def __init__(self, sess: Session) -> None:
+        super().__init__(sess)
+
+    def bz(self, RE:Node, RL:Node, isLeaf:bool, _, C:typing.List[Node])->Node:
         pass
 
+class 址数:
+    def __init__(self,fnAdr:str,cnt:int) -> None:
+        self.址:str=fnAdr
+        self.数:int=cnt
+
+class 成份:
+    def __init__(self) -> None:
+        self.内容:typing.List[址数] = []
+    
+    def 填1个(self,fnAdr:str ):
+        self.内容.append(址数(fnAdr,1))
+        return self
+    
+    @staticmethod
+    def merge(*成份们:typing.List['成份'])-> '成份':
+        k:成份
+        dct = defaultdict(int)
+        for k in 成份们:
+            for j in k.内容:
+                dct[j.址] += j.数
+        新=成份()
+        新.内容.extend(dct.items())
+        return 新
+
+    
+
 class BzWrite成份(TraverseAbs):
-    def bz(self,RE,RL,isLeaf:bool,S,_):
-        pass
+    def __init__(self, sess: Session) -> None:
+        super().__init__(sess)
+
+    def bz(self, RE:Node, RL:Node, isLeaf:bool, S:typing.List[成份], _) -> 成份:
+
+
+        E_fnAdr=RE['fnAdr']
+        L_fnAdr=RL['fnAdr']
+        assert E_fnAdr == L_fnAdr
+
+        fnAdr=E_fnAdr
+
+        if isLeaf:
+            #不写成份字段
+            return 成份( ).填1个(fnAdr)
+        else:
+            #写成份字段
+            return 成份( ).merge(*S)
 
 
 
