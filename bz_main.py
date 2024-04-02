@@ -117,7 +117,7 @@ class 址数:
         self.址:str=fnAdr
         self.数:int=cnt
 
-class 成份:
+class Markup:
     def __init__(self) -> None:
         self.内容:typing.List[址数] = []
     
@@ -126,13 +126,13 @@ class 成份:
         return self
     
     @staticmethod
-    def merge(*成份们:typing.List['成份'])-> '成份':
-        k:成份
+    def merge(*markupLs:typing.List['Markup'])-> 'Markup':
+        m:Markup
         dct = defaultdict(int)
-        for k in 成份们:
-            for j in k.内容:
+        for m in markupLs:
+            for j in m.内容:
                 dct[j.址] += j.数
-        新=成份()
+        新=Markup()
         新.内容.extend(dct.items())
         return 新
 
@@ -141,7 +141,7 @@ class BzWrite成份(TraverseAbs):
     def __init__(self, sess: Session) -> None:
         super().__init__(sess)
 
-    def bz(self, RE:Node, RL:Node, isLeaf:bool, S:typing.List[成份], _) -> 成份:
+    def bz(self, RE:Node, RL:Node, isLeaf:bool, S:typing.List[Markup], _) -> Markup:
 
         #断言起点、终点fnAdr相同，目的是 检验本项目的其他地方逻辑是否有问题
         fnAdr=assertRE_fnAdr_eq_RL__return_fnAdr(RE,RL)
@@ -149,10 +149,10 @@ class BzWrite成份(TraverseAbs):
         markup=None
         if isLeaf:
             #不写成份字段
-            markup= 成份( ).填1个(fnAdr)
+            markup= Markup( ).填1个(fnAdr)
         else:
             #写成份字段
-            markup= 成份( ).merge(*S)
+            markup= Markup( ).merge(*S)
         
         #注意此返回是必须的, 否则 遍历器traverse.py.TraverseAbs.V中的'S=[...bz()...]'将得不到返回值
         return markup
