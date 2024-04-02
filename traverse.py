@@ -23,22 +23,22 @@ class TraverseAbs(ABC):
         #记录遍历次数 （即调用遍历方法V的次数）, 主要用于观看遍历进度
         self.Vi:int=0
 
-    def V(tz,RE:Node):
+    def V(tz,RE:Node)->T:
         tz.Vi+=1
 
-        fnCallId=RE['fnCallId']
+        fnCallId:int=RE['fnCallId']
         print(f"开始遍历 fnCallId={fnCallId}；",end=" ")
         RL:Node=tz.N.getL(RE)
         if tz.N.isLeaf(RE):
             print(f"是叶子")
             return tz.bz(RE,RL,True,None,None)
-        C=tz.N.getChild__by__query_BJ_fJ_LJ_tJ_(RE)
+        C:typing.List[Node]=tz.N.getChild__by__query_BJ_fJ_LJ_tJ_(RE)
         print(f"孩子个数{len(C)}")
-        S=[tz.V(CkE) for CkE in C]
+        S:typing.List[T]=[tz.V(CkE) for CkE in C]
         return tz.bz(RE,RL,False,S,C)
 
     @abstractmethod
-    def bz(self,RE,RL,isLeaf:bool,S,C)->T:
+    def bz(self,RE:Node,RL:Node,isLeaf:bool,S:typing.List[T],C:typing.List[Node])->T:
         raise Exception("你的抽象方法书写的不对，因为py应该自己确保不能调用此抽象方法，而不是靠我这个异常来确保")
 
 
