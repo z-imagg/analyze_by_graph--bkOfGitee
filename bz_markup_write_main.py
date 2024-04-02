@@ -10,7 +10,7 @@ from collections import defaultdict
 import typing
 from neo4j import Session
 from neo4j.graph import Node
-from bz_util import assertRE_fnAdr_eq_RL__return_fnAdr, assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
+from bz_util import assertRE_fnAdr_eq_RL__return_fnAdr, assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf, lsIsEmpty
 from file_tool import readTxt
 from neo4j_main import neo4jMain
 from neo4j_misc import update__init_deepth_as_null
@@ -23,6 +23,16 @@ class Item:
     def __init__(self,fnAdr:str,cnt:int) -> None:
         self.fnAdr:str=fnAdr
         self.cnt:int=cnt
+    
+    @staticmethod
+    def buildFromTupleLs(tupleLs:typing.List[typing.Tuple[str,int]]) ->typing.List['Item']:
+        if lsIsEmpty(tupleLs): return None
+        ls:typing.List['Item'] = [Item(fnAdr,cnt)  for fnAdr,cnt in tupleLs ]
+        return ls
+    
+    def __repr__(self) -> str:
+        return f"【Item】{self.fnAdr}:{self.cnt}"
+    
 
 class Markup:
     def __init__(self) -> None:
@@ -39,9 +49,12 @@ class Markup:
         for m in markupLs:
             for j in m.itmLs:
                 dct[j.fnAdr] += j.cnt
-        新=Markup()
-        新.itmLs.extend(dct.items())
-        return 新
+        
+        newMarkup=Markup()
+        itms:typing.List[Item]=Item.buildFromTupleLs(dct.items())
+        newMarkup.itmLs.extend(itms)
+        
+        return newMarkup
 
     def _to_json(self) -> dict:
         return {'itmLs': [(item.fnAdr, item.cnt) for item in self.itmLs]}
@@ -92,7 +105,7 @@ def _bz_markup_write_main(sess:Session):
     RootFnCallId=13#1,2,5,
 
     #初始化: 全体置空deepth字段
-    update__init_deepth_as_null(sess)
+    # update__init_deepth_as_null(sess)
 
     # 起点RE
     RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
