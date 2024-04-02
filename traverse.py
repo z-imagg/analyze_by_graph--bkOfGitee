@@ -2,9 +2,12 @@
 # -*- coding: utf-8 -*-
 
 #【术语】 abs==abstract==抽象
+#【术语】 V==traverse==遍历, tz==thiz==this==self, Vi==traverse index==第多少次遍历
+#【术语】 RE==R Enter==进入函数==起点, RL==R Leave==离开函数==终点, C==children==起点RE的直接孩子链, bz==busy==业务函数, S==Sum==将bz应用到每个直接孩子所得列表
+#【术语】 CkE==第k个孩子的起点, CkL==第k个孩子的终点
+#【返回类型说明】 V的返回类型 == bz的返回类型 , S的类型==[bz的返回类型]
 import typing
 
-from neo4j_misc import update__init_deepth_as_null
 T = typing.TypeVar('T')
 from abc import abstractmethod,ABC
 from neo4j import Session
@@ -16,75 +19,33 @@ class TraverseAbs(ABC):
     def __init__(self,sess:Session) -> None:
         super().__init__()
         self.N:NTT= NTT(sess)
+        
+        #记录遍历次数 （即调用遍历方法V的次数）, 主要用于观看遍历进度
+        self.Vi:int=0
 
-    def V(tz,RE:Node):
-        fnCallId=RE['fnCallId']
-        print(f"开始遍历 fnCallId={fnCallId},",end=" ")
+    def V(tz,RE:Node)->T:
+        tz.Vi+=1
+
+        fnCallId:int=RE['fnCallId']
+        print(f"开始遍历 fnCallId={fnCallId}；",end=" ")
         RL:Node=tz.N.getL(RE)
         if tz.N.isLeaf(RE):
             print(f"是叶子")
             return tz.bz(RE,RL,True,None,None)
-        C=tz.N.getChild__by__query_tinySeg(RE)
+        C:typing.List[Node]=tz.N.getChild__by__query_BJ_fJ_LJ_tJ_(RE)
         print(f"孩子个数{len(C)}")
-        S=[tz.V(CkE) for CkE in C]
+        S:typing.List[T]=[tz.V(CkE) for CkE in C]
         return tz.bz(RE,RL,False,S,C)
 
     @abstractmethod
-    def bz(self,RE,RL,isLeaf:bool,S,C)->T:
+    def bz(self,RE:Node,RL:Node,isLeaf:bool,S:typing.List[T],C:typing.List[Node])->T:
         raise Exception("你的抽象方法书写的不对，因为py应该自己确保不能调用此抽象方法，而不是靠我这个异常来确保")
 
-class BzDeepth(TraverseAbs):
-    def __init__(self, sess: Session) -> None:
-        super().__init__(sess)
-
-    def bz(self,RE,RL,isLeaf:bool,deepth_ls:typing.List[int],_)->int:
-        if isLeaf: return 0
-        else:
-            return 1+max(deepth_ls)
-
-class BzWriteDeepth(TraverseAbs):
-    def bz(self,RE,RL,isLeaf:bool,deepth_ls,_):
-        pass
-
-class BzWriteWidth(TraverseAbs):
-    def bz(self,RE,RL,isLeaf:bool,_,childLs):
-        pass
-
-class BzWrite成份(TraverseAbs):
-    def bz(self,RE,RL,isLeaf:bool,S,_):
-        pass
 
 
 
 if __name__=="__main__":
-    from neo4j import Driver,GraphDatabase
-    from neo4j_tool_traverse import NTT
-    RootFnCallId=13#1,2,5,
-    NEO4J_DB="neo4j"
-    URI = "neo4j://localhost:7687"
-    AUTH = ("neo4j", "123456")
-
-    driver:Driver=GraphDatabase.driver(URI, auth=AUTH)
-    assert isinstance(driver, Driver) == True
-
-    try:
-        with driver.session(database=NEO4J_DB) as sess:
-            #初始化: 全体置空deepth字段
-            update__init_deepth_as_null(sess)
-            
-            #遍历
-            RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
-            BzDeepth(sess).V(RE)
-            # BzWriteDeepth().V(RE)
-            # BzWriteWidth().V(RE)
-            # BzWrite成份().V(RE)
-
-    except (Exception,) as  err:
-        import traceback
-        traceback.print_exception(err)
-    finally:
-        #关闭neo4j的连接
-        driver.close() 
+    raise Exception("请您去执行main.py,这里是遍历器算法，需要保持干净，且不能作为入口执行")
 
 
     

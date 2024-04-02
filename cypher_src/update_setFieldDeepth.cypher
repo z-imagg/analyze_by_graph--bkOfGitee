@@ -1,0 +1,8 @@
+// 对给定fnCallId的起点、终点， 新增deepth字段并赋值为参数$prm_deepth
+// 【术语】prm == param
+with
+$prm_deepth as prmDeepth ,
+$prm_fnCallId as prmFnCallId 
+MATCH (fromLog:V_FnCallLog {fnCallId:prmFnCallId} )-[:E_FnEL]->(toLog:V_FnCallLog  {fnCallId:prmFnCallId} )
+SET fromLog.deepth = prmDeepth, toLog.deepth = prmDeepth 
+return count(fromLog)+count(toLog)   as 更新记录数

@@ -1,4 +1,8 @@
-//模式 ： 入点B1--t-->入点B2
+//模式 ： 起点--t入-->B0
+// 此即为 query_BJ_fJ_LJ_tJ_.cypher 中提到的 "开头"
+
+//完整情况 请参考 脚本 query_BJ_fJ_LJ_tJ_.cypher
+
 
 with 
 $fnCallId as param_fnCallId, 
