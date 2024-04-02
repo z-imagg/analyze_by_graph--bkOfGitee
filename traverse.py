@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 
 #【术语】 abs==abstract==抽象
+#【术语】 V==traverse==遍历, tz==thiz==this==self, Vi==traverse index==第多少次遍历
+#【术语】 RE==R Enter==进入函数==起点, RL==R Leave==离开函数==终点, C==children==起点RE的直接孩子链, bz==busy==业务函数, S==Sum==将bz应用到每个直接孩子所得列表
+#【术语】 CkE==第k个孩子的起点, CkL==第k个孩子的终点
+#【返回类型说明】 V的返回类型 == bz的返回类型 , S的类型==[bz的返回类型]
 import typing
 
 from file_tool import readTxt
