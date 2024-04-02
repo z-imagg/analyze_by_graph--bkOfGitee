@@ -17,17 +17,15 @@
 // 
 //  已知 深度k 递推的 求 深度k+1
 with 
-$fnCallId as param_fnCallId,
+$fnCallId as param_fnCallId, 
+//14 as param_fnCallId 开发调试用，生产不要使用
 1 AS FnEnter, //Enter == Begin == B
 2 as FnLeave //Leave == End == L
 MATCH path= 
 
-  (BJ:V_FnCallLog where BJ.direct=FnEnter  {fnCallId:param_fnCallId, direct: FnEnter } ) - [fJ:E_FnEL] -> (LJ:V_FnCallLog where LJ.direct=FnLeave  ) - [tJ:E_NxtTmPnt] 
+  (BJ:V_FnCallLog  {fnCallId:param_fnCallId, direct: FnEnter } ) - [fJ:E_FnEL] -> (LJ:V_FnCallLog {direct:FnLeave}  ) - [tJ:E_NxtTmPnt] -> (_:V_FnCallLog)
   
-WHERE  true
-// B.fnCallId = L.fnCallId and B.fnCallId=166153 //开发调试用，生产不要使用
-
-and  BJ.fnCallId = LJ.fnCallId
+WHERE   BJ.fnCallId = LJ.fnCallId
 
 return  
 path as 路径
