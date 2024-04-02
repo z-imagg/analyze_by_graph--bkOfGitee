@@ -4,7 +4,9 @@
 #【术语】 abs==abstract==抽象
 import typing
 
+from file_tool import readTxt
 from neo4j_misc import update__init_deepth_as_null
+from neo4j_tool import neo4j_update
 T = typing.TypeVar('T')
 from abc import abstractmethod,ABC
 from neo4j import Session
@@ -38,13 +40,33 @@ class BzDeepth(TraverseAbs):
         super().__init__(sess)
 
     def bz(self,RE,RL,isLeaf:bool,deepth_ls:typing.List[int],_)->int:
+        E_fnCallId=RE['fnCallId']
+        L_fnCallId=RL['fnCallId']
+        assert E_fnCallId == L_fnCallId
+
         if isLeaf: return 0
         else:
             return 1+max(deepth_ls)
 
 class BzWriteDeepth(TraverseAbs):
-    def bz(self,RE,RL,isLeaf:bool,deepth_ls,_):
-        pass
+
+    cypher__update_setFieldDeepth=readTxt("cypher_src/update_setFieldDeepth.cypher") 
+
+    def __init__(self, sess: Session) -> None:
+        super().__init__(sess)
+
+    def bz(self,RE,RL,isLeaf:bool,deepth_ls,_)->int:
+        E_fnCallId=RE['fnCallId']
+        L_fnCallId=RL['fnCallId']
+        assert E_fnCallId == L_fnCallId
+
+        fnCallId=E_fnCallId
+
+        
+        d=0 if isLeaf  else 1+max(deepth_ls)
+        neo4j_update(sess,"update_setFieldDeepth",BzWriteDeepth.cypher__update_setFieldDeepth,params={"prm_fnCallId":fnCallId,"prm_deepth":d},filedName="更新记录数")
+        
+        return d
 
 class BzWriteWidth(TraverseAbs):
     def bz(self,RE,RL,isLeaf:bool,_,childLs):
@@ -74,8 +96,8 @@ if __name__=="__main__":
             
             #遍历
             RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
-            BzDeepth(sess).V(RE)
-            # BzWriteDeepth().V(RE)
+            # BzDeepth(sess).V(RE)
+            BzWriteDeepth(sess).V(RE)
             # BzWriteWidth().V(RE)
             # BzWrite成份().V(RE)
 
