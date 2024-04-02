@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "neo4j遍历器调试",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "traverse.py",
+            "console": "integratedTerminal",
+            "args": [  
+],
+            "env": {
+                // "PYTHONPATH": "${workspaceFolder}:/xxx"
+            },
+        },
+    ]
+}
