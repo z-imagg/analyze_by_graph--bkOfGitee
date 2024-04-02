@@ -21,11 +21,9 @@ $fnCallId as param_fnCallId,
 1 AS FnEnter, //Enter == Begin == B
 2 as FnLeave //Leave == End == L
 MATCH path= 
-// (B:V_FnCallLog {fnCallId:param_fnCallId, direct: FnEnter }) - [tB:E_NxtTmPnt] ->
 
   (BJ:V_FnCallLog where BJ.direct=FnEnter  {fnCallId:param_fnCallId, direct: FnEnter } ) - [fJ:E_FnEL] -> (LJ:V_FnCallLog where LJ.direct=FnLeave  ) - [tJ:E_NxtTmPnt] 
   
-// ->  (L:V_FnCallLog {fnCallId:param_fnCallId,  direct: FnLeave} )
 WHERE  true
 // B.fnCallId = L.fnCallId and B.fnCallId=166153 //开发调试用，生产不要使用
 
