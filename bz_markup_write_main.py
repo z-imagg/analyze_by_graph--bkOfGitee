@@ -56,8 +56,14 @@ class Markup:
         
         return newMarkup
 
+    def assert_uniqe(self):
+        fnAdrLs=[ i.fnAdr for i in self.itmLs]
+        fnAdrLsLen=len(fnAdrLs)
+        fnAdrSetLen=len(set(fnAdrLs))
+        assert fnAdrLsLen == fnAdrSetLen, "此算法(遍历器 或 成份 业务函数)有错，因为itmLs的地址们应该是唯一的，但这里不唯一"
     def _to_json(self) -> dict:
-        return {'itmLs': [(item.fnAdr, item.cnt) for item in self.itmLs]}
+        self.assert_uniqe()
+        return dict([(item.fnAdr, item.cnt) for item in self.itmLs])
 
     def jsonTxt(self)->str:
         _jsonTxt: str = json.dumps(self, default=lambda o: o._to_json())
