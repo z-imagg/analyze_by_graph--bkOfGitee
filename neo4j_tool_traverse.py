@@ -14,12 +14,13 @@ from file_tool import readTxt
 cypher__getE=readTxt("cypher_src/getE.cypher") 
 cypher__getL=readTxt("cypher_src/getL.cypher") 
 cypher__isLeaf=readTxt("cypher_src/isLeaf.cypher") 
-cypher__getChild=readTxt("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher") 
+cypher__query_入T入=readTxt("cypher_src/query_入T入.cypher") 
+cypher__query_tinySeg=readTxt("cypher_src/query_tinySeg.cypher") 
 
 
 
 from cypher_tmpl_render import cypherTmplRender
-from neo4j_tool import neo4j_update, neo4j_query,neo4j_query_1field1row
+from neo4j_tool import neo4j_query_1row, neo4j_update, neo4j_query,neo4j_query_1field1row
 
 class NTT:
     def __init__(self,sess:Session) -> None:
@@ -39,10 +40,28 @@ class NTT:
             assert 匹配起点个数 ==1
         return 匹配起点个数 == 1
 
+
+    _LIMIT_SON_CNT:int = 10_0000  #拍脑袋写的，意思是 任何一个函数内容（循环展开后）不应该含有10_0000次函数调用
+    def getChild__by__query_tinySeg(self,RE:Node)->bool:
+        fnCallId=RE["fnCallId"]
+        B2= neo4j_query_1field1row(self.sess,"query_入T入",cypher__query_入T入,params={"fnCallId":fnCallId},filedName="B2" )
+        ls=[]
+        Bk=B2
+        for _ in range(0,NTT._LIMIT_SON_CNT):
+            ls.append(Bk)
+            fnCallId_k=Bk["fnCallId"]
+            B,t= neo4j_query_1row(self.sess,"query_tinySeg",cypher__query_tinySeg,params={"fnCallId":fnCallId_k},filedNameLs=["BJ","tJ"] )
+            if t["fnCallId"] == fnCallId:
+                return ls
+            assert B is not None
+            Bk=B
+
+        raise Exception("不应该到这里")
+    
     def getChild_len_i(self,fnCallId,len_i:int):
-        cypherTxt=cypherTmplRender("cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher",len_i, "//直接调用平链元素(模板)(match)", "//直接调用平链元素(模板)(where)","//直接调用平链元素(模板)(return)")
+        cypherTxt=cypherTmplRender("cypher_src/query__tinySeg.cypher",len_i, "//直接调用平链元素(模板)(match)", "//直接调用平链元素(模板)(where)","//直接调用平链元素(模板)(return)")
         # print(cypherTxt)
-        df:pandas.DataFrame=neo4j_query(self.sess, f"getChild_len_i_{len_i}", cypherTxt, params={"fnCallId":fnCallId})
+        df:pandas.DataFrame=neo4j_query_1row(self.sess, f"getChild_len_i_{len_i}", cypherTxt, params={"fnCallId":fnCallId})
         records=df.to_dict(orient="records")
         rowCnt=len(records) #rowCnt==行数
         if rowCnt == 0:
@@ -56,18 +75,6 @@ class NTT:
             
         return  B_ls, cypherTxt
 
-    def getChild(self,RE:Node):
-        child:typing.List[Node]; cypherTxt:str
-        fnCallId=RE["fnCallId"]
-        tnPnt_delta=100 #时刻点个数100 是拍脑袋写的 
-        for len_i in range(1,tnPnt_delta+1):
-            child,cypherTxt=self.getChild_len_i(fnCallId,len_i)
-            if child is not None: 
-                self._found_child_save_cypherTxt(fnCallId,len_i,cypherTxt)
-                return child
-        
-        raise Exception(f"仍然未找到 直接方法链条， 已到达时刻点个数上限{tnPnt_delta}, fnCallId={fnCallId}")
-        # return None
     
     def _found_child_save_cypherTxt(self,fnCallId,len_i,cypherTxt)->None:
         outDir="./cypher_tmpl_reander_out/"
