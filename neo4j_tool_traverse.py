@@ -45,16 +45,13 @@ class NTT:
     def getChild__by__query_tinySeg(self,RE:Node)->bool:
         fnCallId=RE["fnCallId"]
         B2= neo4j_query_1field1row(self.sess,"query_入T入",cypher__query_入T入,params={"fnCallId":fnCallId},filedName="B2" )
-        ls=[]
-        Bk=B2
+        ls=[B2] ; fnCallId_k=B2["fnCallId"]
         for _ in range(0,NTT._LIMIT_SON_CNT):
-            ls.append(Bk)
-            fnCallId_k=Bk["fnCallId"]
             B,t= neo4j_query_1row(self.sess,"query_tinySeg",cypher__query_tinySeg,params={"fnCallId":fnCallId_k},filedNameLs=["BJ","tJ"] )
-            if t["fnCallId"] == fnCallId:
-                return ls
             assert B is not None
-            Bk=B
+            fnCallId_k=t["to_fnCallId"]
+            if fnCallId_k == fnCallId: return ls
+            ls.append(B)
 
         raise Exception("不应该到这里")
     
