@@ -19,7 +19,10 @@ class BzDeepth(TraverseAbs):
         super().__init__(sess)
 
 # 【业务函数】 计算深度
-    def bz(self,RE,RL,isLeaf:bool,deepth_ls:typing.List[int],_)->int:
+    def bz(self,RE,RL,isLeaf:bool,S,_)->int:
+        #deepth数值列表即为S
+        deepth_ls:typing.List[int]= S
+
         E_fnCallId=RE['fnCallId']
         L_fnCallId=RL['fnCallId']
         assert E_fnCallId == L_fnCallId
@@ -36,7 +39,9 @@ class BzWriteDeepth(TraverseAbs):
         super().__init__(sess)
 
 # 【业务函数】 计算深度 并 写deepth字段为深度值
-    def bz(self,RE,RL,isLeaf:bool,deepth_ls,_)->int:
+    def bz(self,RE,RL,isLeaf:bool,S,_)->int:
+        #deepth数值列表即为S
+        deepth_ls:typing.List[int]= S
 
 
         E_fnCallId=RE['fnCallId']
