@@ -3,6 +3,8 @@
 
 #【术语】 abs==abstract==抽象
 import typing
+
+from neo4j_misc import update__init_deepth_as_null
 T = typing.TypeVar('T')
 from abc import abstractmethod,ABC
 from neo4j import Session
@@ -67,11 +69,16 @@ if __name__=="__main__":
 
     try:
         with driver.session(database=NEO4J_DB) as sess:
+            #初始化: 全体置空deepth字段
+            update__init_deepth_as_null(sess)
+            
+            #遍历
             RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
             BzDeepth(sess).V(RE)
             # BzWriteDeepth().V(RE)
             # BzWriteWidth().V(RE)
             # BzWrite成份().V(RE)
+
     except (Exception,) as  err:
         import traceback
         traceback.print_exception(err)
