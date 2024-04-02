@@ -12,7 +12,7 @@ def neo4j_update(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typ
     reslt:Result=sess.run(query=cypherTxt, parameters=params)
     reslt_df:pandas.DataFrame=reslt.to_df()
     更新记录数:int=reslt_df[filedName].to_list()[0]
-    print(f"{title}, {nowDateTimeTxt()}, 更新记录数:{更新记录数} ", flush=True)
+    # print(f"{title}, {nowDateTimeTxt()}, 更新记录数:{更新记录数} ", flush=True)
     return 更新记录数
 
 

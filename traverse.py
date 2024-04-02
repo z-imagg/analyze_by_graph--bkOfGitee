@@ -65,6 +65,7 @@ class BzWriteDeepth(TraverseAbs):
         
         d=0 if isLeaf  else 1+max(deepth_ls)
         neo4j_update(sess,"update_setFieldDeepth",BzWriteDeepth.cypher__update_setFieldDeepth,params={"prm_fnCallId":fnCallId,"prm_deepth":d},filedName="更新记录数")
+        print(f"fnCallId={fnCallId}写字段deepth={d}")
         
         return d
 
