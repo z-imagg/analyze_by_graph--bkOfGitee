@@ -47,7 +47,7 @@ def replaceLn(ln:str,repeatCnt:int, *flagS:str)->str:
         return ln
         
 def cypherTmplRender(tmplFP:str,repeatCnt:int,*flagS:str):
-    with open(tmplFP) as fr: #"cypher_src/update_deepth__Bnull_repeatK_Lnull__tmpl.cypher"
+    with open(tmplFP) as fr: #"cypher_src/query__fE_t__fEL_t_multipleK__t_fL__tmpl.cypher"
         lines=fr.readlines()
         newLines=[replaceLn(ln,repeatCnt,*flagS) for ln in lines]
         _new_cypher_txt:str="".join(newLines)
