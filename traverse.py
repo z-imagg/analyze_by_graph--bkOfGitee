@@ -59,7 +59,7 @@ class BzWrite成份(TraverseAbs):
 if __name__=="__main__":
     from neo4j import Driver,GraphDatabase
     from neo4j_tool_traverse import NTT
-    RootFnCallId=51#1,5,49
+    RootFnCallId=13#1,2,5,
     NEO4J_DB="neo4j"
     URI = "neo4j://localhost:7687"
     AUTH = ("neo4j", "123456")
