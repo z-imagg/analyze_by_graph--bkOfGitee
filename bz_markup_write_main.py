@@ -13,7 +13,7 @@ from neo4j.graph import Node
 from bz_util import assertRE_fnAdr_eq_RL__return_fnAdr, assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf, lsIsEmpty
 from file_tool import readTxt
 from neo4j_main import neo4jMain
-from neo4j_misc import update__init_deepth_as_null
+from neo4j_misc import update__init_markup_as_null
 from traverse import TraverseAbs
 from neo4j_tool import neo4j_update
 from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
@@ -110,8 +110,8 @@ def _bz_markup_write_main(sess:Session):
     from neo4j_tool_traverse import NTT
     RootFnCallId=13#1,2,5,
 
-    #初始化: 全体置空deepth字段
-    # update__init_deepth_as_null(sess)
+    #初始化: 全体置空markup字段
+    update__init_markup_as_null(sess)
 
     # 起点RE
     RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
