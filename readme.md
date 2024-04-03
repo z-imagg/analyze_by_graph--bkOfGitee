@@ -43,3 +43,9 @@ https://pypi.org/project/neo4j/
 
 
 不要用淘汰了的py2neo
+
+
+
+### 运行效果基本正面：  丑陋但正确且速度正常的遍历器（小节 起_t入_B0__BJ_fJ_LJ_tJ_ 逐前拱）
+
+http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/src/branch/main/result.md
