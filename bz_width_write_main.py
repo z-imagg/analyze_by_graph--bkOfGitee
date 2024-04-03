@@ -61,7 +61,7 @@ def _bz_width_write_main(sess:Session):
     RootFnCallId=229638#13
 
     #初始化: 全体置空width字段
-    update__init_width_as_null(sess)
+    # update__init_width_as_null(sess)
 
     # 起点RE
     RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
