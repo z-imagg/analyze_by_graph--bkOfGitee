@@ -27,6 +27,7 @@ class TraverseAbs(ABC):
         tz.Vi+=1
 
         fnCallId:int=RE['fnCallId']
+        tz.fnCallId=fnCallId
         print(f"开始遍历 fnCallId={fnCallId}；",end=" ")
         RL:Node=tz.N.getL(RE)
         if tz.N.isLeaf(RE):

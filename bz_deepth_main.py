@@ -37,10 +37,9 @@ class BzDeepth(TraverseAbs):
         return d
 
 
-
+import sys
 def _bz_deepth_main(sess:Session):
     from neo4j_tool_traverse import NTT
-    RootFnCallId=13 
     #1:不平衡点;  
     #孤立点群：{2:叶子}； 
     #孤立点群：{3:孩子为4，4:叶子}； 
@@ -48,12 +47,37 @@ def _bz_deepth_main(sess:Session):
     #孤立点群：{13:孩子为..., 229371:叶子} 此群点数庞大， fnCallId==229371是最后一个节点
 
     #初始化: 全体置空deepth字段
-    update__init_deepth_as_null(sess)
+    # update__init_deepth_as_null(sess)
 
-    # 起点RE
-    RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
-    # 遍历过程中 计算深度
-    BzDeepth(sess).V(RE)
+    startFnCallId=229372
+    RootFnCallId=startFnCallId 
+    while True:
+        print(f"开始RootFnCallId={RootFnCallId}",end="; ",file=sys.stderr,flush=True)
+        # 起点RE
+        RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
+        # 遍历过程中 计算深度
+        bz=BzDeepth(sess)
+        bz.V(RE)
+        endFnCallId= bz.fnCallId
+        if endFnCallId - startFnCallId > 1000:
+            print(f"发现长链条",file=sys.stderr)
+            break
+        else:
+            print(f"短链条endFnCallId={endFnCallId}",file=sys.stderr)
+            RootFnCallId=endFnCallId+1
+            continue
+        
+"""
+开始RootFnCallId=229372; 短链条endFnCallId=229400
+开始RootFnCallId=229401; 短链条endFnCallId=229469
+开始RootFnCallId=229470; 短链条endFnCallId=229538
+开始RootFnCallId=229539; 短链条endFnCallId=229607
+开始RootFnCallId=229608; 短链条endFnCallId=229624
+开始RootFnCallId=229625; 短链条endFnCallId=229634
+开始RootFnCallId=229635; 短链条endFnCallId=229636
+开始RootFnCallId=229637; 短链条endFnCallId=229637
+开始RootFnCallId=229638;  #可见下一个长链条是 起点是 229638
+"""
 
 if __name__=="__main__":
     neo4jMain(_bz_deepth_main)
