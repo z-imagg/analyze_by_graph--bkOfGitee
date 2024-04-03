@@ -237,7 +237,13 @@ return v.logId,v.fnCallId, v.fnAdr,v.fnSym_moduleName, v.fnSym_fileName, v.fnSym
 
 ##  torch1.3.1 的 链条们 
 
-根据 [临时粗略改造，为了跳过短链条，找到下一个长链条  ea5b0 ](http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/commit/ea5b057e26ca4d0761dd880da13e33dab8b4504f)  ,  [遍历器 ，代码无修改，记录几个小孤立群  bfc1 ](http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/commit/bfc1a6837cefb4a828ad3e8d8dadb39d416907fb)  
+根据
+
+[临时粗略改造，为了跳过短链条，找到下一个长链条  ea5b0 ](http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/commit/ea5b057e26ca4d0761dd880da13e33dab8b4504f)  , 
+
+[遍历器 ，代码无修改，记录几个小孤立群  bfc1 ](http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/commit/bfc1a6837cefb4a828ad3e8d8dadb39d416907fb)  
+
+[临时粗略改造，下一个长链条是 起点是 fnCallId=667245 40f10 ](http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/commit/40f1085ccf9f680f40bcd2b9ebde3a87dc8303c9)  
 
 直观获得以下  链条们 
 
@@ -245,7 +251,7 @@ return v.logId,v.fnCallId, v.fnAdr,v.fnSym_moduleName, v.fnSym_fileName, v.fnSym
 ```cypher
 // 查询各链条的起点
 match (v:V_FnCallLog {direct:1})
-where v.fnCallId in [2,3,5,13,229372,229401,229470,229539,229608,229625,229635,229637,229638]
+where v.fnCallId in [2,3,5,13,229372,229401,229470,229539,229608,229625,229635,229637,229638,667245]
 return v.fnCallId,v.fnSym_name,v.fnSym_moduleName
 order by v.fnCallId asc
 
@@ -286,6 +292,8 @@ order by v.fnCallId asc
 │229637    │"_fini"                                                               │"simple_nn.elf"   │ 链接器生成，在程序结束时会被自动调用
 ├──────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
 │229638    │"__do_global_dtors_aux"                                               │"libtorch.so.1"   │ c++处理全局变量的析构函数调用; 长链条
+├──────────┼──────────────────────────────────────────────────────────────────────┼──────────────────┤
+│667245    │"__do_global_dtors_aux"                                               │"libcaffe2.so"    │ c++处理全局变量的析构函数调用; 长链条
 └──────────┴──────────────────────────────────────────────────────────────────────┴──────────────────┘
 
 
