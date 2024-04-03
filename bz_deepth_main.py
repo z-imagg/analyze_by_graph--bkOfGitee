@@ -40,7 +40,7 @@ class BzDeepth(TraverseAbs):
 
 def _bz_deepth_main(sess:Session):
     from neo4j_tool_traverse import NTT
-    RootFnCallId=13#1,2,5,
+    RootFnCallId=13 #1:不平衡点;  孤立点群：{2:叶子}； 孤立点群：{3:孩子为4，4:叶子}； 孤立点群：{5:孩子为6， 6:孩子为7， 7:孩子为8， 8:孩子为9， 9:孩子为10、12， 10:孩子为11， 11:叶子， 12:叶子}；孤立点群：{13:孩子为..., }此群点数庞大
 
     #初始化: 全体置空deepth字段
     update__init_deepth_as_null(sess)
