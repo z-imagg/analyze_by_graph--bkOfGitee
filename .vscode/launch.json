@@ -17,7 +17,7 @@
 },
 
 //配置项3
-{ "name": "bz_width_write 遍历器调试", "type": "debugpy",   "request": "launch",  "program": "bz_width_write.py",  "console": "integratedTerminal",
+{ "name": "bz_width_write_main 遍历器调试", "type": "debugpy",   "request": "launch",  "program": "bz_width_write_main.py",  "console": "integratedTerminal",
 "args": [  ],
 "env": {
 // "PYTHONPATH": "${workspaceFolder}:/xxx"

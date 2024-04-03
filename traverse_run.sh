@@ -20,7 +20,7 @@ $bash_en_dbg && set -x #如果启用了调试模式, 则打开调试模式
 rm -frv *.log
 
 python bz_deepth_write_main.py | tee bz_deepth_write_main.log
-python bz_width_write.py | tee bz_width_write.log
+python bz_width_write_main.py | tee bz_width_write_main.log
 python bz_markup_write_main.py | tee bz_markup_write_main.log
 md5sum *.log > log.md5sum.txt
 
