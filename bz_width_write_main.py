@@ -58,7 +58,7 @@ class BzWriteWidth(TraverseAbs):
 
 def _bz_width_write_main(sess:Session):
     from neo4j_tool_traverse import NTT
-    RootFnCallId=13#1,2,5,
+    RootFnCallId=229638#13
 
     #初始化: 全体置空width字段
     update__init_width_as_null(sess)
