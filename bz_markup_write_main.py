@@ -108,7 +108,7 @@ class BzWriteMarkup(TraverseAbs):
 
 def _bz_markup_write_main(sess:Session):
     from neo4j_tool_traverse import NTT
-    RootFnCallId=229638#13
+    RootFnCallId=667245 #13,229638,667245
 
     #初始化: 全体置空markup字段
     # update__init_markup_as_null(sess)
