@@ -16,10 +16,10 @@ from neo4j_misc import update__init_deepth_as_null, update__init_width_as_null
 from traverse import TraverseAbs
 from neo4j_tool import neo4j_update
 from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
-
+import json
 
 class BzWriteWidth(TraverseAbs):
-    cypher__update_setFieldWidth=readTxt("cypher_src/update_setFieldWidth.cypher") 
+    cypher__update_width=readTxt("cypher_src/update_width.cypher") 
 
     def __init__(self, sess: Session) -> None:
         super().__init__(sess)
@@ -34,10 +34,23 @@ class BzWriteWidth(TraverseAbs):
         fnCallId=assertRE_fnCallId_eq_RL__return_fnCallId(RE,RL)
 
         #叶子的width为0,非叶子的width为直接孩子个数
-        width=0 if isLeaf  else len(sonLs)
-        #写width字段
-        neo4j_update(self.N.sess,"update_setFieldWidth",BzWriteWidth.cypher__update_setFieldWidth,params={"prm_fnCallId":fnCallId,"prm_width":width},filedName="更新记录数")
-        print(f"BzWriteWidth.bz, {nowDateTimeTxt()}, fnCallId={fnCallId}写字段width={width}; 第{self.Vi}次遍历")
+        #叶子的sonFnCallIdLs为空,非叶子的sonFnCallIdLs为直接孩子fnCallId列表
+        if isLeaf:
+            width=0
+            sonFnCallIdLs= None
+        else:
+            width=len(sonLs)
+            sonFnCallIdLs= [son["fnCallId"] for son in sonLs]
+
+        _msg_sonFnCallIdLs= "sonFnCallIdLs为空" if sonFnCallIdLs is None else f"sonFnCallIdLs长度为{len(sonFnCallIdLs)}"
+        
+        jsonTxt_sonFnCallIdLs= None if sonFnCallIdLs is None else json.dumps(sonFnCallIdLs)
+        params={"prm_fnCallId":fnCallId,"prm_width":width,"prm_sonFnCallIdLs":jsonTxt_sonFnCallIdLs}
+        #写width字段、sonFnCallIdLs字段
+        neo4j_update(self.N.sess,"update_width",BzWriteWidth.cypher__update_width,params=params,filedName="更新记录数")
+        print(f"BzWriteWidth.bz, {nowDateTimeTxt()}, fnCallId={fnCallId}写字段width={width}写字段{_msg_sonFnCallIdLs}; 第{self.Vi}次遍历")
+
+
 
         #注意此返回是必须的, 否则 遍历器traverse.py.TraverseAbs.V中的'S=[...bz()...]'将得不到返回值
         return None
