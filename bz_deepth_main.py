@@ -49,7 +49,7 @@ def _bz_deepth_main(sess:Session):
     #初始化: 全体置空deepth字段
     # update__init_deepth_as_null(sess)
 
-    startFnCallId=229372
+    startFnCallId=667243+1
     RootFnCallId=startFnCallId 
     while True:
         print(f"开始RootFnCallId={RootFnCallId}",end="; ",file=sys.stderr,flush=True)
@@ -76,7 +76,11 @@ def _bz_deepth_main(sess:Session):
 开始RootFnCallId=229625; 短链条endFnCallId=229634
 开始RootFnCallId=229635; 短链条endFnCallId=229636
 开始RootFnCallId=229637; 短链条endFnCallId=229637
-开始RootFnCallId=229638;  #可见下一个长链条是 起点是 229638
+开始RootFnCallId=229638;  #可见下一个长链条是 起点是 fnCallId=229638, 根据运行结果 得知 终点是 fnCallId=667243
+
+修改变量 startFnCallId 为 667243+1， 运行此程序 'python bz_deepth_main.py 1>/dev/null' ，得到结果:
+开始RootFnCallId=667244; 短链条endFnCallId=667244
+开始RootFnCallId=667245;  #可见下一个长链条是 起点是 fnCallId=667245
 """
 
 if __name__=="__main__":
