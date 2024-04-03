@@ -123,6 +123,10 @@ return v
 
 ### 下一个 孤立点群
 
+[孤立函数  __call_tls_dtors 调用了 函数 _ZN5torch3jit6tracer13ArgumentStashD1Ev 0x7ffff766da32  ， 若frida_js拦截 __call_tls_dtors 可合并由此导致的 若干孤立群 ， a38b2](http://giteaz:3000/frida_analyze_app_src/frida_js/commit/a38b2b49c3ac3d52a8368ee5fe652f730645593c)
+
+由此可知 frida_js 需要 拦截 __call_tls_dtors 能聚拢 因 没拦截 __call_tls_dtors 导致的 若干孤立群
+
 下一个 孤立点群 起点 是 fnCallId==229372， 终点 要 从该起点遍历后 才知道
 
 fnCallId==229372的 函数名```_ZN5torch3jit6tracer13ArgumentStashD1Ev```,  demangle解码后为```torch::jit::tracer::ArgumentStash::~ArgumentStash()```  
