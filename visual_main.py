@@ -83,6 +83,7 @@ def _visual_main(sess:Session, sess_anlz:Session, _:Driver,  __:Driver):
     nodeTab= dict([ (r["fnCallId"],r)for r in rowLs])
     fnCallIdLs= [ r["fnCallId"]for r in rowLs]
 
+    ####循环插入点V_FnCallLog_Analz
     for k,r in enumerate(rowLs):
         result:EagerResult=sess_anlz.run(
 "CREATE (x:V_FnCallLog_Analz {logId: $logId, tmPnt: $tmPnt, curThreadId: $curThreadId, direct:$direct, fnAdr:$fnAdr, fnCallId:$fnCallId, width:$width, deepth:$deepth,   fnSym_address:$fnSym_address, fnSym_name:$fnSym_name, fnSym_moduleName:$fnSym_moduleName, fnSym_fileName:$fnSym_fileName, fnSym_lineNumber:$fnSym_lineNumber, fnSym_column:$fnSym_column})",
@@ -139,5 +140,3 @@ if __name__=="__main__":
 
 
     
-#neo4j社区版 同一个服务下 同时只能访问一个数据库，因此再开一个neo4j服务
-#docker run -d -p 5474:7474 -p 5687:7687 --name neo4j_anlz -e "NEO4J_AUTH=neo4j/123456" neo4j:4.4.32-community
