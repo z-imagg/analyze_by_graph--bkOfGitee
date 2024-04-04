@@ -49,18 +49,19 @@ def executeDropCreate(sess_anlz:Session,Cypher_:str)->int:
 Cypher_delete__E_P2S="""
 MATCH ()-[r:E_P2S]-()
 WITH r
-LIMIT 100000
+LIMIT 1000
 DETACH DELETE r
 """
 # 删除关系 V_FnCallLog_Analz
 Cypher_delete__V_FnCallLog_Analz="""
 MATCH (n:V_FnCallLog_Analz)
 WITH n
-LIMIT 100
+LIMIT 1000
 DETACH DELETE n
 """
 def deleteAll(sess_anlz:Session,Cypher_:str)->int:
-    delete_row_cnt:int = 0
+    del_node_cnt:int = 0
+    del_edge_cnt:int = 0
 
     # 循环删除, 因为一次行删除 可能报内存超出
     while True:
@@ -68,9 +69,11 @@ def deleteAll(sess_anlz:Session,Cypher_:str)->int:
         # s=result.single()
         # v=result.value()
         summry:ResultSummary=result.consume()
-        delete_row_cnt += summry.counters.nodes_deleted
-        if summry.counters.nodes_deleted == 0:
-            break
+        del_node_cnt += summry.counters.nodes_deleted
+        del_edge_cnt += summry.counters.relationships_deleted
+        if summry.counters.nodes_deleted == 0 and summry.counters.relationships_deleted == 0:
+            print(f"一共删除{del_node_cnt}条记录")
+            return
 
 def _visual_main(sess:Session,sess_anlz:Session):
     executeDropCreate(sess_anlz, Cypher_IdxDropCreate)
@@ -82,6 +85,17 @@ def _visual_main(sess:Session,sess_anlz:Session):
     fnCallIdLs= [ r["fnCallId"]for r in rowLs]
 
     for r in rowLs:
+        result:Result=sess_anlz.run(
+query=
+#构建 节点parent
+"CREATE (parent:V_FnCallLog_Analz {logId: $logId, tmPnt: $tmPnt, curThreadId: $curThreadId, direct:$direct, \
+fnAdr:$fnAdr, fnCallId:$fnCallId, width:$width, deepth:$deepth,   fnSym_address:$fnSym_address, fnSym_name:$fnSym_name, \
+fnSym_moduleName:$fnSym_moduleName, fnSym_fileName:$fnSym_fileName, fnSym_lineNumber:$fnSym_lineNumber, \
+fnSym_column:$fnSym_column})",
+parameters=r)
+        
+    
+    for r in rowLs:
         fnCallId=r["fnCallId"]
         sonFnCallIdLs:typing.List[int]=json.loads(r["sonFnCallIdLs"])
         for sonFnCallId in sonFnCallIdLs:
@@ -89,18 +103,12 @@ def _visual_main(sess:Session,sess_anlz:Session):
             if son is not None:
                 result:Result=sess_anlz.run(
 query=
-#构建 节点parent
-"CREATE (parent:V_FnCallLog_Analz {logId: $parent_logId, tmPnt: $parent__tmPnt, curThreadId: $parent__curThreadId, direct:$parent__direct, \
-fnAdr:$parent__fnAdr, fnCallId:$parent__fnCallId, width:$parent__width, deepth:$parent__deepth,   fnSym_address:$parent__fnSym_address, fnSym_name:$parent__fnSym_name, \
-fnSym_moduleName:$parent__fnSym_moduleName, fnSym_fileName:$parent__fnSym_fileName, fnSym_lineNumber:$parent__fnSym_lineNumber, \
-fnSym_column:$parent__fnSym_column})"
-#构建 节点son
-"CREATE (son:V_FnCallLog_Analz {logId: $son_logId, tmPnt: $son__tmPnt, curThreadId: $son__curThreadId, direct:$son__direct, \
-fnAdr:$son__fnAdr, fnCallId:$son__fnCallId, width:$son__width, deepth:$son__deepth,   fnSym_address:$son__fnSym_address, fnSym_name:$son__fnSym_name, \
-fnSym_moduleName:$son__fnSym_moduleName, fnSym_fileName:$son__fnSym_fileName, fnSym_lineNumber:$son__fnSym_lineNumber, \
-fnSym_column:$son__fnSym_column})"
+#
+"MATCH (parent:V_FnCallLog_Analz {fnCallId:$parent__fnCallId})"
+#  找到最小时刻点
+"MATCH   (son:V_FnCallLog_Analz  {fnCallId:$son__fnCallId})"
 #构建 边 parentFnCallId --> sonFnCallId
-"CREATE (parent)-[:E_P2S  {parent_logId:$parent_logId, son_logId:$son_logId, parent__tmPnt:$parent__tmPnt, son__tmPnt:$son__tmPnt, parent__fnCallId:$parent__fnCallId, son__fnCallId: $son__fnCallId,   parent__width:$parent__width, parent__deepth:$parent__deepth,  son__width:$son__width, son__deepth:$son__deepth}]->(son)"
+"CREATE (parent  )-[:E_P2S  {parent_logId:$parent_logId, son_logId:$son_logId, parent__tmPnt:$parent__tmPnt, son__tmPnt:$son__tmPnt, parent__fnCallId:$parent__fnCallId, son__fnCallId: $son__fnCallId,   parent__width:$parent__width, parent__deepth:$parent__deepth,  son__width:$son__width, son__deepth:$son__deepth}]->(son   )"
 ,
 
 parent_logId=r["logId"], parent__tmPnt=r["tmPnt"],  parent__curThreadId=r["curThreadId"],  parent__direct=r["direct"], 
