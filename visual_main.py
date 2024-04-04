@@ -83,6 +83,7 @@ def _visual_main(sess:Session, sess_anlz:Session, _:Driver,  __:Driver):
     nodeTab= dict([ (r["fnCallId"],r)for r in rowLs])
     fnCallIdLs= [ r["fnCallId"]for r in rowLs]
 
+    ####循环插入点V_FnCallLog_Analz
     for k,r in enumerate(rowLs):
         result:EagerResult=sess_anlz.run(
 "CREATE (x:V_FnCallLog_Analz {logId: $logId, tmPnt: $tmPnt, curThreadId: $curThreadId, direct:$direct, fnAdr:$fnAdr, fnCallId:$fnCallId, width:$width, deepth:$deepth,   fnSym_address:$fnSym_address, fnSym_name:$fnSym_name, fnSym_moduleName:$fnSym_moduleName, fnSym_fileName:$fnSym_fileName, fnSym_lineNumber:$fnSym_lineNumber, fnSym_column:$fnSym_column})",
@@ -141,3 +142,28 @@ if __name__=="__main__":
     
 #neo4j社区版 同一个服务下 同时只能访问一个数据库，因此再开一个neo4j服务
 #docker run -d -p 5474:7474 -p 5687:7687 --name neo4j_anlz -e "NEO4J_AUTH=neo4j/123456" neo4j:4.4.32-community
+
+
+"""
+实际上发生了 第二个docker实例neo4j_anlz 很怪异的事情 一条CREATE (x:V_FnCallLog_Analz) 创建了25988条空白点
+
+此文件代码 中 '####循环插入点V_FnCallLog_Analz' 中的 第一个循环体 所执行的 'sess_anlz.run("CREATE (x:V_FnCallLog_Analz {...})' 导致 neo4j_anlz中多了 25988条空白点，这些点 只有自带字段 <elementId>	、<id> 没有任何语句中指定的字段 
+
+这些点的统计个数如下：
+
+//按类型们(labels)统计 点数
+MATCH (n) 
+with  labels(n) as labs, n
+RETURN  labs, count(n)
+
+结果如下：
+╒═════════════════════╤════════╕
+│labs                 │count(n)│
+╞═════════════════════╪════════╡
+│[]                   │25988   │
+├─────────────────────┼────────┤
+│["V_FnCallLog_Analz"]│6987    │
+└─────────────────────┴────────┘
+
+
+"""
