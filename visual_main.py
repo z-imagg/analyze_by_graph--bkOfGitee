@@ -30,14 +30,16 @@ import json
 def _visual_main(sess:Session):
     rowLs:typing.List[typing.Dict[str,typing.Any]]=neo4j_query_RowLs(sess,"_visual_main", cypher__query__链条_宽_宽1深, params={})
     # nodeLs:typing.List[Node]=rowLs["v"]
-    nodeLs_visjs=[ {  "id":r["fnCallId"],"size":int(log2(1+r["width"])), "label":r["fnSym_name"], "shape":"dot" , 
-              #后面这些字段是方便开发调试用的,多字段 对vis.js无造成影响
-               "fnCallId":r["fnCallId"],  "width":r["width"], "fnSym_name":r["fnSym_name"],   } for r in rowLs]
+    nodeTab= dict([ (r["fnCallId"],r)for r in rowLs])
     
     _edgeLs=[
-    [ (r["fnCallId"],x) for x in json.loads(r["sonFnCallIdLs"]) ]  
+    [ f'{r["fnCallId"]} : {{ "value" : {nodeTab[r["fnCallId"]]["fnSym_name"]}, parent: "{to}" }}' for to in json.loads(r["sonFnCallIdLs"]) ]  
 for r in rowLs 
 ]
+    
+    # 
+    #  zelda : {value : "Zelda Timeline", parent : ""},
+    #  a : {value : "Skyward Sword", parent : "zelda"},
     #展平嵌套列表
     edgeLs=list(chain.from_iterable(_edgeLs))
 

@@ -1,68 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title> vis.js 可视化图结构例子（颜色、形状、竖直布局） </title>
+    <title>TreeData.js  可视化图结构例子（颜色、形状、竖直布局）</title>
+    <!--Optional-->
+    <link rel="stylesheet" href="./raphamorim--treeData.js/assets/css/style.css">
+    <link rel="shortcut icon" href="./raphamorim--treeData.js/assets/img/favicon.ico">
+
+    <!--Required-->
+    <link rel="stylesheet" href="./raphamorim--treeData.js/assets/css/treeData.css">
 </head>
-
-<style>
-#mynetwork {
-  width: 600px;
-  height: 400px;
-  border: 1px solid lightgray;
-}
-
-p {
-  max-width: 700px;
-}
-
-
-</style>
-
-<p>
-
-<a href="https://visjs.github.io/vis-network/examples/"> vis-network/examples/ </a>
-</br>
-
-"Node Styles"  /
-<a href="https://visjs.github.io/vis-network/examples/network/nodeStyles/colors.html">  Colors  </a>  
-其中的
-<a href="https://visjs.github.io/vis-network/examples/static/codepen.aec0f22e3d245b3c6f85d183374a64aa5350c42ea32e60a09a1ca6cca89a99f3.html"> 'color' </a> 
-</br>
-
-"Node Styles" /
-<a href="https://visjs.github.io/vis-network/examples/network/nodeStyles/shapes.html">  Shapes  </a>  
-其中的
-<a href="https://visjs.github.io/vis-network/examples/static/codepen.5ee8db0327d36431ab286eacdfc731eaaef45d4d9d1da85b42a093b51f2525fc.html"> 'size'  </a> 
-
-</br>
-
-"Layouts"  /
-<a href="https://visjs.github.io/vis-network/examples/network/layout/hierarchicalLayoutDynamicChanges.html">  "Dynamic Hierarchical Layout Changes"  </a>  
-其中的
-<a href="https://visjs.github.io/vis-network/examples/static/codepen.0ed25d51bdfef337ff55fef03567c133c44b9873267ce01ca6bfed4336630d99.html"> 'hierarchical' </a>  
-
-</br>
-
-
-
-</p>
-
 <body>
-    <div class=".mycontainer">
-        <div id="mynetwork"></div>
-      </div>
+<div id="container">
+  <div id="tree"></div>
+</div>
 
-</body>
-
-<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-
-
-<script type="text/javascript" src="./generated_nodeLs_visjs.js"></script>
-<script type="text/javascript" src="./generated_edgeLs_visjs.js"></script>
-<script type="text/javascript" src="./main.js"></script>
-
+<script type="text/javascript" src="./raphamorim--treeData.js/assets/js/treeData.js"></script>
 <script>
- 
+var tree = {
+     1 : {value : "Zelda Timeline", parent : ""},
+     2 : {value : "ttt2", parent : "1"},
+     xz : {value : "XXZZ", parent : "1"},
+
+};
+
+TreeData(tree, "#tree");
 </script>
+</body>
 </html>
