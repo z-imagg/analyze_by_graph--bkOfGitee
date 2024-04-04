@@ -1,36 +1,13 @@
 { "version": "0.2.0",  "configurations": [
-//配置项1
-{ "name": "bz_deepth 遍历器调试", "type": "debugpy",   "request": "launch",  "program": "bz_deepth_main.py",  "console": "integratedTerminal",
+
+
+
+//配置项5
+{ "name": "可视化_main", "type": "debugpy",   "request": "launch",  "program": "visual_main.py",  "console": "integratedTerminal",
 "args": [  ],
 "env": {
 // "PYTHONPATH": "${workspaceFolder}:/xxx"
 },
 },
-
-
-//配置项2
-{ "name": "bz_deepth_write 遍历器调试", "type": "debugpy",   "request": "launch",  "program": "bz_deepth_write_main.py",  "console": "integratedTerminal",
-"args": [  ],
-"env": {
-// "PYTHONPATH": "${workspaceFolder}:/xxx"
-},
-},
-
-//配置项3
-{ "name": "bz_width_write 遍历器调试", "type": "debugpy",   "request": "launch",  "program": "bz_width_write.py",  "console": "integratedTerminal",
-"args": [  ],
-"env": {
-// "PYTHONPATH": "${workspaceFolder}:/xxx"
-},
-},
-
-//配置项4
-{ "name": "bz_markup_write 遍历器调试", "type": "debugpy",   "request": "launch",  "program": "bz_markup_write_main.py",  "console": "integratedTerminal",
-"args": [  ],
-"env": {
-// "PYTHONPATH": "${workspaceFolder}:/xxx"
-},
-},
-
 ]
 }

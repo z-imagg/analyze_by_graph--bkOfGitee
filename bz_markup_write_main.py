@@ -94,7 +94,7 @@ class BzWriteMarkup(TraverseAbs):
             #写成份字段
             markup= Markup( ).merge(*S)
             markupJsonTxt:str=markup.jsonTxt()
-            neo4j_update(self.N.sess,"update_setFieldWidth",BzWriteMarkup.cypher__update_setFieldMarkup,params={"prm_fnCallId":fnCallId,"prm_markup":markupJsonTxt},filedName="更新记录数")
+            neo4j_update(self.N.sess,"update_setFieldMarkup",BzWriteMarkup.cypher__update_setFieldMarkup,params={"prm_fnCallId":fnCallId,"prm_markup":markupJsonTxt},filedName="更新记录数")
             print(f"BzWriteMarkup.bz, {nowDateTimeTxt()}, fnCallId={fnCallId}写字段markup; 第{self.Vi}次遍历")
         
         #注意此返回是必须的, 否则 遍历器traverse.py.TraverseAbs.V中的'S=[...bz()...]'将得不到返回值
@@ -108,10 +108,10 @@ class BzWriteMarkup(TraverseAbs):
 
 def _bz_markup_write_main(sess:Session):
     from neo4j_tool_traverse import NTT
-    RootFnCallId=13#1,2,5,
+    RootFnCallId=667245 #13,229638,667245
 
     #初始化: 全体置空markup字段
-    update__init_markup_as_null(sess)
+    # update__init_markup_as_null(sess)
 
     # 起点RE
     RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)

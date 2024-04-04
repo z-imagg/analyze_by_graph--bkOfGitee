@@ -48,10 +48,10 @@ class BzWriteDeepth(TraverseAbs):
 
 def _bz_deepth_write_main(sess:Session):
     from neo4j_tool_traverse import NTT
-    RootFnCallId=13#1,2,5,
+    RootFnCallId=667245 #13,229638,667245
 
     #初始化: 全体置空deepth字段
-    update__init_deepth_as_null(sess)
+    # update__init_deepth_as_null(sess)
 
     # 起点RE
     RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)

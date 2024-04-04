@@ -22,6 +22,16 @@ def neo4j_query(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typi
     # print(f"neo4j_query 【{title}】, {nowDateTimeTxt()}, 查询结果尺寸:{reslt_df.size} ", flush=True)
     return reslt_df
 
+#要求cypher语句中return的是单纯字段 而不能是复合字段
+def neo4j_query_RowLs(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typing.Any]  )->typing.List[typing.Dict[str,typing.Any]]:
+    reslt:Result=sess.run(query=cypherTxt, parameters=params)
+    reslt_df:pandas.DataFrame=reslt.to_df()
+    #orient : str {'dict', 'list', 'series', 'split', 'records', 'index'}
+    rowLs:typing.List[typing.Dict[str,typing.Any]]=reslt_df.to_dict(orient="records" )
+    # print(f"neo4j_query 【{title}】, {nowDateTimeTxt()}, 查询结果尺寸:{rowLs.__len__()} ", flush=True)
+    return rowLs
+
+
 def neo4j_query_1row(sess:Session,title:str,cypherTxt:str,params:typing.Dict[str,typing.Any],filedNameLs:typing.List[str] )->typing.Union[Node,Path]:
     reslt:Result=sess.run(query=cypherTxt, parameters=params)
     reslt_df:pandas.DataFrame=reslt.to_df()
