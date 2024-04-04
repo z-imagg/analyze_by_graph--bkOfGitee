@@ -81,7 +81,6 @@ def _visual_main(sess:Session, sess_anlz:Session, _:Driver,  __:Driver):
 
     rowLs:typing.List[typing.Dict[str,typing.Any]]=neo4j_query_RowLs(sess,"_visual_main", cypher__query__链条_宽_宽1深, params={})
     nodeTab= dict([ (r["fnCallId"],r)for r in rowLs])
-    fnCallIdLs= [ r["fnCallId"]for r in rowLs]
 
     ####循环插入点V_FnCallLog_Analz
     for k,r in enumerate(rowLs):
@@ -96,14 +95,15 @@ fnSym_column=r["fnSym_column"],)
         v=result.value()
         summary:ResultSummary=result.consume()
         # summary_4driver:ResultSummary=result.summary
-        print(f"{k},创建节点{summary.counters.nodes_created}个,创建Label{summary.counters.labels_added}个")
+        if k % 1000 == 0:
+            print(f"创建点;k={k},fnCallId={r['fnCallId']},创建节点{summary.counters.nodes_created}个,创建Label{summary.counters.labels_added}个")
     
     print(f"k={k}")
     
-    for r in rowLs:
+    for k,r in enumerate(rowLs):
         fnCallId=r["fnCallId"]
         sonFnCallIdLs:typing.List[int]=json.loads(r["sonFnCallIdLs"])
-        for sonFnCallId in sonFnCallIdLs:
+        for j,sonFnCallId in enumerate(sonFnCallIdLs):
             son=nodeTab.get(sonFnCallId,None)
             if son is not None:
                 result:Result=sess_anlz.run(
@@ -128,8 +128,8 @@ son__fnSym_column=son["fnSym_column"]
                 # s=result.single()
                 # v=result.value()
                 summary:ResultSummary=result.consume()
-                print(f"fnCallId={fnCallId},创建边{summary.counters.relationships_created}个 ")
-                pass
+                if k % 1000 == 0:
+                    print(f"创建边;k={k},j={j}; 【fnCallId={fnCallId}】 --> 【sonFnCallId={son['fnCallId']}】; sonFnCallIdLs尺寸={len(sonFnCallIdLs)}; 创建边{summary.counters.relationships_created}个 ")
 
 
 if __name__=="__main__":
