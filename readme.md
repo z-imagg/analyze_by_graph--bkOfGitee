@@ -29,6 +29,24 @@ docker exec -it neo4j  cp  /var/lib/neo4j/conf/neo4j.conf /var/lib/neo4j/conf/ne
 docker exec -it neo4j  sed -i  's/#dbms.threads.worker_count=/dbms.threads.worker_count=4/' /var/lib/neo4j/conf/neo4j.conf 
 
 ```
+#####  neo4j安装apoc插件
+
+https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/
+
+[neo4j-apoc-procedures/apoc-4.4.0.26-all.jar](https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.26/apoc-4.4.0.26-all.jar)
+
+```bash
+wget https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.26/apoc-4.4.0.26-all.jar
+
+docker cp  apoc-4.4.0.26-all.jar  neo4j:/var/lib/neo4j/plugins
+
+docker restart neo4j
+```
+
+打开[neo4j web控制台](http://localhost:7474/browser/),  在cypher查询中可正常调用apoc函数 举例：  ```RETURN apoc.convert.fromJsonList('[1,2,3]') AS output;```
+
+
+cypher例子apoc语句参照:  https://neo4j.com/labs/apoc/4.1/overview/apoc.convert/apoc.convert.fromJsonList/
 
 ####  py访问neo4j
 
