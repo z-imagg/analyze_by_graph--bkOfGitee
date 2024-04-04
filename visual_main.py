@@ -29,27 +29,36 @@ from pathlib import Path
 import json
 def _visual_main(sess:Session):
     rowLs:typing.List[typing.Dict[str,typing.Any]]=neo4j_query_RowLs(sess,"_visual_main", cypher__query__链条_宽_宽1深, params={})
-    # nodeLs:typing.List[Node]=rowLs["v"]
-    nodeLs_visjs=[ {  "id":r["fnCallId"],"size":int(log2(1+r["width"])), "label":r["fnSym_name"], "shape":"dot" , 
+    nodeTab= dict([ (r["fnCallId"],r)for r in rowLs])
+    nodeLs_visjs=[ {  "id":r["fnCallId"],  "text_1":r["fnSym_name"],  
               #后面这些字段是方便开发调试用的,多字段 对vis.js无造成影响
                "fnCallId":r["fnCallId"],  "width":r["width"], "fnSym_name":r["fnSym_name"],   } for r in rowLs]
     
     _edgeLs=[
-    [ (r["fnCallId"],x) for x in json.loads(r["sonFnCallIdLs"]) ]  
-for r in rowLs 
+    [ (father["fnCallId"],son) for son in json.loads(father["sonFnCallIdLs"]) ]  
+for father in rowLs 
 ]
     #展平嵌套列表
     edgeLs=list(chain.from_iterable(_edgeLs))
 
-    edgeLs_visjs=[{"from":parentFnCallId, "to":sonFnCallId} for parentFnCallId,sonFnCallId in edgeLs]
+    edgeLs_treeviz=[]
 
-    nodeLs_jsonTxt_visjs=json.dumps(nodeLs_visjs)
-    edgeLs_jsonTxt_visjs=json.dumps(edgeLs_visjs)
+    for fnCallId,sonFnCallId in edgeLs:
+        sonNode=nodeTab.get(sonFnCallId,None)
+        if sonNode is None:
+            #跳过过窄的子节点
+            continue
 
-    nodeLs_bigJsVar_visjs=f"var generated_nodeLs_visjs={nodeLs_jsonTxt_visjs}"
-    edgeLs_bigJsVar_visjs=f"var generated_edgeLs_visjs={edgeLs_jsonTxt_visjs}"
-    Path("./visual/generated_nodeLs_visjs.js").write_text(nodeLs_bigJsVar_visjs)
-    Path("./visual/generated_edgeLs_visjs.js").write_text(edgeLs_bigJsVar_visjs)
+        son_label=sonNode.get("fnSym_name" ) 
+
+        dct={"son_fnCallId":sonFnCallId,  "son_label":nodeTab.get(sonFnCallId,{}).get("fnSym_name"," "), "father_fnCallId":fnCallId}
+        edgeLs_treeviz.append(dct)
+
+
+    edgeLs_jsonTxt_treeviz=json.dumps(edgeLs_treeviz)
+
+    edgeLs_bigJsVar_treeviz=f"var generated_edgeLs_treeviz={edgeLs_jsonTxt_treeviz}"
+    Path("./visual/generated_edgeLs_treeviz.js").write_text(edgeLs_bigJsVar_treeviz)
     end=True
 
 

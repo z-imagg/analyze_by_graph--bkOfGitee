@@ -3,66 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title> vis.js 可视化图结构例子（颜色、形状、竖直布局） </title>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/treeviz@3.0.1/dist/treeviz.js"></script>
+
 </head>
 
 <style>
-#mynetwork {
-  width: 600px;
-  height: 400px;
-  border: 1px solid lightgray;
-}
-
-p {
-  max-width: 700px;
-}
 
 
 </style>
 
 <p>
 
-<a href="https://visjs.github.io/vis-network/examples/"> vis-network/examples/ </a>
+<a href="https://github.com/PierreCapo/treeviz.git"> PierreCapo/treeviz.git </a>
 </br>
-
-"Node Styles"  /
-<a href="https://visjs.github.io/vis-network/examples/network/nodeStyles/colors.html">  Colors  </a>  
-其中的
-<a href="https://visjs.github.io/vis-network/examples/static/codepen.aec0f22e3d245b3c6f85d183374a64aa5350c42ea32e60a09a1ca6cca89a99f3.html"> 'color' </a> 
-</br>
-
-"Node Styles" /
-<a href="https://visjs.github.io/vis-network/examples/network/nodeStyles/shapes.html">  Shapes  </a>  
-其中的
-<a href="https://visjs.github.io/vis-network/examples/static/codepen.5ee8db0327d36431ab286eacdfc731eaaef45d4d9d1da85b42a093b51f2525fc.html"> 'size'  </a> 
-
-</br>
-
-"Layouts"  /
-<a href="https://visjs.github.io/vis-network/examples/network/layout/hierarchicalLayoutDynamicChanges.html">  "Dynamic Hierarchical Layout Changes"  </a>  
-其中的
-<a href="https://visjs.github.io/vis-network/examples/static/codepen.0ed25d51bdfef337ff55fef03567c133c44b9873267ce01ca6bfed4336630d99.html"> 'hierarchical' </a>  
-
-</br>
-
-
 
 </p>
-
 <body>
-    <div class=".mycontainer">
-        <div id="mynetwork"></div>
-      </div>
+  // Define a tree element where dimensions are mandatory
+  <div id="tree" style="height:700px; width:900px"></div>
+  
+  <script>
+  // Define a dataset
+  var data = [
+    { id: 1, text_1: "Father", father: null },
+    { id: 2, text_1: "Child A", father: 1 },
+    { id: 3, text_1: "Child B", father: 1 },
+    { id: 4, text_1: "Subchild C", father: 2 }
+  ];
+  
+  // Define and configure a tree object
+  var myTree = Treeviz.create({
+    htmlId: "tree",
+    idKey: "id",
+    hasFlatData: true,
+    nodeColor: (nodeData) => "grey",
+    relationnalField: "father",
+  });
+  
+  // Display the tree based on the data
+  myTree.refresh(data);
+  </script>
 
 </body>
 
-<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 
-
-<script type="text/javascript" src="./generated_nodeLs_visjs.js"></script>
-<script type="text/javascript" src="./generated_edgeLs_visjs.js"></script>
-<script type="text/javascript" src="./main.js"></script>
-
-<script>
- 
-</script>
 </html>
