@@ -1,8 +1,8 @@
 // 宽>=? 且 宽1深>=?
 //  孤立群 == 链条 == chain
 with 
-4 as beginW,
-5 as w1BeginD,
+5 as beginW,
+6 as w1BeginD,
 13 as chainBegin_fnCallId, //链条 起点
 229638-1 as chainEnd_fnCallId //链条 终点
 match (v:V_FnCallLog {direct:1})
