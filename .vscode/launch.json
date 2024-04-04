@@ -1,4 +1,5 @@
 { "version": "0.2.0",  "configurations": [
+
 //配置项1
 { "name": "bz_deepth 遍历器调试", "type": "debugpy",   "request": "launch",  "program": "bz_deepth_main.py",  "console": "integratedTerminal",
 "args": [  ],
@@ -32,5 +33,13 @@
 },
 },
 
+
+//配置项5
+{ "name": "可视化_main", "type": "debugpy",   "request": "launch",  "program": "visual_main.py",  "console": "integratedTerminal",
+"args": [  ],
+"env": {
+// "PYTHONPATH": "${workspaceFolder}:/xxx"
+},
+},
 ]
 }
