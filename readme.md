@@ -63,17 +63,8 @@ https://pypi.org/project/neo4j/
 不要用淘汰了的py2neo
 
 
-### 树形结构可视化
-
-#### 树形结构图形化库 
-
-https://www.cssscript.com/best-tree-view/
 
 
-#### 可视化
-
-
-http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/src/branch/main/tree_visual.md
 
 
 ### 运行效果基本正面：  丑陋但正确且速度正常的遍历器（小节 起_t入_B0__BJ_fJ_LJ_tJ_ 逐前拱）
@@ -89,3 +80,13 @@ http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/src/branch/main/result
 http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/src/branch/main/gain.md
 
 
+
+
+### 创建另一个neo4j数据库 用于 存储 树形结构 以 分析
+
+ 
+
+neo4j社区版 同一个服务下 同时只能访问一个数据库，因此再开一个neo4j服务
+
+```docker run -d -p 5474:7474 -p 5687:7687 --name neo4j_anlz -e "NEO4J_AUTH=neo4j/123456" neo4j:4.4.32-community```
+注意端口不要写错
