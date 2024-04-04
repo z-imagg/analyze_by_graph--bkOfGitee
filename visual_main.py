@@ -36,7 +36,7 @@ Cypher_IdxDropCreate=\
 "DROP CONSTRAINT uq__V_FnCallLog_Analz__tmPnt IF EXISTS"
 "CREATE CONSTRAINT uq__V_FnCallLog_Analz__tmPnt FOR (x:V_FnCallLog_Analz) REQUIRE x.tmPnt IS UNIQUE"
 
-def executeDropCreate(sess_anlz:Session,Cypher_:str)->int:
+def executeDropCreateIdx(sess_anlz:Session,Cypher_:str)->int:
 
     result:Result=sess_anlz.run(Cypher_)
     s=result.single()
@@ -74,8 +74,8 @@ def deleteAll(sess_anlz:Session,Cypher_:str)->int:
             print(f"一共删除{del_node_cnt+del_edge_cnt}条记录")
             return
 
-def _visual_main(driver1:Driver, sess:Session, driver_anlz:Driver, sess_anlz:Session):
-    executeDropCreate(sess_anlz, Cypher_IdxDropCreate)
+def _visual_main(sess:Session, sess_anlz:Session, _:Driver,  __:Driver):
+    # executeDropCreateIdx(sess_anlz, Cypher_IdxDropCreate)
     deleteAll(sess_anlz,Cypher_delete__E_P2S)
     deleteAll(sess_anlz,Cypher_delete__V_FnCallLog_Analz)
 
@@ -84,18 +84,17 @@ def _visual_main(driver1:Driver, sess:Session, driver_anlz:Driver, sess_anlz:Ses
     fnCallIdLs= [ r["fnCallId"]for r in rowLs]
 
     for k,r in enumerate(rowLs):
-        # result:Result=sess_anlz.run(
-        result:EagerResult=driver_anlz.execute_query(
+        result:EagerResult=sess_anlz.run(
 "CREATE (x:V_FnCallLog_Analz {logId: $logId, tmPnt: $tmPnt, curThreadId: $curThreadId, direct:$direct, fnAdr:$fnAdr, fnCallId:$fnCallId, width:$width, deepth:$deepth,   fnSym_address:$fnSym_address, fnSym_name:$fnSym_name, fnSym_moduleName:$fnSym_moduleName, fnSym_fileName:$fnSym_fileName, fnSym_lineNumber:$fnSym_lineNumber, fnSym_column:$fnSym_column})",
 logId=r["logId"], tmPnt=r["tmPnt"],  curThreadId=r["curThreadId"],  direct=r["direct"], 
 fnAdr=r["fnAdr"], fnCallId=r["fnCallId"], width=r["width"], deepth=r["deepth"],   fnSym_address=r["fnSym_address"], fnSym_name=r["fnSym_name"], 
 fnSym_moduleName=r["fnSym_moduleName"], fnSym_fileName=r["fnSym_fileName"], fnSym_lineNumber=r["fnSym_lineNumber"], 
 fnSym_column=r["fnSym_column"],)
         
-        # s=result.single()
-        # v=result.value()
-        # summry:ResultSummary=result.consume()
-        summary:ResultSummary=result.summary
+        s=result.single()
+        v=result.value()
+        summary:ResultSummary=result.consume()
+        # summary_4driver:ResultSummary=result.summary
         print(f"{k},创建节点{summary.counters.nodes_created}个,创建Label{summary.counters.labels_added}个")
     
     print(f"k={k}")
@@ -124,9 +123,11 @@ son__fnSym_moduleName=son["fnSym_moduleName"], son__fnSym_fileName=son["fnSym_fi
 son__fnSym_column=son["fnSym_column"]
 
 )
-            # if sonFnCallId in fnCallIdLs:
-                #构建 节点r 、 节点son
-                #节点字段 logId, fnCallId, width, deepth, fnAdr, 调试信息等
+            
+                # s=result.single()
+                # v=result.value()
+                summary:ResultSummary=result.consume()
+                print(f"fnCallId={fnCallId},创建边{summary.counters.relationships_created}个 ")
                 pass
 
 

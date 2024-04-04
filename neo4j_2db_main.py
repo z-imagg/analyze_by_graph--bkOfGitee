@@ -20,7 +20,7 @@ def neo4j2dbMain(db1:Neo4J_DB_Entity,db2:Neo4J_DB_Entity,func):
     try:
         with driver1.session(database=db1.DB_NAME) as sess1:
             with driver2.session(database=db2.DB_NAME) as sess2:
-                func(driver1, sess1, driver2, sess2)
+                func(sess1, sess2, driver1, driver2)
 
     except (Exception,) as  err:
         import traceback
