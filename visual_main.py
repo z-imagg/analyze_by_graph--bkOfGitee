@@ -6,7 +6,7 @@
 #【备注】 V == traverse.py.TraverseAbs.V,  S == traverse.py.TraverseAbs.S
 
 import typing
-from neo4j import Driver, GraphDatabase, ResultSummary, Session,Result
+from neo4j import Driver, EagerResult, GraphDatabase, ResultSummary, Session,Result
 from neo4j.graph import Node
 import pandas
 from bz_util import assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
@@ -37,7 +37,6 @@ Cypher_IdxDropCreate=\
 "CREATE CONSTRAINT uq__V_FnCallLog_Analz__tmPnt FOR (x:V_FnCallLog_Analz) REQUIRE x.tmPnt IS UNIQUE"
 
 def executeDropCreate(sess_anlz:Session,Cypher_:str)->int:
-    delete_row_cnt:int = 0
 
     result:Result=sess_anlz.run(Cypher_)
     s=result.single()
@@ -72,10 +71,10 @@ def deleteAll(sess_anlz:Session,Cypher_:str)->int:
         del_node_cnt += summry.counters.nodes_deleted
         del_edge_cnt += summry.counters.relationships_deleted
         if summry.counters.nodes_deleted == 0 and summry.counters.relationships_deleted == 0:
-            print(f"一共删除{del_node_cnt}条记录")
+            print(f"一共删除{del_node_cnt+del_edge_cnt}条记录")
             return
 
-def _visual_main(sess:Session,sess_anlz:Session):
+def _visual_main(driver1:Driver, sess:Session, driver_anlz:Driver, sess_anlz:Session):
     executeDropCreate(sess_anlz, Cypher_IdxDropCreate)
     deleteAll(sess_anlz,Cypher_delete__E_P2S)
     deleteAll(sess_anlz,Cypher_delete__V_FnCallLog_Analz)
@@ -84,16 +83,22 @@ def _visual_main(sess:Session,sess_anlz:Session):
     nodeTab= dict([ (r["fnCallId"],r)for r in rowLs])
     fnCallIdLs= [ r["fnCallId"]for r in rowLs]
 
-    for r in rowLs:
-        result:Result=sess_anlz.run(
-query=
-#构建 节点parent
-"CREATE (parent:V_FnCallLog_Analz {logId: $logId, tmPnt: $tmPnt, curThreadId: $curThreadId, direct:$direct, \
-fnAdr:$fnAdr, fnCallId:$fnCallId, width:$width, deepth:$deepth,   fnSym_address:$fnSym_address, fnSym_name:$fnSym_name, \
-fnSym_moduleName:$fnSym_moduleName, fnSym_fileName:$fnSym_fileName, fnSym_lineNumber:$fnSym_lineNumber, \
-fnSym_column:$fnSym_column})",
-parameters=r)
+    for k,r in enumerate(rowLs):
+        # result:Result=sess_anlz.run(
+        result:EagerResult=driver_anlz.execute_query(
+"CREATE (x:V_FnCallLog_Analz {logId: $logId, tmPnt: $tmPnt, curThreadId: $curThreadId, direct:$direct, fnAdr:$fnAdr, fnCallId:$fnCallId, width:$width, deepth:$deepth,   fnSym_address:$fnSym_address, fnSym_name:$fnSym_name, fnSym_moduleName:$fnSym_moduleName, fnSym_fileName:$fnSym_fileName, fnSym_lineNumber:$fnSym_lineNumber, fnSym_column:$fnSym_column})",
+logId=r["logId"], tmPnt=r["tmPnt"],  curThreadId=r["curThreadId"],  direct=r["direct"], 
+fnAdr=r["fnAdr"], fnCallId=r["fnCallId"], width=r["width"], deepth=r["deepth"],   fnSym_address=r["fnSym_address"], fnSym_name=r["fnSym_name"], 
+fnSym_moduleName=r["fnSym_moduleName"], fnSym_fileName=r["fnSym_fileName"], fnSym_lineNumber=r["fnSym_lineNumber"], 
+fnSym_column=r["fnSym_column"],)
         
+        # s=result.single()
+        # v=result.value()
+        # summry:ResultSummary=result.consume()
+        summary:ResultSummary=result.summary
+        print(f"{k},创建节点{summary.counters.nodes_created}个,创建Label{summary.counters.labels_added}个")
+    
+    print(f"k={k}")
     
     for r in rowLs:
         fnCallId=r["fnCallId"]
@@ -102,20 +107,18 @@ parameters=r)
             son=nodeTab.get(sonFnCallId,None)
             if son is not None:
                 result:Result=sess_anlz.run(
-query=
-#
 "MATCH (parent:V_FnCallLog_Analz {fnCallId:$parent__fnCallId})"
 #  找到最小时刻点
 "MATCH   (son:V_FnCallLog_Analz  {fnCallId:$son__fnCallId})"
 #构建 边 parentFnCallId --> sonFnCallId
-"CREATE (parent  )-[:E_P2S  {parent_logId:$parent_logId, son_logId:$son_logId, parent__tmPnt:$parent__tmPnt, son__tmPnt:$son__tmPnt, parent__fnCallId:$parent__fnCallId, son__fnCallId: $son__fnCallId,   parent__width:$parent__width, parent__deepth:$parent__deepth,  son__width:$son__width, son__deepth:$son__deepth}]->(son   )"
+"CREATE (parent  )-[:E_P2S  {parent__logId:$parent__logId, son__logId:$son__logId, parent__tmPnt:$parent__tmPnt, son__tmPnt:$son__tmPnt, parent__fnCallId:$parent__fnCallId, son__fnCallId: $son__fnCallId,   parent__width:$parent__width, parent__deepth:$parent__deepth,  son__width:$son__width, son__deepth:$son__deepth}]->(son   )"
 ,
 
-parent_logId=r["logId"], parent__tmPnt=r["tmPnt"],  parent__curThreadId=r["curThreadId"],  parent__direct=r["direct"], 
+parent__logId=r["logId"], parent__tmPnt=r["tmPnt"],  parent__curThreadId=r["curThreadId"],  parent__direct=r["direct"], 
 parent__fnAdr=r["fnAdr"], parent__fnCallId=r["fnCallId"], parent__width=r["width"], parent__deepth=r["deepth"],   parent__fnSym_address=r["fnSym_address"], parent__fnSym_name=r["fnSym_name"], 
 parent__fnSym_moduleName=r["fnSym_moduleName"], parent__fnSym_fileName=r["fnSym_fileName"], parent__fnSym_lineNumber=r["fnSym_lineNumber"], 
 parent__fnSym_column=r["fnSym_column"],
-son_logId=son["logId"], son__tmPnt=son["tmPnt"],  son__curThreadId=son["curThreadId"],  son__direct=son["direct"], 
+son__logId=son["logId"], son__tmPnt=son["tmPnt"],  son__curThreadId=son["curThreadId"],  son__direct=son["direct"], 
 son__fnAdr=son["fnAdr"], son__fnCallId=son["fnCallId"], son__width=son["width"], son__deepth=son["deepth"],   son__fnSym_address=son["fnSym_address"], son__fnSym_name=son["fnSym_name"], 
 son__fnSym_moduleName=son["fnSym_moduleName"], son__fnSym_fileName=son["fnSym_fileName"], son__fnSym_lineNumber=son["fnSym_lineNumber"], 
 son__fnSym_column=son["fnSym_column"]
