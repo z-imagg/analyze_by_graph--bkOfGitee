@@ -16,7 +16,7 @@ from util_file import readTxt
 from neo4j_misc import update__init_markup_as_null
 from traverse import TraverseAbs
 from neo4j_tool import neo4j_update
-from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
+from tool_datetime import nowDateTimeTxt
 import json
     
 class Item:

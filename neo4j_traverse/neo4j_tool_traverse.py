@@ -7,7 +7,7 @@ import typing
 import numpy
 from pathlib import Path
 
-from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
+from tool_datetime import nowDateTimeTxt
 from util_file import readTxt
 
 
