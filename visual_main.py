@@ -12,7 +12,7 @@ import pandas
 from bz_util import assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
 from file_tool import readTxt
 from neo4j_2db_main import neo4j2dbMain
-from neo4j_db_entity import Neo4J_DB_Entity
+from neo4j_db_basic import Neo4J_DB_Entity
 from neo4j_main import neo4jMain
 from neo4j_misc import update__init_deepth_as_null
 from traverse import TraverseAbs
