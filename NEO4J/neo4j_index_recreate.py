@@ -10,6 +10,17 @@ import typing
 from neo4j import Driver, EagerResult, GraphDatabase, ResultSummary, Session,Result
 from neo4j.graph import Node
 
+#neo4j执行cypher语句
+def _neo4j_run_cypherTxt(sess:Session,Cypher_Txt:str)->ResultSummary:
+
+    result:Result=sess.run(Cypher_Txt)
+    # s=result.single()
+    # v=result.value()
+    summry:ResultSummary=result.consume()
+
+    return summry
+
+
 
 #例子cypher语句: 删除索引、创建索引 V_Demo.logId
 Cypher_recreateIdx__V_Demo__logId=\
@@ -21,10 +32,7 @@ Cypher_recreateIdx__V_Demo__logId=\
 #neo4j重建索引（neo4j删除索引、创建索引）
 def neo4j_recreateIdx(sess:Session,Cypher_Txt:str)->int:
 
-    result:Result=sess.run(Cypher_Txt)
-    # s=result.single()
-    # v=result.value()
-    summry:ResultSummary=result.consume()
+    summry:ResultSummary=_neo4j_run_cypherTxt(sess,Cypher_Txt)
 
     print(f"删除索引{summry.counters.indexes_removed}条, 创建索引{summry.counters.indexes_added}条")
     return summry.counters.indexes_removed + summry.counters.indexes_added
@@ -38,10 +46,7 @@ Cypher_recreateConstraint__V_Demo__logId=\
 #neo4j重建约束（neo4j删除约束、创建约束）
 def neo4j_recreateConstraint(sess:Session,Cypher_Txt:str)->int:
 
-    result:Result=sess.run(Cypher_Txt)
-    # s=result.single()
-    # v=result.value()
-    summry:ResultSummary=result.consume()
+    summry:ResultSummary=_neo4j_run_cypherTxt(sess,Cypher_Txt)
 
     print(f"删除索引{summry.counters.constraints_removed}条, 创建索引{summry.counters.constraints_added}条")
     return summry.counters.constraints_removed + summry.counters.constraints_added
