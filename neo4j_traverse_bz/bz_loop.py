@@ -21,7 +21,7 @@ class LoopTraverse( ):
 
     def _minMax_fnCallId( this):
         CypherTxt=\
-"""match (v:V_FnCallLog_Analz {direct:1})
+"""match (v:V_FnCallLog {direct:1})
 return min(v.fnCallId) as min_fnCallId, max(v.fnCallId) as max_fnCallId
 """
         min_fnCallId,max_fnCallId=neo4j_query_1row(this.trav.N.sess,"",CypherTxt,params={},filedNameLs=["min_fnCallId","max_fnCallId"])
