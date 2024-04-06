@@ -12,6 +12,7 @@ import neo4j
 from neo4j import Driver
 
 from dbConn_inject__sqlite3_neo4j import dbConn_inject__sqlite3_neo4j
+from neo4j__visual__by_networkx import neo4j_visual__by_networkx
 from neo4j__writeVertex_FnCallLog__writeEdge_FnEL import neo4j_recreate___idx__V_FnCallLog__logId, neo4j_recreate___uq__V_FnCallLog__logId, neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId
 from sqlite3_basic_Q_fnCallLog import queryFnCallLogTmPntMaxMin
 
@@ -71,6 +72,13 @@ notBalancedTmPntLs,
 notBalancedFnCallIdLs,
 tmPnt_max,tmPnt_min,
 )
+    
+## 简易可视化neo4j图（以networkx）
+    # pip install networkx matplotlib
+
+#### 可视化
+    neo4j_visual__by_networkx(neo4j_sess)
+
     return 0
 
 
