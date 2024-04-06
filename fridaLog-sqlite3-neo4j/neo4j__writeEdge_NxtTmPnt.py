@@ -7,6 +7,14 @@
 #【术语】 
 
 import typing
+import sqlite3
+import neo4j
+
+#循环操作neo4j过程中,打印进度时所用的判定整数
+from const import Neo4j_Integer_Print
+
+from sqlite3_basic_Q_fnCallLog import queryFnCallLogByTmPnt
+from tool_basic import lsIsEmpty, nowDateTimeTxt
 
 
 
@@ -30,10 +38,7 @@ import typing
 
 
 
-sqlTmpl_t_FnCallLog_query_by_tmPnt="select  *  from t_FnCallLog where tmPnt=?"
 
-sqlTmpl_t_FnCallLog_tmPnt_min="select  min(tmPnt) tmPnt_min  from t_FnCallLog "
-sqlTmpl_t_FnCallLog_tmPnt_max="select  max(tmPnt) tmPnt_max  from t_FnCallLog "
 
 
 ### 按照tmPnt查询出 调用日志
@@ -41,23 +46,15 @@ sqlTmpl_t_FnCallLog_tmPnt_max="select  max(tmPnt) tmPnt_max  from t_FnCallLog "
 
 
 
-def queryFnCallLogByTmPnt(tmPnt):
-    _rowLs=sq3dbConn.execute(sqlTmpl_t_FnCallLog_query_by_tmPnt, [tmPnt]).fetchall()
-    # print(_rowLs)
-    if lsIsEmpty(_rowLs): return None
-    assert len(_rowLs) == 1, "一个时刻点tmPnt只应该有一条调用日志"
-    callLog=_rowLs[0]
-    
-    return callLog
 
 
 
 
-#最小时刻点
-tmPnt_min:int=sq3dbConn.execute(sqlTmpl_t_FnCallLog_tmPnt_min).fetchone()["tmPnt_min"]
+# #最小时刻点
+# tmPnt_min:int=sq3dbConn.execute(sqlTmpl_t_FnCallLog_tmPnt_min).fetchone()["tmPnt_min"]
 
-#最大时刻点
-tmPnt_max:int=sq3dbConn.execute(sqlTmpl_t_FnCallLog_tmPnt_max).fetchone()["tmPnt_max"]
+# #最大时刻点
+# tmPnt_max:int=sq3dbConn.execute(sqlTmpl_t_FnCallLog_tmPnt_max).fetchone()["tmPnt_max"]
 
 
 
@@ -66,10 +63,7 @@ tmPnt_max:int=sq3dbConn.execute(sqlTmpl_t_FnCallLog_tmPnt_max).fetchone()["tmPnt
 #  to_tmPnt 取值范围为 区间[tmPnt_min+1,tmPnt_max]
 
 ### 跳过不平衡的 to_tmPnt
-
-
-
-def skipNotBalanced__to_tmPnt(from_tmPnt:int) -> int:
+def skipNotBalanced__to_tmPnt(notBalancedTmPntLs:typing.List[int],from_tmPnt:int) -> int:
     to_tmPnt=from_tmPnt+1
     
     while to_tmPnt in notBalancedTmPntLs:
@@ -79,52 +73,48 @@ def skipNotBalanced__to_tmPnt(from_tmPnt:int) -> int:
     return to_tmPnt
 
 
-
-
-print(f"notBalancedFnCallIdLs={notBalancedFnCallIdLs}")
-
-
+# print(f"notBalancedFnCallIdLs={notBalancedFnCallIdLs}")
     # notBalancedFnCallIdLs=[1]
 
-
-### 遍历 时刻点TmPnt
-
-
-
 # 遍历 时刻点TmPnt
+def neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId(
+sq3dbConn:sqlite3.Connection,  neo4j_sess:neo4j.Session,
+notBalancedTmPntLs:typing.List[int],
+notBalancedFnCallIdLs:typing.List[int],
+tmPnt_max:int,tmPnt_min:int,
+):
+    for from_tmPnt in range(tmPnt_min,tmPnt_max):
+        
+        #打印 进度
+        if from_tmPnt % Neo4j_Integer_Print == 0 : print(f"{nowDateTimeTxt()},from_tmPnt={from_tmPnt}")
 
-for from_tmPnt in range(tmPnt_min,tmPnt_max):
-    
-    #打印 进度
-    if from_tmPnt % Neo4j_Integer_Print == 0 : print(f"{nowDateTimeTxt()},from_tmPnt={from_tmPnt}")
+        # 查询 '来源时刻点from_tmPnt' 下 仅有的一条日志
+        fromLog=queryFnCallLogByTmPnt(sq3dbConn,from_tmPnt)
+        if fromLog is None:
+            assert from_tmPnt in notBalancedTmPntLs, \
+    f"TmPnt链条断裂处点一定在notBalancedTmPntLs中, from_tmPnt={from_tmPnt}, notBalancedTmPntLs={notBalancedTmPntLs}"
+            #跳过 TmPnt链条断裂处点
+            continue
+        
+        #从 来源时刻点from_tmPnt 指向 下一个时刻点to_tmPnt
+        to_tmPnt:int=skipNotBalanced__to_tmPnt(from_tmPnt)
 
-    # 查询 '来源时刻点from_tmPnt' 下 仅有的一条日志
-    fromLog=queryFnCallLogByTmPnt(from_tmPnt)
-    if fromLog is None:
-        assert from_tmPnt in notBalancedTmPntLs, \
-f"TmPnt链条断裂处点一定在notBalancedTmPntLs中, from_tmPnt={from_tmPnt}, notBalancedTmPntLs={notBalancedTmPntLs}"
-        #跳过 TmPnt链条断裂处点
-        continue
-    
-    #从 来源时刻点from_tmPnt 指向 下一个时刻点to_tmPnt
-    to_tmPnt:int=skipNotBalanced__to_tmPnt(from_tmPnt)
+        from_fnCallId:int=fromLog["fnCallId"]
+        assert from_fnCallId not in notBalancedFnCallIdLs ,\
+    f"断言 遍历 时刻点TmPnt 中 无应该有 不平衡的from_fnCallId={from_fnCallId}, notBalancedFnCallIdLs={notBalancedFnCallIdLs}"
 
-    from_fnCallId:int=fromLog["fnCallId"]
-    assert from_fnCallId not in notBalancedFnCallIdLs ,\
-f"断言 遍历 时刻点TmPnt 中 无应该有 不平衡的from_fnCallId={from_fnCallId}, notBalancedFnCallIdLs={notBalancedFnCallIdLs}"
+                
+        # 查询 '下一个时刻点to_tmPnt' 下 仅有的一条日志
+        toLog=queryFnCallLogByTmPnt(sq3dbConn,to_tmPnt)
+        
+        fromLogId=fromLog["logId"]
+        toLogId=toLog["logId"]
 
-            
-    # 查询 '下一个时刻点to_tmPnt' 下 仅有的一条日志
-    toLog=queryFnCallLogByTmPnt(to_tmPnt)
-    
-    fromLogId=fromLog["logId"]
-    toLogId=toLog["logId"]
-
-    
-    to_fnCallId=toLog["fnCallId"]
-    # print(f"fromLogId={fromLogId},toLog={toLogId}")
-    
-    driver.execute_query(
+        
+        to_fnCallId=toLog["fnCallId"]
+        # print(f"fromLogId={fromLogId},toLog={toLogId}")
+        
+        neo4j_sess.run(
 #'neo4j 索引 V_FnCallLog.logId' 加速 以下两个MATCH查询
 #  找到最小时刻点
 "MATCH (from_Log:V_FnCallLog {logId: $fromLogId})"
@@ -137,7 +127,6 @@ fromLogId=fromLogId,
 toLogId=toLogId, 
 from_fnCallId=from_fnCallId,
 to_fnCallId=to_fnCallId,
-database_=NEO4J_DB,
 )
     
 
@@ -161,26 +150,12 @@ database_=NEO4J_DB,
 
 
 ### 开发调试用语句
-
-
-
-{ **sq3dbConn.execute(sqlTmpl_t_FnCallLog_tmPnt_min).fetchall()[0] }
-
+# { **sq3dbConn.execute(sqlTmpl_t_FnCallLog_tmPnt_min).fetchall()[0] }
     # {'tmPnt_min': 2}
 
-
-
-
-
-{ **sq3dbConn.execute(sqlTmpl_t_FnCallLog_tmPnt_max).fetchall()[0] }
-
+# { **sq3dbConn.execute(sqlTmpl_t_FnCallLog_tmPnt_max).fetchall()[0] }
     # {'tmPnt_max': 1619593}
 
-
-
-
-
-tmPnt_min,tmPnt_max, len(range(tmPnt_min,tmPnt_max+1))
-
+# tmPnt_min,tmPnt_max, len(range(tmPnt_min,tmPnt_max+1))
     # (2, 1619593, 1619592)
 

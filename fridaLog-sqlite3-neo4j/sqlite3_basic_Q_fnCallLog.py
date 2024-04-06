@@ -62,7 +62,7 @@ def queryFnCallLogByTmPnt(sq3dbConn:sqlite3.Connection,tmPnt):
 sqlTmpl_t_FnCallLog_tmPnt_min="select  min(tmPnt) tmPnt_min  from t_FnCallLog "
 sqlTmpl_t_FnCallLog_tmPnt_max="select  max(tmPnt) tmPnt_max  from t_FnCallLog "
 ### 查询 最大时刻点、最小时刻点
-def queryFnCallLogTmPntMaxMin(sq3dbConn:sqlite3.Connection):
+def queryFnCallLogTmPntMaxMin(sq3dbConn:sqlite3.Connection)->typing.Tuple[int,int]:
     #最小时刻点
     tmPnt_min:int=sq3dbConn.execute(sqlTmpl_t_FnCallLog_tmPnt_min).fetchone()["tmPnt_min"]
     #最大时刻点
