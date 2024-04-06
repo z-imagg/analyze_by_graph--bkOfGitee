@@ -51,6 +51,7 @@ DETACH DELETE n
 """
 
 def _visual_main(sess:Session):
+    sess_anlz:Session = sess#本来sess_anlz连接的是另一个neo4j实例
     # executeDropCreateIdx(sess_anlz, Cypher_IdxDropCreate)
     deleteAll(sess,Cypher_delete__E_P2S)
     deleteAll(sess,Cypher_delete__V_FnCallLog_Analz)
