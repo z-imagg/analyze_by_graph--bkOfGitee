@@ -55,24 +55,11 @@ class BzWriteWidth(TraverseAbs):
         #注意此返回是必须的, 否则 遍历器traverse.py.TraverseAbs.V中的'S=[...bz()...]'将得不到返回值
         return None
     
+    def clear_field(self):
+        #初始化: 全体置空width字段
+        update__init_width_as_null(self.N.sess)
 
-def _bz_width_write_main(sess:Session):
-    from neo4j_tool_traverse import NTT
-    RootFnCallId=667245 #13,229638,667245
-
-    #初始化: 全体置空width字段
-    # update__init_width_as_null(sess)
-
-    # 起点RE
-    RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
-    # 遍历过程中 计算深度
-    BzWriteWidth(sess).V(RE)
 
 
 if __name__=="__main__":
-    dbConn_inject_neo4j_default(_bz_width_write_main)
-
-
-
-    
-
+    raise Exception("请运行_main_neo4j_traverse_bz.py")

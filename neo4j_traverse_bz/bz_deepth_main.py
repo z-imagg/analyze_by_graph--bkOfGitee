@@ -8,6 +8,7 @@
 import typing
 from neo4j import Session
 from neo4j.graph import Node
+# from bz_loop import LoopTraverse
 from dbConn_inject_neo4j import dbConn_inject_neo4j_default
 from util_basic import assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
 from neo4j_misc import update__init_deepth_as_null
@@ -35,29 +36,14 @@ class BzDeepth(TraverseAbs):
 
         #注意此返回是必须的, 否则 遍历器traverse.py.TraverseAbs.V中的'S=[...bz()...]'将得不到返回值
         return d
+    
+    def clear_field(self):
+        pass
 
 
-
-def _bz_deepth_main(sess:Session):
-    from neo4j_tool_traverse import NTT
-    RootFnCallId=13 
-    #1:不平衡点;  
-    #孤立点群：{2:叶子}； 
-    #孤立点群：{3:孩子为4，4:叶子}； 
-    #孤立点群：{5:孩子为6， 6:孩子为7， 7:孩子为8， 8:孩子为9， 9:孩子为10、12， 10:孩子为11， 11:叶子， 12:叶子}；
-    #孤立点群：{13:孩子为..., 229371:叶子} 此群点数庞大， fnCallId==229371是最后一个节点
-
-    #初始化: 全体置空deepth字段
-    update__init_deepth_as_null(sess)
-
-    # 起点RE
-    RE:Node=NTT(sess).getE_byFnCallId(RootFnCallId)
-    # 遍历过程中 计算深度
-    BzDeepth(sess).V(RE)
 
 if __name__=="__main__":
-    dbConn_inject_neo4j_default(_bz_deepth_main)
-
+    raise Exception("请运行_main_neo4j_traverse_bz.py")
 
     
 

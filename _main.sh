@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+#【术语】  
+#【返回类型说明】  
+#【备注】  
 
 function get_bash_en_dbg() {
   bash_en_dbg=false; [[ $- == *x* ]] && bash_en_dbg=true #记录bash是否启用了调试模式
@@ -23,8 +26,11 @@ now="$(date +%s)"
 
 export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/;/fridaAnlzAp/analyze_by_graph/_neo4j/;/fridaAnlzAp/analyze_by_graph/_sqlite3/;/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/;/fridaAnlzAp/analyze_by_graph/neo4j_traverse/;/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/;/fridaAnlzAp/analyze_by_graph/db_conn_inject/;/fridaAnlzAp/analyze_by_graph/util/;/fridaAnlzAp/analyze_by_graph/visual/"
 
-python bz_deepth_write_main.py | tee bz_deepth_write_main-${now}.log
-python bz_width_write_main.py | tee bz_width_write_main-${now}.log
-python bz_markup_write_main.py | tee bz_markup_write_main-${now}.log
+#fridaLog-sqlite3-neo4j
+python _main_fridaLog-sqlite3-neo4j.py | tee fridaLog-sqlite3-neo4j-${now}.log
+
+#遍历器
+python _main_neo4j_traverse_bz.py.py | tee _main_neo4j_traverse_bz-${now}.log
+
 md5sum *.log > log.md5sum-${now}.txt
 

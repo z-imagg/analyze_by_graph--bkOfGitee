@@ -11,10 +11,11 @@ import sqlite3
 import neo4j
 from neo4j import Driver
 
-from dbConn_inject__sqlite3_neo4j import dbConn_inject__sqlite3_neo4j
+from db_conn_inject.dbConn_inject__sqlite3_neo4j import dbConn_inject__sqlite3_neo4j
 from neo4j__simple_visual__by_networkx import neo4j_visual__by_networkx
 from neo4j__writeVertex_FnCallLog__writeEdge_FnEL import neo4j_recreate___idx__V_FnCallLog__logId, neo4j_recreate___uq__V_FnCallLog__logId, neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId
 from sqlite3_basic_Q_fnCallLog import queryFnCallLogTmPntMaxMin
+from config import sqlite3_dbFilePath,neo4jDB_default
 
 
 def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.Session
@@ -85,12 +86,7 @@ tmPnt_max,tmPnt_min,
 if __name__=="__main__":
     from fridaLog__sqlite3_reinitDbTabDef import reinit_sq3_db_tabDef
     from neo4j_db_basic import Neo4J_DB_Entity, getDriver
-    sq_db_fp='./FnCallLog.db'
     ### 重初始化sqlite3数据库、表结构
-    sq3dbConn:sqlite3.Connection=reinit_sq3_db_tabDef(sq_db_fp)
+    sq3dbConn:sqlite3.Connection=reinit_sq3_db_tabDef(sqlite3_dbFilePath)
 
-    neo4j_db_entity= Neo4J_DB_Entity(URI="neo4j://localhost:7687", AUTH_user="neo4j", AUTH_pass="123456", DB_NAME="neo4j")
-    neo4j_dbConn:Driver=getDriver(neo4j_db_entity )
-
-
-    fnCallLogCnt:int = dbConn_inject__sqlite3_neo4j(sqlite3_dbFilePath='./FnCallLog.db', neo4j_db_entity=neo4j_db_entity, func=fridaLog_to_sqlite3_to_neo4j)
+    fnCallLogCnt:int = dbConn_inject__sqlite3_neo4j(sqlite3_dbFilePath, neo4jDB_default, func=fridaLog_to_sqlite3_to_neo4j)
