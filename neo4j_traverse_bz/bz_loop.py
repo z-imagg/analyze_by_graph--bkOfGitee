@@ -51,7 +51,8 @@ class LoopTraverse( ):
             end_tmPnt:int=this.trav.cur_tmPnt
 
             #写链条
-            Neo4j_CAUD_chain._write_chain(this.trav.N.sess, curThreadId,root_fnCallId,end_fnCallId, root_tmPnt, end_tmPnt)
+            # 理论上 每个chain写一次即可，但是这里图简单 每个Bz写了一次， 实际上 V_chain__Bz* 中的内容完全相同
+            Neo4j_CAUD_chain._write_chain(this.trav.N.sess,this.trav.__class__.__name__, curThreadId,root_fnCallId,end_fnCallId, root_tmPnt, end_tmPnt)
             
             #切换到下一个链条
             # 已知上一个 孤立群 的 终点fnCallId 为 this.trav.curFnCallId , 求 下一个孤立群 的 起点fnCallId
