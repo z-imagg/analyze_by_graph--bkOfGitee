@@ -10,9 +10,9 @@ from collections import defaultdict
 import typing
 from neo4j import Session
 from neo4j.graph import Node
+from dbConn_inject_neo4j import dbConn_inject_neo4j_default
 from util_basic import assertRE_fnAdr_eq_RL__return_fnAdr, assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf, lsIsEmpty
 from util_file import readTxt
-from neo4j_main import neo4jMain
 from neo4j_misc import update__init_markup_as_null
 from traverse import TraverseAbs
 from neo4j_tool import neo4j_update
@@ -119,5 +119,5 @@ def _bz_markup_write_main(sess:Session):
     BzWriteMarkup(sess).V(RE)
 
 if __name__=="__main__":
-    neo4jMain(_bz_markup_write_main)
+    dbConn_inject_neo4j_default(_bz_markup_write_main)
 

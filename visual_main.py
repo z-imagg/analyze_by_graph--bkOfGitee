@@ -7,8 +7,8 @@
 
 import typing
 from neo4j import  EagerResult, ResultSummary, Session,Result
+from dbConn_inject_neo4j import dbConn_inject_neo4j
 from util_file import readTxt
-from neo4j_2db_main import neo4j2dbMain
 from neo4j_db_basic import Neo4J_DB_Entity
 from neo4j_delete_all import deleteAll
 from neo4j_tool import neo4j_query_RowLs
@@ -110,7 +110,7 @@ son__fnSym_column=son["fnSym_column"]
 
 if __name__=="__main__":
     db_main= Neo4J_DB_Entity(URI="neo4j://localhost:7687", AUTH_user="neo4j", AUTH_pass="123456", DB_NAME="neo4j")
-    neo4j2dbMain(db=db_main,func=_visual_main)
+    dbConn_inject_neo4j(neo4jBbEntity=db_main,func=_visual_main)
 
 
 

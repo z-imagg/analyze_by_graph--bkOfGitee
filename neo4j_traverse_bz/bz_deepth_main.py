@@ -8,8 +8,8 @@
 import typing
 from neo4j import Session
 from neo4j.graph import Node
+from dbConn_inject_neo4j import dbConn_inject_neo4j_default
 from util_basic import assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
-from neo4j_main import neo4jMain
 from neo4j_misc import update__init_deepth_as_null
 from traverse import TraverseAbs
 
@@ -56,7 +56,7 @@ def _bz_deepth_main(sess:Session):
     BzDeepth(sess).V(RE)
 
 if __name__=="__main__":
-    neo4jMain(_bz_deepth_main)
+    dbConn_inject_neo4j_default(_bz_deepth_main)
 
 
     
