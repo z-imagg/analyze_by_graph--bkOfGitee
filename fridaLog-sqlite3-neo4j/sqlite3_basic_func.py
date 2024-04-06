@@ -9,7 +9,7 @@
 from sqlite3 import Row as sqlite3Row
 import typing
 
-from tool_basic import lsIsEmpty
+from util_basic import lsIsEmpty
 
 
 ## 基础sqlite3函数

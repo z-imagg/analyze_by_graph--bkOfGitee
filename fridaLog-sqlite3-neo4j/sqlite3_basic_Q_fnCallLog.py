@@ -10,7 +10,7 @@
 import sqlite3
 import typing
 
-from tool_basic import lsIsEmpty
+from util_basic import lsIsEmpty
 
 sqlTmpl_t_FnCallLog_query_by_fnCallId="select  *  from t_FnCallLog where fnCallId=?"
 #按字段t_FnCallLog.fnCallId查询，因此该字段得有索引
