@@ -14,20 +14,5 @@ lambda sess:
 
 dbConn_inject_neo4j_default(
 lambda sess: 
-    LoopTraverse(trav=BzDeepth(sess)).loop_traverse()
-)
-
-dbConn_inject_neo4j_default(
-lambda sess: 
-    LoopTraverse(trav=BzWriteDeepth(sess)).loop_traverse()
-)
-
-dbConn_inject_neo4j_default(
-lambda sess: 
-    LoopTraverse(trav=BzWriteWidth(sess)).loop_traverse()
-)
-
-dbConn_inject_neo4j_default(
-lambda sess: 
-    LoopTraverse(trav=BzWriteMarkup(sess)).loop_traverse()
+    LoopTraverse(sess,trav_ls=[BzDeepth(sess),BzWriteDeepth(sess),BzWriteWidth(sess),BzWriteMarkup(sess)]).loop_traverse()
 )

@@ -50,4 +50,9 @@ def assertRE_fnAdr_eq_RL__return_fnAdr(RE:Node, RL:Node)->str:
     fnAdr:str=E_fnAdr
     return fnAdr
 
-
+#断言数组作为集合只有1个元素， 即 数组中 都是某一个元素的重复
+def assert_ls_as_set_only_1_element(intLs:typing.List[int])->int:
+    intSet:typing.List[int]=[*set(intLs)]
+    assert len(intSet) == 1
+    _int:int=intSet[0]
+    return _int
