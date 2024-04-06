@@ -19,7 +19,6 @@ cypher__query_BJ_fJ_LJ_tJ_=readTxt("cypher_src/query_BJ_fJ_LJ_tJ_.cypher")
 
 
 
-from cypher_tmpl_render import cypherTmplRender
 from neo4j_tool import neo4j_query_1row, neo4j_update, neo4j_query,neo4j_query_1field1row
 
 class NTT:
