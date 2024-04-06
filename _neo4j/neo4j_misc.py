@@ -1,7 +1,7 @@
 from neo4j import Session
 
-from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
-from file_tool import readTxt
+from util_datetime import nowDateTimeTxt
+from util_file import readTxt
 
 cypher__init_deepth_as_null=readTxt("cypher_src/init_deepth_as_null.cypher") 
 cypher__init_width_as_null=readTxt("cypher_src/init_width_as_null.cypher") 

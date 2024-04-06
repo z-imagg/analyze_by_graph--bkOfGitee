@@ -9,13 +9,13 @@ from collections import defaultdict
 import typing
 from neo4j import Session
 from neo4j.graph import Node
+from dbConn_inject_neo4j import dbConn_inject_neo4j_default
 from util_basic import assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
-from file_tool import readTxt
-from neo4j_main import neo4jMain
+from util_file import readTxt
 from neo4j_misc import update__init_deepth_as_null, update__init_width_as_null
 from traverse import TraverseAbs
 from neo4j_tool import neo4j_update
-from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
+from util_datetime import nowDateTimeTxt
 import json
 
 class BzWriteWidth(TraverseAbs):
@@ -70,7 +70,7 @@ def _bz_width_write_main(sess:Session):
 
 
 if __name__=="__main__":
-    neo4jMain(_bz_width_write_main)
+    dbConn_inject_neo4j_default(_bz_width_write_main)
 
 
 

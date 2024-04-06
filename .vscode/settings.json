@@ -11,9 +11,14 @@
         "/fridaAnlzAp/analyze_by_graph/",
         "/fridaAnlzAp/analyze_by_graph/_neo4j/",
         "/fridaAnlzAp/analyze_by_graph/_sqlite3/",
-        "/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/"
+        "/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/",
+        "/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/",
+        "/fridaAnlzAp/analyze_by_graph/neo4j_traverse/",
+        "/fridaAnlzAp/analyze_by_graph/db_conn_inject/",
+        "/fridaAnlzAp/analyze_by_graph/util/",
+        "/fridaAnlzAp/analyze_by_graph/visual/",
     ],
     "terminal.integrated.env.windows": {
-        "PYTHONPATH": "${env:PYTHONPATH};${workspaceFolder};/fridaAnlzAp/analyze_by_graph/;/fridaAnlzAp/analyze_by_graph/_neo4j/;/fridaAnlzAp/analyze_by_graph/_sqlite3/;/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/;",
+        "PYTHONPATH": "${env:PYTHONPATH};${workspaceFolder};/fridaAnlzAp/analyze_by_graph/;/fridaAnlzAp/analyze_by_graph/_neo4j/;/fridaAnlzAp/analyze_by_graph/_sqlite3/;/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/;/fridaAnlzAp/analyze_by_graph/neo4j_traverse/;/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/;/fridaAnlzAp/analyze_by_graph/db_conn_inject/;/fridaAnlzAp/analyze_by_graph/util/;/fridaAnlzAp/analyze_by_graph/visual/",
     }
 }

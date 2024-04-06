@@ -7,8 +7,8 @@ import typing
 import numpy
 from pathlib import Path
 
-from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
-from file_tool import readTxt
+from util_datetime import nowDateTimeTxt
+from util_file import readTxt
 
 
 cypher__getE=readTxt("cypher_src/getE.cypher") 
@@ -19,7 +19,6 @@ cypher__query_BJ_fJ_LJ_tJ_=readTxt("cypher_src/query_BJ_fJ_LJ_tJ_.cypher")
 
 
 
-from cypher_tmpl_render import cypherTmplRender
 from neo4j_tool import neo4j_query_1row, neo4j_update, neo4j_query,neo4j_query_1field1row
 
 class NTT:
