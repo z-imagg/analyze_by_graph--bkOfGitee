@@ -29,3 +29,7 @@ from sq3_qeury_notBalanced_fnCallIdLs_tmPntLs import qeury_notBalanced_fnCallIdL
 notBalancedFnCallIdLs, notBalancedTmPntLs=qeury_notBalanced_fnCallIdLs_tmPntLs()
 ### 删除不平衡的fnCallId的记录行(移到他表)
 sq3_move_notBalanced_fnCallCallLog()
+
+
+## neo4j 社区版 安装、启动
+#  neo4j_community_install_boot.md
