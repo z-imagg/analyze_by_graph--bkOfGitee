@@ -1,28 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#【术语】 abs==abstract==抽象 , bz==busy==业务函数
+#【术语】 abs==abstract==抽象 , bz==busy==业务函数, P2S=="parent to son"=="parentFnCallId --> sonFnCallId"
 #【返回类型说明】 V的返回类型 == bz的返回类型 , S的类型==[bz的返回类型]
 #【备注】 V == traverse.py.TraverseAbs.V,  S == traverse.py.TraverseAbs.S
 
 import typing
-from neo4j import Driver, EagerResult, GraphDatabase, ResultSummary, Session,Result
-from neo4j.graph import Node
-import pandas
-from util_basic import assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
+from neo4j import  EagerResult, ResultSummary, Session,Result
+from util_file import readTxt
 from neo4j_2db_main import neo4j2dbMain
 from neo4j_db_basic import Neo4J_DB_Entity
 from neo4j_delete_all import deleteAll
-from neo4j_main import neo4jMain
-from neo4j_misc import update__init_deepth_as_null
-from traverse import TraverseAbs
-from neo4j_tool import neo4j_query, neo4j_query_RowLs, neo4j_update
-from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
-from math import log2
+from neo4j_tool import neo4j_query_RowLs
 
 
-from itertools import chain
-from pathlib import Path
 import json
 
 cypher__query__链条_宽_宽1深=readTxt("cypher_src/query__链条_宽_宽1深.cypher") 
@@ -59,10 +50,10 @@ LIMIT 1000
 DETACH DELETE n
 """
 
-def _visual_main(sess:Session, sess_anlz:Session, _:Driver,  __:Driver):
+def _visual_main(sess:Session):
     # executeDropCreateIdx(sess_anlz, Cypher_IdxDropCreate)
-    deleteAll(sess_anlz,Cypher_delete__E_P2S)
-    deleteAll(sess_anlz,Cypher_delete__V_FnCallLog_Analz)
+    deleteAll(sess,Cypher_delete__E_P2S)
+    deleteAll(sess,Cypher_delete__V_FnCallLog_Analz)
 
     rowLs:typing.List[typing.Dict[str,typing.Any]]=neo4j_query_RowLs(sess,"_visual_main", cypher__query__链条_宽_宽1深, params={})
     nodeTab= dict([ (r["fnCallId"],r)for r in rowLs])
@@ -91,7 +82,7 @@ fnSym_column=r["fnSym_column"],)
         for j,sonFnCallId in enumerate(sonFnCallIdLs):
             son=nodeTab.get(sonFnCallId,None)
             if son is not None:
-                result:Result=sess_anlz.run(
+                result:Result=sess.run(
 "MATCH (parent:V_FnCallLog_Analz {fnCallId:$parent__fnCallId})"
 #  找到最小时刻点
 "MATCH   (son:V_FnCallLog_Analz  {fnCallId:$son__fnCallId})"
@@ -119,8 +110,7 @@ son__fnSym_column=son["fnSym_column"]
 
 if __name__=="__main__":
     db_main= Neo4J_DB_Entity(URI="neo4j://localhost:7687", AUTH_user="neo4j", AUTH_pass="123456", DB_NAME="neo4j")
-    db_anlz= Neo4J_DB_Entity(URI="neo4j://localhost:5687", AUTH_user="neo4j", AUTH_pass="123456", DB_NAME="neo4j")
-    neo4j2dbMain(db1=db_main, db2=db_anlz, func=_visual_main)
+    neo4j2dbMain(db=db_main,func=_visual_main)
 
 
 
