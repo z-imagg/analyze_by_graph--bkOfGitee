@@ -7,16 +7,18 @@
 #【备注】 
 #【术语】 
 
-from sqlite3 import Row as sqlite3Row
+import sqlite3
 import typing
+from fridaLog_fullPath_get import getLogFullPath
 from iterLineOfFile import iterLineF
 
 ## torch函数调用日志文件(frida日志文件) 装入 sqlite3 
 
 ###  写 表FnCallLog
-def sq3_wTab_FnCallLog():
+def sq3_wTab_FnCallLog(sq3dbConn:sqlite3.Connection):
+    fnCallLogFP:str=getLogFullPath()
     print("从表t_FnCallLog删除行数 ",sq3dbConn.execute("delete from t_FnCallLog").rowcount)    
-    LogLineCnt:int=iterLineF(TorchFnCallLogFP,LineFunc=sq3_insert_t_FnCallLog)
+    LogLineCnt:int=iterLineF(fnCallLogFP,LineFunc=sq3_insert_t_FnCallLog)
     # 从表t_FnCallLog删除行数  0
     # 即将处理第0行日志
     # 即将处理第500000行日志
@@ -29,7 +31,7 @@ def sq3_wTab_FnCallLog():
 sqlTmpl_t_FnCallLog_insert=f"INSERT INTO t_FnCallLog (logId,tmPnt,processId,curThreadId,direct,fnAdr,fnCallId,fnSymId) VALUES (?,?,?,?,?,?,?,?)"
 
 #### 行回调函数中执行插入
-def sq3_insert_t_FnCallLog(lnNum,ln):
+def sq3_insert_t_FnCallLog(lnNum:int,ln:str,sq3dbConn:sqlite3.Connection):
     try:
         sq3dbConn.execute(sqlTmpl_t_FnCallLog_insert,[ ln['logId'],ln['tmPnt'],ln['processId'], ln['curThreadId'],ln['direct'],ln['fnAdr'],ln['fnCallId'],ln['fnSym']['address'] ])
     except (KeyError, ValueError) as e:

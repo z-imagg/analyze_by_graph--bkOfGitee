@@ -30,15 +30,14 @@ def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.S
     sq3_wTab_FnCallLog(sq3dbConn)
 ### 提交、关闭sqlite3数据库
     sq3dbConn.commit()
-    # sq3dbConn.close()
 
 ## 找进出不平衡的fnCallId
     from neo4j__writeVertex_FnCallLog__writeEdge_FnEL import neo4j_del_v_e
     from sqlite3_qeury_notBalanced_fnCallIdLs_tmPntLs import qeury_notBalanced_fnCallIdLs_tmPntLs,sq3_move_notBalanced_fnCallCallLog
 ### 找到 不平衡的fnCallId列表 和 不平衡的 TmPnt列表
-    notBalancedFnCallIdLs, notBalancedTmPntLs=qeury_notBalanced_fnCallIdLs_tmPntLs()
+    notBalancedFnCallIdLs, notBalancedTmPntLs=qeury_notBalanced_fnCallIdLs_tmPntLs(sq3dbConn)
 ### 删除不平衡的fnCallId的记录行(移到他表)
-    sq3_move_notBalanced_fnCallCallLog()
+    sq3_move_notBalanced_fnCallCallLog(sq3dbConn,notBalancedFnCallIdLs)
 
 ## neo4j 社区版 安装、启动
 #  neo4j_community_install_boot.md

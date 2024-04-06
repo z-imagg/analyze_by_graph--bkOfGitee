@@ -6,9 +6,12 @@
 #【备注】 
 #【术语】 
 
-from sqlite3 import Row as sqlite3Row
 import typing
+import sqlite3
 
+from sqlite3_basic_DU_inInts import sq3DU_inInts
+from sqlite3_basic_Q_inInts import sq3Q_inInts, sq3Q_inInts_2Dcts
+from sqlite3_basic_func import sq3Q
 from tool_basic import lsIsEmpty
 ## 找进出不平衡的fnCallId
 
@@ -17,7 +20,7 @@ from tool_basic import lsIsEmpty
 #  以前用spark也找出过[sql方式找进出不平衡的fncallid](http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/raw/tag/%E5%AE%8C%E5%A4%87%E4%BE%8B%E5%AD%90/spark3.5.0_pyspark3.5.0_sql%E4%B8%BA%E4%B8%BB/spark_demo_pyspark.ipynb#sql%E6%96%B9%E5%BC%8F%E6%89%BE%E8%BF%9B%E5%87%BA%E4%B8%8D%E5%B9%B3%E8%A1%A1%E7%9A%84fncallid)，　可以作为这里的对比
 
 ### 找到 不平衡的fnCallId列表 和 不平衡的 TmPnt列表
-def qeury_notBalanced_fnCallIdLs_tmPntLs():
+def qeury_notBalanced_fnCallIdLs_tmPntLs(sq3dbConn:sqlite3.Connection):
     fnCallIdLs=sq3Q(sq3dbConn,"select fnCallId,count(*) cnt from t_FnCallLog group by fnCallId having cnt=1","fnCallId")
     if lsIsEmpty(fnCallIdLs)  :
         print("无不平衡的fnCallLog")
@@ -38,9 +41,9 @@ def qeury_notBalanced_fnCallIdLs_tmPntLs():
 
 
 ### _ 找到不平衡的FnSym列表 
-def sq3_query_notBalanced_fnSymLs():
+def sq3_query_notBalanced_fnSymLs(sq3dbConn:sqlite3.Connection):
     _fnAdrLs=sq3Q_inInts(sq3dbConn, "select  fnAdr from t_FnCallLog where fnCallId in ( {lsVar} )", notBalancedFnCallIdLs, "fnAdr")
-    _symLs_nBl=sq3Q_inStrs_2Dcts(sq3dbConn, "select  * from t_FnSym where address in ( {lsVar} )", _fnAdrLs )
+    _symLs_nBl=sq3Q_inInts_2Dcts(sq3dbConn, "select  * from t_FnSym where address in ( {lsVar} )", _fnAdrLs )
 
     print("找到不平衡的FnSym列表 _symLs_nBl=",_symLs_nBl)
 
@@ -49,7 +52,7 @@ def sq3_query_notBalanced_fnSymLs():
 
 
 ### 删除不平衡的fnCallId的记录行(移到他表)
-def sq3_move_notBalanced_fnCallCallLog():
+def sq3_move_notBalanced_fnCallCallLog(sq3dbConn:sqlite3.Connection,notBalancedFnCallIdLs:typing.List[int]):
     #  不平衡的fnCallId列表 移动到 表t_FnCallLog_notBalanced
     _rowCnt_insert=sq3DU_inInts(sq3dbConn, 
     "insert into t_FnCallLog_notBalanced select * from t_FnCallLog where fnCallId in ( {lsVar} )",notBalancedFnCallIdLs)
