@@ -23,10 +23,14 @@ class TraverseAbs(ABC):
         #记录遍历次数 （即调用遍历方法V的次数）, 主要用于观看遍历进度
         self.Vi:int=0
 
+        #当遍历函数V结束时,self.curFnCallId==最后一个fnCallId
+        self.curFnCallId:int=None
+
     def V(tz,RE:Node)->T:
         tz.Vi+=1
 
         fnCallId:int=RE['fnCallId']
+        tz.curFnCallId:int=fnCallId
         print(f"开始遍历 fnCallId={fnCallId}；",end=" ")
         RL:Node=tz.N.getL(RE)
         if tz.N.isLeaf(RE):
