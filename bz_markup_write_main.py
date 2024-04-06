@@ -10,7 +10,7 @@ from collections import defaultdict
 import typing
 from neo4j import Session
 from neo4j.graph import Node
-from bz_util import assertRE_fnAdr_eq_RL__return_fnAdr, assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf, lsIsEmpty
+from util_basic import assertRE_fnAdr_eq_RL__return_fnAdr, assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf, lsIsEmpty
 from file_tool import readTxt
 from neo4j_main import neo4jMain
 from neo4j_misc import update__init_markup_as_null

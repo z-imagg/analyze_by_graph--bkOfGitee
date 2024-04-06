@@ -9,10 +9,11 @@ import typing
 from neo4j import Driver, EagerResult, GraphDatabase, ResultSummary, Session,Result
 from neo4j.graph import Node
 import pandas
-from bz_util import assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
+from util_basic import assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
 from file_tool import readTxt
 from neo4j_2db_main import neo4j2dbMain
-from neo4j_db_entity import Neo4J_DB_Entity
+from neo4j_db_basic import Neo4J_DB_Entity
+from neo4j_delete_all import deleteAll
 from neo4j_main import neo4jMain
 from neo4j_misc import update__init_deepth_as_null
 from traverse import TraverseAbs
@@ -58,21 +59,6 @@ WITH n
 LIMIT 1000
 DETACH DELETE n
 """
-def deleteAll(sess_anlz:Session,Cypher_:str)->int:
-    del_node_cnt:int = 0
-    del_edge_cnt:int = 0
-
-    # 循环删除, 因为一次行删除 可能报内存超出
-    while True:
-        result:Result=sess_anlz.run(Cypher_)
-        # s=result.single()
-        # v=result.value()
-        summry:ResultSummary=result.consume()
-        del_node_cnt += summry.counters.nodes_deleted
-        del_edge_cnt += summry.counters.relationships_deleted
-        if summry.counters.nodes_deleted == 0 and summry.counters.relationships_deleted == 0:
-            print(f"一共删除{del_node_cnt+del_edge_cnt}条记录")
-            return
 
 def _visual_main(sess:Session, sess_anlz:Session, _:Driver,  __:Driver):
     # executeDropCreateIdx(sess_anlz, Cypher_IdxDropCreate)

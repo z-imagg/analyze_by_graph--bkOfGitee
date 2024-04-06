@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 
+from neo4j import Driver,GraphDatabase
+
 class Neo4J_DB_Entity:
     def __init__(self,URI:str,AUTH_user:str,AUTH_pass:str,DB_NAME:str) -> None:
         """
@@ -14,3 +16,8 @@ class Neo4J_DB_Entity:
         self.AUTH_pass:str = AUTH_pass
         self.DB_NAME:str=DB_NAME
         return
+
+def getDriver(db:Neo4J_DB_Entity)->Driver:
+    driver:Driver=GraphDatabase.driver(db.URI, auth=(db.AUTH_user,db.AUTH_pass))
+    assert isinstance(driver, Driver) == True
+    return driver

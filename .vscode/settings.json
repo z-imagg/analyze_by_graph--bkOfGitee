@@ -1,0 +1,19 @@
+
+
+//// vscode初始生成此文件 的操作如下：
+//// ctrl + shift + p  -->  'Preferences: Open Workspace Settings(JSON)'
+
+////  修改PYTHONPATH， 需要 重启vscode后 生效
+
+
+{
+    "python.analysis.extraPaths": [
+        "/fridaAnlzAp/analyze_by_graph/",
+        "/fridaAnlzAp/analyze_by_graph/_neo4j/",
+        "/fridaAnlzAp/analyze_by_graph/_sqlite3/",
+        "/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/"
+    ],
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "${env:PYTHONPATH};${workspaceFolder};/fridaAnlzAp/analyze_by_graph/;/fridaAnlzAp/analyze_by_graph/_neo4j/;/fridaAnlzAp/analyze_by_graph/_sqlite3/;/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/;",
+    }
+}

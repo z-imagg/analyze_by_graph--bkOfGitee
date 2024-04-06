@@ -2,12 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from neo4j import Driver,GraphDatabase
-from neo4j_db_entity import Neo4J_DB_Entity
+from neo4j_db_basic import Neo4J_DB_Entity, getDriver
 
-def getDriver(db:Neo4J_DB_Entity)->Driver:
-    driver:Driver=GraphDatabase.driver(db.URI, auth=(db.AUTH_user,db.AUTH_pass))
-    assert isinstance(driver, Driver) == True
-    return driver
 
 #neo4j 两个数据库连接 主程序模板
 def neo4j2dbMain(db1:Neo4J_DB_Entity,db2:Neo4J_DB_Entity,func):

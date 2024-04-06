@@ -153,7 +153,7 @@ def sq3Q_2Dcts(sq3dbConn,sqlTxt):
 # [{'tmPnt': 1, 'fnCallId': 1}, {'tmPnt': 2, 'fnCallId': 2}]
 ```
 
-## sqlite3查询函数:in字符串们
+## sqlite3查询函数:in整数们
 
 ### sq3Q_inInts_2Dcts: sqlite3执行sql查询 携带in整数列表条件 结果转字典
 
@@ -184,7 +184,7 @@ def sq3Q_inInts(sq3dbConn,sqlInIntLs,intLs, fieldName):
 # [1, 8, 36, 37]
 ```
 
-## sqlite3查询函数:in整数们
+## sqlite3查询函数:in字符串们
 
 ### sq3Q_inStrs: sqlite3执行sql查询 携带in字符串列表条件 并 提取字段
 
