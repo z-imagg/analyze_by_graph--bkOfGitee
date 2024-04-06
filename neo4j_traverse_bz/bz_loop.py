@@ -21,16 +21,23 @@ class LoopTraverse( ):
     def __init__(self, trav: typing.Union[BzDeepth,BzWriteDeepth,BzWriteWidth,BzWriteMarkup]) -> None:
         self.trav:typing.Union[BzDeepth,BzWriteDeepth,BzWriteWidth,BzWriteMarkup] = trav
 
+    #进入循环之前做的事情
+    def before_loop( this):
+        #初始化: 全体置空deepth|width|markup字段
+        this.trav.clear_field( )
+
     def loop_traverse( this):
+        #进入循环之前做的事情
+        this.before_loop()
+        
         min_fnCallId,max_fnCallId=Neo4j_CAUD_chain._minMax_fnCallId(this.trav.N.sess )
 
+        
         root_fnCallId:int=min_fnCallId
         while root_fnCallId!=max_fnCallId:
 
             assert root_fnCallId < max_fnCallId, "frida_js有逻辑错误， frida_js生成的fnCallId应该沿着链条递增"
 
-            #初始化: 全体置空deepth|width|markup字段
-            # this.trav.clear_field(this.trav.N.sess)
 
             # 起点RE
             RE:Node=NTT(this.trav.N.sess).getE_byFnCallId(root_fnCallId)
