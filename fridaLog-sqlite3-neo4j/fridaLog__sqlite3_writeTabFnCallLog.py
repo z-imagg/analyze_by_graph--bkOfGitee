@@ -9,14 +9,14 @@
 
 from sqlite3 import Row as sqlite3Row
 import typing
-from iterLineOfFile import iterLogF
+from iterLineOfFile import iterLineF
 
 ## torch函数调用日志文件(frida日志文件) 装入 sqlite3 
 
 ###  写 表FnCallLog
 def sq3_wTab_FnCallLog():
     print("从表t_FnCallLog删除行数 ",sq3dbConn.execute("delete from t_FnCallLog").rowcount)    
-    LogLineCnt:int=iterLogF(TorchFnCallLogFP,LineFunc=sq3_insert_t_FnCallLog)
+    LogLineCnt:int=iterLineF(TorchFnCallLogFP,LineFunc=sq3_insert_t_FnCallLog)
     # 从表t_FnCallLog删除行数  0
     # 即将处理第0行日志
     # 即将处理第500000行日志

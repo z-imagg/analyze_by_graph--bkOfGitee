@@ -11,14 +11,16 @@ import typing
 
 from pathlib import Path
 import sqlite3
-from iterLineOfFile import iterLogF
+from fridaLog_fullPath_get import getLogFullPath
+from iterLineOfFile import iterLineF
 
 ## torch函数调用日志文件(frida日志文件) 装入 sqlite3 
 
 ### 写 表 FnSym
-def sq3_wTab_FnSym():
+def sq3_wTab_FnSym(sq3dbConn:sqlite3.Connection):
+    fnCallLogFP:str=getLogFullPath()
     print("从表t_FnSym删除行数 ",sq3dbConn.execute("delete from t_FnSym").rowcount)
-    iterLogF(TorchFnCallLogFP,LineFunc=sq3_insert_t_FnSym)
+    iterLineF(fnCallLogFP,LineFunc=sq3_insert_t_FnSym)
     # 从表t_FnSym删除行数  0
     # 即将处理第0行日志
     # 即将处理第500000行日志
@@ -43,7 +45,7 @@ r["fileName"]==fnSym["fileName"] and \
 r["lineNumber"]==fnSym["lineNumber"] and \
 r["column"]==fnSym["column"], f"断言 frida_js项目中 每次 写入的 从DebugSymb中按地址读取出来的 fnSym 是 不变的, rowInSqlite3Tab={r},fnSym={fnSym}"
 
-def sq3_insert_t_FnSym(lnNum,ln):
+def sq3_insert_t_FnSym(lnNum:int,ln:str,sq3dbConn:sqlite3.Connection):
     fnSym=ln['fnSym'] 
     try:
         row_ls=sq3dbConn.execute(sqlTmpl_t_FnSym_query,[ fnSym['address']  ]).fetchall()

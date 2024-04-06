@@ -6,7 +6,7 @@
 #【备注】 
 #【术语】 
 
-from sqlite3 import Row as sqlite3Row
+import sqlite3
 import typing
 
 ## torch函数调用日志文件(frida日志文件) 按行遍历器
@@ -15,23 +15,26 @@ import typing
 
 
 
-
+import typing
 import json
 
 from fridaLog_fullPath_get import getLogFullPath
 #FirstLineFunc 只在开发时用
 # LogFP==TorchFnCallLogFP
-def iterLogF(LogFP:str,LineFunc=None,FirstLineFunc=None)->int:
+def iterLineF(LogFP:str,sq3dbConn:sqlite3.Connection,
+    LineFunc:typing.Callable[[int,str,sqlite3.Connection],None]=None,
+    FirstLineFunc_onlyDevelop:typing.Callable[[int,str,sqlite3.Connection],None]=None #开发调试用的 只回调第一行 为了节省时间
+)->int:
     LogF= open(LogFP,"r")
 
-    hasFrtLnFunc=FirstLineFunc is not None
+    hasFrtLnFunc=FirstLineFunc_onlyDevelop is not None
     hasLineFunc= LineFunc is not None
 
     #如果指定了FirstLineFunc, 则表明现在是开发状态,只看第一行后结束循环
     if hasFrtLnFunc and not hasLineFunc:
         k,lnK=0,LogF.readline()
         ln0_json=json.loads(lnK)
-        FirstLineFunc(k,ln0_json)
+        FirstLineFunc_onlyDevelop(k,ln0_json,sq3dbConn)
     elif hasLineFunc:        
         for k,lnK in enumerate( LogF ):
             if k % 500000 == 0 :  print(f"即将处理第{k}行日志")
@@ -39,7 +42,7 @@ def iterLogF(LogFP:str,LineFunc=None,FirstLineFunc=None)->int:
             lnK_json=json.loads(lnK)
     
             #对每行 都执行回调行数
-            LineFunc(k,lnK_json)
+            LineFunc(k,lnK_json,sq3dbConn)
     else:
         raise Exception(f"函数 iterLogF 条件混乱, hasFrtLnFunc={hasFrtLnFunc},hasLineFunc={hasLineFunc}")
 
@@ -65,7 +68,7 @@ if __name__ == "__main__":
             
     
     TorchFnCallLogFP=getLogFullPath()
-    iterLogF(TorchFnCallLogFP,assignEveryLn)
+    iterLineF(TorchFnCallLogFP,assignEveryLn)
 
     print("最后一行",type(lnEnd_json), "\n",lnEnd_json)
     del lnEnd_json
