@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#【标题】 torch函数调用日志文件 按行遍历器
+#【标题】 torch函数调用日志文件(frida日志文件) 按行遍历器
 #【术语】 
 #【备注】 
 #【术语】 
@@ -9,7 +9,7 @@
 from sqlite3 import Row as sqlite3Row
 import typing
 
-## torch函数调用日志文件 按行遍历器
+## torch函数调用日志文件(frida日志文件) 按行遍历器
 
 #  逐行加载 frida_js生产的日志文件
 
