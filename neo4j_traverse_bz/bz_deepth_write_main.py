@@ -14,7 +14,7 @@ from util_file import readTxt
 from neo4j_misc import update__init_deepth_as_null
 from traverse import TraverseAbs
 from neo4j_tool import neo4j_update
-from tool_datetime import nowDateTimeTxt
+from util_datetime import nowDateTimeTxt
 
 
 class BzWriteDeepth(TraverseAbs):
