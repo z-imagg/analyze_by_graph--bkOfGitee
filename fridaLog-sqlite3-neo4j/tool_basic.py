@@ -19,3 +19,8 @@ def lsIsEmpty(ls:typing.List[typing.Any]) -> bool:
 def joinInts(_intLs:typing.List[int],_sep:str=",")->str:
     _strLs=[f"{k}" for k in _intLs]
     return _sep.join(_strLs)
+
+
+from datetime import datetime
+def nowDateTimeTxt():
+    return datetime.now()   .strftime( '%Y-%m-%d %H:%M:%S %f' ) 
