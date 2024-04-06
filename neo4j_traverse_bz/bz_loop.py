@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#【术语】 abs==abstract==抽象 , bz==busy==业务函数, 链条 的 末尾FnCallId==endFnCallId
-#【返回类型说明】 V的返回类型 == bz的返回类型 , S的类型==[bz的返回类型]
-#【备注】 V == traverse.py.TraverseAbs.V,  S == traverse.py.TraverseAbs.S
+#【描述】 多个遍历
+#【术语】 
+#【返回类型说明】 
+#【备注】 
 
 import typing
 from neo4j import EagerResult, ResultSummary
