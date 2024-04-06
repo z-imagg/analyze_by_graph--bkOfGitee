@@ -6,7 +6,7 @@
 { "name": "可视化_main", "type": "debugpy",   "request": "launch",  "program": "visual_main.py",  "console": "integratedTerminal",
 "args": [  ],
 "env": {
-"PYTHONPATH": "${workspaceFolder};/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/NEO4J/:/fridaAnlzAp/analyze_by_graph/_sqlite3/:/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/"
+"PYTHONPATH": "${workspaceFolder};/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/_neo4j/:/fridaAnlzAp/analyze_by_graph/_sqlite3/:/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/"
 },
 },
 ]

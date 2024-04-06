@@ -9,11 +9,11 @@
 {
     "python.analysis.extraPaths": [
         "/fridaAnlzAp/analyze_by_graph/",
-        "/fridaAnlzAp/analyze_by_graph/NEO4J/",
+        "/fridaAnlzAp/analyze_by_graph/_neo4j/",
         "/fridaAnlzAp/analyze_by_graph/_sqlite3/",
         "/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/"
     ],
     "terminal.integrated.env.windows": {
-        "PYTHONPATH": "${env:PYTHONPATH};${workspaceFolder};/fridaAnlzAp/analyze_by_graph/;/fridaAnlzAp/analyze_by_graph/NEO4J/;/fridaAnlzAp/analyze_by_graph/_sqlite3/;/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/;",
+        "PYTHONPATH": "${env:PYTHONPATH};${workspaceFolder};/fridaAnlzAp/analyze_by_graph/;/fridaAnlzAp/analyze_by_graph/_neo4j/;/fridaAnlzAp/analyze_by_graph/_sqlite3/;/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/;",
     }
 }
