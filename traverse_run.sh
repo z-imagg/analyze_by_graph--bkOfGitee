@@ -21,6 +21,7 @@ rm -frv *.log
 
 now="$(date +%s)"
 
+export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/;/fridaAnlzAp/analyze_by_graph/_neo4j/;/fridaAnlzAp/analyze_by_graph/_sqlite3/;/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/;/fridaAnlzAp/analyze_by_graph/neo4j_traverse/;/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/;/fridaAnlzAp/analyze_by_graph/db_conn_inject/;/fridaAnlzAp/analyze_by_graph/util/;/fridaAnlzAp/analyze_by_graph/visual/"
 
 python bz_deepth_write_main.py | tee bz_deepth_write_main-${now}.log
 python bz_width_write_main.py | tee bz_width_write_main-${now}.log
