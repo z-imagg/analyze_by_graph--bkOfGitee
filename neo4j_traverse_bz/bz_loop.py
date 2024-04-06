@@ -34,38 +34,43 @@ return min(v.fnCallId) as min_fnCallId, max(v.fnCallId) as max_fnCallId
         return next_begin_fnCallId
 
     #写链条 首尾fnCallId
-    def _write_chain( this,curThreadId,rootFnCallId,endFnCallId):
+    def _write_chain( this,curThreadId,root_fnCallId, end_fnCallId:int,   root_tmPnt:int,end_tmPnt:int):
         result:EagerResult=this.trav.N.sess.run(
-"CREATE (x:V_Chain {curThreadId: $curThreadId, rootFnCallId: $rootFnCallId, endFnCallId: $endFnCallId})",
-curThreadId=curThreadId, rootFnCallId=rootFnCallId,  endFnCallId=endFnCallId)
+"CREATE (x:V_Chain {curThreadId: $curThreadId, root_fnCallId: $root_fnCallId, end_fnCallId: $end_fnCallId,   root_tmPnt:$root_tmPnt, end_tmPnt:$end_tmPnt })",
+curThreadId=curThreadId, root_fnCallId=root_fnCallId,  end_fnCallId=end_fnCallId,    root_tmPnt=root_tmPnt,end_tmPnt=end_tmPnt)
         s=result.single()
         v=result.value()
         summary:ResultSummary=result.consume()
-        print(f"_write_chain;curThreadId={curThreadId},rootFnCallId={rootFnCallId},curThreadId={endFnCallId},创建V_Chain节点{summary.counters.nodes_created}个,")
+        print(f"_write_chain;curThreadId={curThreadId},root_fnCallId={root_fnCallId},end_fnCallId={end_fnCallId}, root_tmPnt={root_tmPnt},end_tmPnt={end_tmPnt},创建V_Chain节点{summary.counters.nodes_created}个,")
 
     def loop_traverse( this):
         min_fnCallId,max_fnCallId=this._minMax_fnCallId( )
 
-        rootFnCallId:int=min_fnCallId
-        while rootFnCallId!=max_fnCallId:
+        root_fnCallId:int=min_fnCallId
+        while root_fnCallId!=max_fnCallId:
 
-            assert rootFnCallId < max_fnCallId, "frida_js有逻辑错误， frida_js生成的fnCallId应该沿着链条递增"
+            assert root_fnCallId < max_fnCallId, "frida_js有逻辑错误， frida_js生成的fnCallId应该沿着链条递增"
 
             #初始化: 全体置空deepth|width|markup字段
             # this.trav.clear_field(this.trav.N.sess)
 
             # 起点RE
-            RE:Node=NTT(this.trav.N.sess).getE_byFnCallId(rootFnCallId)
-            curThreadId:int=RE["curThreadId"]
+            RE:Node=NTT(this.trav.N.sess).getE_byFnCallId(root_fnCallId)
+            curThreadId:int=RE["curThreadId"] ; root_tmPnt:int=RE["tmPnt"]
+            
             # 遍历过程中 计算深度deepth|宽度width|成份markup
             this.trav.V(RE)
+            
             #遍历完, 遍历器trav 的 curFnCallId == 链条 的 末尾FnCallId
-            endFnCallId:int=this.trav.curFnCallId
+            end_fnCallId:int=this.trav.cur_fnCallId
+            end_tmPnt:int=this.trav.cur_tmPnt
+
             #写链条
-            this._write_chain(curThreadId,rootFnCallId,endFnCallId)
+            this._write_chain(curThreadId,root_fnCallId,end_fnCallId, root_tmPnt, end_tmPnt)
+            
             #切换到下一个链条
             # 已知上一个 孤立群 的 终点fnCallId 为 this.trav.curFnCallId , 求 下一个孤立群 的 起点fnCallId
-            rootFnCallId=this._next_begin_fnCallId(this.trav.curFnCallId)
+            root_fnCallId=this._next_begin_fnCallId(this.trav.cur_fnCallId)
 
 
 if __name__=="__main__":
