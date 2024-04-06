@@ -30,6 +30,7 @@ def iterLogF(LogFP:str,LineFunc=None,FirstLineFunc=None)->int:
     #如果指定了FirstLineFunc, 则表明现在是开发状态,只看第一行后结束循环
     if hasFrtLnFunc and not hasLineFunc:
         k,lnK=0,LogF.readline()
+        ln0_json=json.loads(lnK)
         FirstLineFunc(k,ln0_json)
     elif hasLineFunc:        
         for k,lnK in enumerate( LogF ):
