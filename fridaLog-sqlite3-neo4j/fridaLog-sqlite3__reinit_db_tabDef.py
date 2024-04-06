@@ -16,7 +16,7 @@ import sqlite3
 
 ### 重初始化sqlite3数据库、表结构
 
-def reinit_sq3_db_tabDef(sq_db_fp:str): 
+def reinit_sq3_db_tabDef(sq_db_fp:str)->sqlite3.Connection: 
 
     # sq_db_fp='./FnCallLog.db'
 
@@ -26,7 +26,7 @@ def reinit_sq3_db_tabDef(sq_db_fp:str):
 
     #### 创建sqlite3数据库文件
     # sq3dbConn = sqlite3.connect(':memory:')
-    sq3dbConn = sqlite3.connect(sq_db_fp)
+    sq3dbConn:sqlite3.Connection = sqlite3.connect(sq_db_fp)
 
     #  设置sqlite3.connect.execute.fetchall返回字典列表而非tuple列表
     origin_sq3dbConn_row_factory=sq3dbConn.row_factory #先备份
@@ -84,3 +84,7 @@ def reinit_sq3_db_tabDef(sq_db_fp:str):
     sq3dbConn.execute("""
     CREATE TABLE t_FnCallLog_notBalanced as select * from t_FnCallLog where false
     """)
+
+    return sq3dbConn
+
+
