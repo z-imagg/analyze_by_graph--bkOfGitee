@@ -34,7 +34,7 @@ class TraverseAbs(ABC):
         fnCallId:int=RE['fnCallId'] ; tz.cur_fnCallId:int=fnCallId
         tmPnt:int=RE['tmPnt'] ; tz.cur_tmPnt:int=tmPnt
         
-        print(f"开始遍历 fnCallId={fnCallId}； tmPnt={tmPnt}；",end=" ")
+        print(f"{tz.__class__.__name__},开始遍历 fnCallId={fnCallId}； tmPnt={tmPnt}；",end=" ")
         RL:Node=tz.N.getL(RE)
         if tz.N.isLeaf(RE):
             print(f"是叶子")
