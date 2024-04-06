@@ -24,12 +24,12 @@ class LoopTraverse( ):
 """match (v:V_FnCallLog_Analz {direct:1})
 return min(v.fnCallId) as min_fnCallId, max(v.fnCallId) as max_fnCallId
 """
-        min_fnCallId,max_fnCallId=neo4j_query_1row(this.sess,"",CypherTxt,params={},filedNameLs=["min_fnCallId","max_fnCallId"])
+        min_fnCallId,max_fnCallId=neo4j_query_1row(this.trav.N.sess,"",CypherTxt,params={},filedNameLs=["min_fnCallId","max_fnCallId"])
         return min_fnCallId,max_fnCallId
 
     def _next_begin_fnCallId( this,previous_end_fnCallId:int)->int:
         CypherTxt=readTxt("./cypher_src/query__next_chain__begin_fnCallId.cypher")
-        next_begin_fnCallId=neo4j_query_1field1row(this.sess,"",CypherTxt,params={"previous_end_fnCallId", previous_end_fnCallId} )
+        next_begin_fnCallId=neo4j_query_1field1row(this.trav.N.sess,"",CypherTxt,params={"previous_end_fnCallId", previous_end_fnCallId} )
         return next_begin_fnCallId
 
 
