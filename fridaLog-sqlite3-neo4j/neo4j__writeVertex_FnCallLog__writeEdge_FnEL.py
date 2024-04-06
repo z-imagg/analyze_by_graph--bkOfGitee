@@ -29,8 +29,6 @@ from neo4j_index_constraint import neo4j_recreateConstraint, neo4j_recreateIdx
 from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
 from sqlite3_basic_Q_fnEnterLeave import queryFnEnterLeave
 
-db_main= Neo4J_DB_Entity(URI="neo4j://localhost:7687", AUTH_user="neo4j", AUTH_pass="123456", DB_NAME="neo4j")
-driver=getDriver(db=db_main)
 # driver.close() #到最后再关闭neo4j的连接
 
 ### 删除现有顶点、边
