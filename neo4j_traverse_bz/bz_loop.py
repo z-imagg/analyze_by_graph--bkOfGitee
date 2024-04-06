@@ -30,7 +30,9 @@ return min(v.fnCallId) as min_fnCallId, max(v.fnCallId) as max_fnCallId
 
     def _next_begin_fnCallId( this,previous_end_fnCallId:int)->int:
         CypherTxt=readTxt("./cypher_src/query__next_chain__begin_fnCallId.cypher")
-        next_begin_fnCallId=neo4j_query_1field1row(this.trav.N.sess,"",CypherTxt,params={"previous_end_fnCallId", previous_end_fnCallId} )
+        next_begin_fnCallId=neo4j_query_1field1row(this.trav.N.sess,"query__next_chain__begin_fnCallId",CypherTxt,
+params={"previous_end_fnCallId":previous_end_fnCallId} ,
+filedName="next_begin_fnCallId")
         return next_begin_fnCallId
 
     #写链条 首尾fnCallId
