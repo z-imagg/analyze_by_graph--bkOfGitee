@@ -8,7 +8,7 @@ import numpy
 from pathlib import Path
 
 from print_nowDateTime_with_prevSeconds_tool import nowDateTimeTxt
-from file_tool import readTxt
+from util_file import readTxt
 
 
 cypher__getE=readTxt("cypher_src/getE.cypher") 

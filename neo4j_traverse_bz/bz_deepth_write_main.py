@@ -9,7 +9,7 @@ import typing
 from neo4j import Session
 from neo4j.graph import Node
 from util_basic import assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
-from file_tool import readTxt
+from util_file import readTxt
 from neo4j_main import neo4jMain
 from neo4j_misc import update__init_deepth_as_null
 from traverse import TraverseAbs
