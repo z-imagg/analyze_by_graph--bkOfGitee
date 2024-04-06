@@ -18,7 +18,7 @@ import typing
 
 import json
 
-from log_fullPath_get import getLogFullPath
+from fridaLog_fullPath_get import getLogFullPath
 #FirstLineFunc 只在开发时用
 # LogFP==TorchFnCallLogFP
 def iterLogF(LogFP:str,LineFunc=None,FirstLineFunc=None)->int:
