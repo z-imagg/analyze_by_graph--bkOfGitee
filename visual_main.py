@@ -9,7 +9,7 @@ import typing
 from neo4j import Driver, EagerResult, GraphDatabase, ResultSummary, Session,Result
 from neo4j.graph import Node
 import pandas
-from bz_util import assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
+from util_basic import assertRE_fnCallId_eq_RL__return_fnCallId, assertSonLsEmptyWhenLeaf
 from file_tool import readTxt
 from neo4j_2db_main import neo4j2dbMain
 from neo4j_db_basic import Neo4J_DB_Entity
