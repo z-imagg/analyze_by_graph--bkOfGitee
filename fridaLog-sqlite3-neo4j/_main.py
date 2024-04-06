@@ -24,7 +24,7 @@ sq3dbConn.commit()
 # sq3dbConn.close()
 
 ## 找进出不平衡的fnCallId
-from sq3_qeury_notBalanced_fnCallIdLs_tmPntLs import qeury_notBalanced_fnCallIdLs_tmPntLs,sq3_move_notBalanced_fnCallCallLog
+from sqlite3_qeury_notBalanced_fnCallIdLs_tmPntLs import qeury_notBalanced_fnCallIdLs_tmPntLs,sq3_move_notBalanced_fnCallCallLog
 ### 找到 不平衡的fnCallId列表 和 不平衡的 TmPnt列表
 notBalancedFnCallIdLs, notBalancedTmPntLs=qeury_notBalanced_fnCallIdLs_tmPntLs()
 ### 删除不平衡的fnCallId的记录行(移到他表)
