@@ -10,7 +10,7 @@ from sqlite3 import Row as sqlite3Row
 import typing
 
 from sqlite3_basic_func import sq3Rows2Dcts
-from basic_tool import lsIsEmpty
+from tool_basic import lsIsEmpty
 
 
 

@@ -10,7 +10,7 @@ from sqlite3 import Row as sqlite3Row
 import typing
 
 from sqlite3_basic_func import sq3DU
-from basic_tool import joinInts
+from tool_basic import joinInts
 ## sqlite删改函数
 
 ### sq3DU_inInts: sqlite3执行sql删改 携带in整数列表条件  
