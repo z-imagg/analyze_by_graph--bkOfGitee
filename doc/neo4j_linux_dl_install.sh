@@ -44,3 +44,9 @@ neo4j start
 #http://10.0.4.220:7474/browser/
 #默认用户名密码 neo4j/neoj4
 #web端修改密码, 输入命令 ':server change-password'
+
+
+
+#关闭图形化界面, 进入 多用户文本界面  #systemctl set-default multi-user.target   #reboot
+#关闭多用户文本界面, 进入 图形化界面  #systemctl set-default graphical.target
+

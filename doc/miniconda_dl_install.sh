@@ -4,6 +4,7 @@
 #【返回类型说明】  
 #【备注】  
 
+shopt -s expand_aliases
 
 cd /app/
 
@@ -15,8 +16,9 @@ S=/app/Miniconda3-py310_22.11.1-1/bin/activate
 sudo apt install axel -y
 
 F=Miniconda3-py310_22.11.1-1-Linux-x86_64.sh
+md5sum_txt='e01420f221a7c4c6cde57d8ae61d24b5  Miniconda3-py310_22.11.1-1-Linux-x86_64.sh' 
 
-axel -n 8 https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py310_22.11.1-1-Linux-x86_64.sh
+{ echo "$md5sum_txt" | md5sum --check ;} || axel -n 8 https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py310_22.11.1-1-Linux-x86_64.sh
 
 bash $F
 
