@@ -14,6 +14,7 @@ cd /fridaAnlzAp/analyze_by_graph/
 # 临时关闭bash调试模式， 是 由于 miniconda 的 activate 脚本内容太大，从而减少视觉干扰
 get_bash_en_dbg  #记录bash是否启用了调试模式
 $bash_en_dbg && set +x #如果启用了调试模式, 则关闭调试模式
+# wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py310_22.11.1-1-Linux-x86_64.sh
 source /app/Miniconda3-py310_22.11.1-1/bin/activate
 $bash_en_dbg && set -x #如果启用了调试模式, 则打开调试模式
 # pip install -r requirements.txt
