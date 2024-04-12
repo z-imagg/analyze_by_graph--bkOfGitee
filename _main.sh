@@ -17,7 +17,9 @@ $bash_en_dbg && set +x #如果启用了调试模式, 则关闭调试模式
 # wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py310_22.11.1-1-Linux-x86_64.sh
 source /app/Miniconda3-py310_22.11.1-1/bin/activate
 $bash_en_dbg && set -x #如果启用了调试模式, 则打开调试模式
-# pip install -r requirements.txt
+
+#安装依赖
+pip install -r requirements.txt
 
 
 #删除旧日志
@@ -25,15 +27,17 @@ rm -frv *.log
 
 now="$(date +%s)"
 
-export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/;/fridaAnlzAp/analyze_by_graph/_neo4j/;/fridaAnlzAp/analyze_by_graph/_sqlite3/;/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/;/fridaAnlzAp/analyze_by_graph/neo4j_traverse/;/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/;/fridaAnlzAp/analyze_by_graph/db_conn_inject/;/fridaAnlzAp/analyze_by_graph/util/;/fridaAnlzAp/analyze_by_graph/visual/"
+export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/;/fridaAnlzAp/analyze_by_graph/_neo4j/;/fridaAnlzAp/analyze_by_graph/_sqlite3/;/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/;"
 
-#fridaLog-sqlite3-neo4j
-python _main_fridaLog-sqlite3-neo4j.py | tee fridaLog-sqlite3-neo4j-${now}.log
+#fridaLog转sqlite3转neo4j
+python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py | tee fridaLog-sqlite3-neo4j-${now}.log
 
 read -p "按回车则执行遍历器:"
 
+export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/neo4j_traverse/;/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/;/fridaAnlzAp/analyze_by_graph/db_conn_inject/;/fridaAnlzAp/analyze_by_graph/util/;/fridaAnlzAp/analyze_by_graph/visual/;"
+
 #遍历器
-python _main_neo4j_traverse_bz.py.py | tee _main_neo4j_traverse_bz-${now}.log
+python neo4j_traverse_bz/_main_neo4j_traverse_bz.py.py | tee _main_neo4j_traverse_bz-${now}.log
 
 md5sum *.log > log.md5sum-${now}.txt
 
