@@ -36,13 +36,26 @@ F_cfg=/app/neo4j-community-4.4.32/conf/neo4j.conf
 grep dbms.default_listen_address $F_cfg
 grep dbms.memory $F_cfg
 cp -v $F_cfg "${F_cfg}_$(date +%s)"
+#修改 neo4j 监听地址为0.0.0.0
 sed -i  "s/#dbms.default_listen_address=0.0.0.0/dbms.default_listen_address=0.0.0.0/g"  $F_cfg
+#修改 neo4j 线程数目为 4 
+sed -i  's/#dbms.threads.worker_count=/dbms.threads.worker_count=4/'   $F_cfg
 
+#neo4j安装apoc插件
+wget --output-document=/app/neo4j-community-4.4.32/plugins/apoc-4.4.0.26-all.jar    https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.26/apoc-4.4.0.26-all.jar
+
+#neo4j重启
+# neo4j restart
+
+#neo4j状态
+# neo4j status
+
+#启动neo4j
 neo4j start
 
 
 #http://10.0.4.220:7474/browser/
-#默认用户名密码 neo4j/neoj4
+#默认用户名密码 neo4j/123456
 #web端修改密码, 输入命令 ':server change-password'
 
 

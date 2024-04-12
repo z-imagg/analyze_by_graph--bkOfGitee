@@ -25,7 +25,7 @@ neo4j start
 
 echo """
 #http://10.0.4.220:7474/browser/
-#默认用户名密码 neo4j/neoj4
+#默认用户名密码 neo4j/123456
 #web端修改密码, 输入命令 ':server change-password'
 """
 
