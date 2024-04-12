@@ -30,6 +30,8 @@ export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/;/fridaAnlzAp/analyze_by_graph/
 #fridaLog-sqlite3-neo4j
 python _main_fridaLog-sqlite3-neo4j.py | tee fridaLog-sqlite3-neo4j-${now}.log
 
+read -p "按回车则执行遍历器:"
+
 #遍历器
 python _main_neo4j_traverse_bz.py.py | tee _main_neo4j_traverse_bz-${now}.log
 
