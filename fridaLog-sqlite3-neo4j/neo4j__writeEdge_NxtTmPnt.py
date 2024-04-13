@@ -116,12 +116,14 @@ tmPnt_max:int,tmPnt_min:int,
         
         neo4j_sess.run(
 #'neo4j 索引 V_FnCallLog.logId' 加速 以下两个MATCH查询
-#  找到最小时刻点
-"MATCH (from_Log:V_FnCallLog {logId: $fromLogId})"
-#  找到最小时刻点
-"MATCH   (to_Log:V_FnCallLog {logId: $toLogId})"
-#创建 时刻边
-"CREATE (from_Log)-[:E_NxtTmPnt {fromLogId: $fromLogId, toLogId:$toLogId, from_fnCallId:$from_fnCallId, to_fnCallId:$to_fnCallId }]->(to_Log)",
+"""
+//  找到最小时刻点
+MATCH (from_Log:V_FnCallLog {logId: $fromLogId})
+//  找到最小时刻点
+MATCH   (to_Log:V_FnCallLog {logId: $toLogId})
+//创建 时刻边
+CREATE (from_Log)-[:E_NxtTmPnt {fromLogId: $fromLogId, toLogId:$toLogId, from_fnCallId:$from_fnCallId, to_fnCallId:$to_fnCallId }]->(to_Log)
+""",
 # 以下这些是作为 参数 parameters_ 的
 fromLogId=fromLogId, 
 toLogId=toLogId, 

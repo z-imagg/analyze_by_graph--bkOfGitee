@@ -19,13 +19,14 @@ import json
 cypher__query__链条_宽_宽1深=readTxt("cypher_src/query__链条_宽_宽1深.cypher") 
 
 
-Cypher_IdxDropCreate=\
-"DROP CONSTRAINT uq__V_FnCallLog_Analz__fnCallId IF EXISTS"
-"CREATE CONSTRAINT uq__V_FnCallLog_Analz__fnCallId FOR (x:V_FnCallLog_Analz) REQUIRE x.fnCallId IS UNIQUE"
-"DROP CONSTRAINT uq__V_FnCallLog_Analz__logId IF EXISTS"
-"CREATE CONSTRAINT uq__V_FnCallLog_Analz__logId FOR (x:V_FnCallLog_Analz) REQUIRE x.logId IS UNIQUE"
-"DROP CONSTRAINT uq__V_FnCallLog_Analz__tmPnt IF EXISTS"
-"CREATE CONSTRAINT uq__V_FnCallLog_Analz__tmPnt FOR (x:V_FnCallLog_Analz) REQUIRE x.tmPnt IS UNIQUE"
+Cypher_IdxDropCreate="""
+DROP CONSTRAINT uq__V_FnCallLog_Analz__fnCallId IF EXISTS;
+CREATE CONSTRAINT uq__V_FnCallLog_Analz__fnCallId FOR (x:V_FnCallLog_Analz) REQUIRE x.fnCallId IS UNIQUE;
+DROP CONSTRAINT uq__V_FnCallLog_Analz__logId IF EXISTS;
+CREATE CONSTRAINT uq__V_FnCallLog_Analz__logId FOR (x:V_FnCallLog_Analz) REQUIRE x.logId IS UNIQUE;
+DROP CONSTRAINT uq__V_FnCallLog_Analz__tmPnt IF EXISTS;
+CREATE CONSTRAINT uq__V_FnCallLog_Analz__tmPnt FOR (x:V_FnCallLog_Analz) REQUIRE x.tmPnt IS UNIQUE;
+"""
 
 def executeDropCreateIdx(sess_anlz:Session,Cypher_:str)->int:
 
@@ -62,7 +63,9 @@ def _visual_main(sess:Session):
     ####循环插入点V_FnCallLog_Analz
     for k,r in enumerate(rowLs):
         result:EagerResult=sess_anlz.run(
-"CREATE (x:V_FnCallLog_Analz {logId: $logId, tmPnt: $tmPnt, curThreadId: $curThreadId, direct:$direct, fnAdr:$fnAdr, fnCallId:$fnCallId, width:$width, deepth:$deepth,   fnSym_address:$fnSym_address, fnSym_name:$fnSym_name, fnSym_moduleName:$fnSym_moduleName, fnSym_fileName:$fnSym_fileName, fnSym_lineNumber:$fnSym_lineNumber, fnSym_column:$fnSym_column})",
+"""
+CREATE (x:V_FnCallLog_Analz {logId: $logId, tmPnt: $tmPnt, curThreadId: $curThreadId, direct:$direct, fnAdr:$fnAdr, fnCallId:$fnCallId, width:$width, deepth:$deepth,   fnSym_address:$fnSym_address, fnSym_name:$fnSym_name, fnSym_moduleName:$fnSym_moduleName, fnSym_fileName:$fnSym_fileName, fnSym_lineNumber:$fnSym_lineNumber, fnSym_column:$fnSym_column})
+""",
 logId=r["logId"], tmPnt=r["tmPnt"],  curThreadId=r["curThreadId"],  direct=r["direct"], 
 fnAdr=r["fnAdr"], fnCallId=r["fnCallId"], width=r["width"], deepth=r["deepth"],   fnSym_address=r["fnSym_address"], fnSym_name=r["fnSym_name"], 
 fnSym_moduleName=r["fnSym_moduleName"], fnSym_fileName=r["fnSym_fileName"], fnSym_lineNumber=r["fnSym_lineNumber"], 
@@ -84,11 +87,13 @@ fnSym_column=r["fnSym_column"],)
             son=nodeTab.get(sonFnCallId,None)
             if son is not None:
                 result:Result=sess.run(
-"MATCH (parent:V_FnCallLog_Analz {fnCallId:$parent__fnCallId})"
-#  找到最小时刻点
-"MATCH   (son:V_FnCallLog_Analz  {fnCallId:$son__fnCallId})"
-#构建 边 parentFnCallId --> sonFnCallId
-"CREATE (parent  )-[:E_P2S  {parent__logId:$parent__logId, son__logId:$son__logId, parent__tmPnt:$parent__tmPnt, son__tmPnt:$son__tmPnt, parent__fnCallId:$parent__fnCallId, son__fnCallId: $son__fnCallId,   parent__width:$parent__width, parent__deepth:$parent__deepth,  son__width:$son__width, son__deepth:$son__deepth}]->(son   )"
+"""
+MATCH (parent:V_FnCallLog_Analz {fnCallId:$parent__fnCallId})
+//  找到最小时刻点
+MATCH   (son:V_FnCallLog_Analz  {fnCallId:$son__fnCallId})
+ // 构建 边 parentFnCallId --> sonFnCallId
+CREATE (parent  )-[:E_P2S  {parent__logId:$parent__logId, son__logId:$son__logId, parent__tmPnt:$parent__tmPnt, son__tmPnt:$son__tmPnt, parent__fnCallId:$parent__fnCallId, son__fnCallId: $son__fnCallId,   parent__width:$parent__width, parent__deepth:$parent__deepth,  son__width:$son__width, son__deepth:$son__deepth}]->(son   )
+"""
 ,
 
 parent__logId=r["logId"], parent__tmPnt=r["tmPnt"],  parent__curThreadId=r["curThreadId"],  parent__direct=r["direct"], 
