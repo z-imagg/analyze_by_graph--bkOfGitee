@@ -84,9 +84,4 @@ tmPnt_max,tmPnt_min,
 
 
 if __name__=="__main__":
-    from fridaLog__sqlite3_reinitDbTabDef import reinit_sq3_db_tabDef
-    from neo4j_db_basic import Neo4J_DB_Entity, getDriver
-    ### 重初始化sqlite3数据库、表结构
-    sq3dbConn:sqlite3.Connection=reinit_sq3_db_tabDef(sqlite3_dbFilePath)
-
     fnCallLogCnt:int = dbConn_inject__sqlite3_neo4j(sqlite3_dbFilePath, neo4jDB_default, func=fridaLog_to_sqlite3_to_neo4j)
