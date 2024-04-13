@@ -47,7 +47,7 @@ def neo4j_recreateIdx(sess:Session,Multi_Cypher_Txt:str)->int:
         summry:ResultSummary=_neo4j_run_cypherTxt(sess,Cypher_Txt)
         rm_cnt += summry.counters.indexes_removed
         add_cnt += summry.counters.indexes_added
-        print(f"删除索引{summry.counters.indexes_removed}条, 创建索引{summry.counters.indexes_added}条")
+        print(f"删除索引{summry.counters.indexes_removed}条, 创建索引{summry.counters.indexes_added}条, 语句为【{Cypher_Txt}】")
     return rm_cnt + add_cnt
 
 
@@ -74,6 +74,6 @@ def neo4j_recreateConstraint(sess:Session,Multi_Cypher_Txt:str)->int:
         summry:ResultSummary=_neo4j_run_cypherTxt(sess,Cypher_Txt)
         rm_cnt += summry.counters.constraints_removed
         add_cnt += summry.counters.constraints_added
-        print(f"删除约束{summry.counters.indexes_removed}条, 创建约束{summry.counters.indexes_added}条")
+        print(f"删除约束{summry.counters.constraints_removed}条, 创建约束{summry.counters.constraints_added}条, 语句为【{Cypher_Txt}】")
     return rm_cnt + add_cnt
 
