@@ -9,8 +9,6 @@
 import typing
 from neo4j.graph import Node
 
-from neo4j_misc import update__init_deepth_as_null
-from traverse import TraverseAbs
 
 ### 列表判空
 def lsIsEmpty(ls:typing.List[typing.Any])->bool:
