@@ -24,7 +24,7 @@ def qeury_notBalanced_fnCallIdLs_tmPntLs(sq3dbConn:sqlite3.Connection):
     fnCallIdLs=sq3Q(sq3dbConn,"select fnCallId,count(*) cnt from t_FnCallLog group by fnCallId having cnt=1","fnCallId")
     if lsIsEmpty(fnCallIdLs)  :
         print("无不平衡的fnCallLog")
-        return None,None
+        return [],[]
         
     print("找到不平衡的fnCallIdLs",fnCallIdLs)
 
@@ -55,7 +55,7 @@ def sq3_query_notBalanced_fnSymLs(sq3dbConn:sqlite3.Connection,notBalancedFnCall
 def sq3_move_notBalanced_fnCallCallLog(sq3dbConn:sqlite3.Connection,notBalancedFnCallIdLs:typing.List[int]):
     
     #若无 不平衡的fnCallId列表, 则直接返回
-    if notBalancedFnCallIdLs is None: return
+    if lsIsEmpty(notBalancedFnCallIdLs): return
     
     #  不平衡的fnCallId列表 移动到 表t_FnCallLog_notBalanced
     _rowCnt_insert=sq3DU_inInts(sq3dbConn, 
