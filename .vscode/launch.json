@@ -1,5 +1,13 @@
 { "version": "0.2.0",  "configurations": [
 
+//配置项 导入日志
+{ "name": "导入日志", "type": "debugpy",   "request": "launch",  "program": "fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py",  "console": "integratedTerminal",
+"args": [  ],
+"env": {
+"PYTHONPATH": "${workspaceFolder}:/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/_neo4j/:/fridaAnlzAp/analyze_by_graph/_sqlite3/:/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/:/fridaAnlzAp/analyze_by_graph/db_conn_inject"
+},
+},
+
 //配置项 _main_neo4j_traverse_bz
 { "name": "_main_neo4j_traverse_bz.py", "type": "debugpy",   "request": "launch",  "program": "neo4j_traverse_bz/_main_neo4j_traverse_bz.py",  "console": "integratedTerminal",
 "args": [  ],
