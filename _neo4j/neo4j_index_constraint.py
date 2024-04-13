@@ -70,7 +70,7 @@ def neo4j_recreateConstraint(sess:Session,Multi_Cypher_Txt:str)->int:
         #跳过空行、跳过注释
         if strIsEmpty(Cypher_Txt) or Cypher_Txt.startswith("//"): continue
             
-        print(Cypher_Txt)
+        # print(Cypher_Txt)
         summry:ResultSummary=_neo4j_run_cypherTxt(sess,Cypher_Txt)
         rm_cnt += summry.counters.constraints_removed
         add_cnt += summry.counters.constraints_added
