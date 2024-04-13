@@ -77,7 +77,7 @@ def skipNotBalanced__to_tmPnt(notBalancedTmPntLs:typing.List[int],from_tmPnt:int
     # notBalancedFnCallIdLs=[1]
 
 # 遍历 时刻点TmPnt
-def neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId(
+def neo4j_writeENxtTmPnt_whenTraverseSq3FnCallId(
 sq3dbConn:sqlite3.Connection,  neo4j_sess:neo4j.Session,
 notBalancedTmPntLs:typing.List[int],
 notBalancedFnCallIdLs:typing.List[int],

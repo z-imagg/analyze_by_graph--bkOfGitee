@@ -15,6 +15,7 @@ from neo4j import Driver
 
 from db_conn_inject.dbConn_inject__sqlite3_neo4j import dbConn_inject__sqlite3_neo4j
 from neo4j__simple_visual__by_networkx import neo4j_visual__by_networkx
+from neo4j__writeEdge_NxtTmPnt import neo4j_writeENxtTmPnt_whenTraverseSq3FnCallId
 from neo4j__writeVertex_FnCallLog__writeEdge_FnEL import neo4j_recreate___idx__V_FnCallLog__logId, neo4j_recreate___uq__V_FnCallLog__logId, neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId
 from sqlite3_basic_Q_fnCallLog import queryFnCallLogTmPntMaxMin
 from config import sqlite3_dbFilePath,neo4jDB_default
@@ -69,7 +70,7 @@ def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.S
     #  to_tmPnt 取值范围为 区间[tmPnt_min+1,tmPnt_max]
 ### 跳过不平衡的 to_tmPnt
 # 遍历 时刻点TmPnt
-    neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId(
+    neo4j_writeENxtTmPnt_whenTraverseSq3FnCallId(
 sq3dbConn,  neo4j_sess,
 notBalancedTmPntLs,
 notBalancedFnCallIdLs,
