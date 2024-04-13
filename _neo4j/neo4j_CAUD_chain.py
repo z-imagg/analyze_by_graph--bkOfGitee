@@ -54,4 +54,4 @@ class Neo4j_CAUD_chain:
     DETACH DELETE n
         """.replace("tabNameSuffix__",tabNameSuffix)
             # 循环删除, 因为一次行删除 可能报内存超出
-            deleteAll(sess,Cypher_delete_V)
+            deleteAll(sess,Cypher_delete_V,"V_Chain__tabNameSuffix__")

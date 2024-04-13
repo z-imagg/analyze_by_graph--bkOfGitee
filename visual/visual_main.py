@@ -53,8 +53,8 @@ DETACH DELETE n
 def _visual_main(sess:Session):
     sess_anlz:Session = sess#本来sess_anlz连接的是另一个neo4j实例
     # executeDropCreateIdx(sess_anlz, Cypher_IdxDropCreate)
-    deleteAll(sess,Cypher_delete__E_P2S)
-    deleteAll(sess,Cypher_delete__V_FnCallLog_Analz)
+    deleteAll(sess,Cypher_delete__E_P2S,"E_P2S")
+    deleteAll(sess,Cypher_delete__V_FnCallLog_Analz,"V_FnCallLog_Analz")
 
     rowLs:typing.List[typing.Dict[str,typing.Any]]=neo4j_query_RowLs(sess,"_visual_main", cypher__query__链条_宽_宽1深, params={})
     nodeTab= dict([ (r["fnCallId"],r)for r in rowLs])

@@ -44,7 +44,7 @@ LIMIT 100000
 DETACH DELETE r
 """
     # 循环删除, 因为一次行删除 可能报内存超出
-    deleteAll(sess,Cypher_delete_E_FnEL)
+    deleteAll(sess,Cypher_delete_E_FnEL,"E_FnEL")
 
     #### 删除关系 E_NxtTmPnt
     #  E_NxtTmPnt == "Edge 时刻点TmPnt  ---> 下一个 时刻点TmPnt"
@@ -56,7 +56,7 @@ LIMIT 100000
 DETACH DELETE r
 """
     # 循环删除, 因为一次行删除 可能报内存超出
-    deleteAll(sess,Cypher_delete_E_NxtTmPnt)
+    deleteAll(sess,Cypher_delete_E_NxtTmPnt,"E_NxtTmPnt")
 
 
 
@@ -71,7 +71,7 @@ DETACH DELETE n
 """
 
     # 循环删除, 因为一次行删除 可能报内存超出
-    deleteAll(sess,Cypher_delete_V_FnCallLog)
+    deleteAll(sess,Cypher_delete_V_FnCallLog,"V_FnCallLog")
 
 
 
