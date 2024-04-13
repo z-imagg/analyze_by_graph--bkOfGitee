@@ -94,26 +94,30 @@ DELETE r
 
 #### neo4j 删除 索引 V_FnCallLog.logId
 
-# neo4j重建索引 V_FnCallLog.logId
-def neo4j_recreate___idx__V_FnCallLog__logId(sess:Session):
-    Cypher_recreateIdx_V_FnCallLog__logId="""
-DROP INDEX idx__V_FnCallLog__logId IF EXISTS ;
-CREATE INDEX idx__V_FnCallLog__logId FOR (n:V_FnCallLog) ON (n.logId) ;
-"""
-    neo4j_recreateIdx(sess,Cypher_recreateIdx_V_FnCallLog__logId)
 
 ### neo4j创建unique约束
     # neo4j重建unique约束 V_FnCallLog.logId
 def neo4j_recreate___uq__V_FnCallLog__logId(sess:Session):
 #### neo4j 创建  unique约束 V_FnCallLog.logId
+#     noe4j 查看约束 https://neo4j.com/docs/cypher-manual/4.4/constraints/examples/#administration-constraints-list-constraint
     _Cypher__uq__V_FnCallLog__logId="""
-DROP CONSTRAINT uq__V_FnCallLog__logId IF EXISTS ;
+//查看约束
+SHOW   CONSTRAINTS WHERE entityType = 'NODE';
+//删除unique约束
+DROP CONSTRAINT ON (v:V_FnCallLog) ASSERT v.logId IS UNIQUE  IF EXISTS;
+//删除索引
+DROP INDEX ON :V_FnCallLog(logId)  IF EXISTS ;
 CREATE CONSTRAINT uq__V_FnCallLog__logId FOR (x:V_FnCallLog) REQUIRE x.logId IS UNIQUE ;
 """
     neo4j_recreateConstraint(sess,_Cypher__uq__V_FnCallLog__logId)
 #### neo4j 创建  unique约束 V_FnCallLog.tmPnt
     _Cypher__uq__V_FnCallLog__tmPnt="""
-DROP CONSTRAINT uq__V_FnCallLog__tmPnt IF EXISTS ;
+//查看约束
+SHOW   CONSTRAINTS WHERE entityType = 'NODE';
+//删除unique约束
+DROP CONSTRAINT ON (v:V_FnCallLog) ASSERT v.tmPnt IS UNIQUE  IF EXISTS ;
+//删除索引
+DROP INDEX ON :V_FnCallLog(tmPnt)   IF EXISTS ;
 CREATE CONSTRAINT uq__V_FnCallLog__tmPnt FOR (x:V_FnCallLog) REQUIRE x.tmPnt IS UNIQUE ;
 """
     neo4j_recreateConstraint(sess,_Cypher__uq__V_FnCallLog__tmPnt)

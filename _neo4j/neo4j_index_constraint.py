@@ -39,11 +39,13 @@ def neo4j_recreateIdx(sess:Session,Multi_Cypher_Txt:str)->int:
     add_cnt=0
     for Cypher_Txt  in Cypher_Txt_ls:
         Cypher_Txt=Cypher_Txt.strip()
-        if not strIsEmpty(Cypher_Txt):
-            summry:ResultSummary=_neo4j_run_cypherTxt(sess,Cypher_Txt)
-            rm_cnt += summry.counters.indexes_removed
-            add_cnt += summry.counters.indexes_added
-            print(f"删除索引{summry.counters.indexes_removed}条, 创建索引{summry.counters.indexes_added}条")
+        #跳过空行、跳过注释
+        if strIsEmpty(Cypher_Txt) or Cypher_Txt.startswith("//"): continue
+        
+        summry:ResultSummary=_neo4j_run_cypherTxt(sess,Cypher_Txt)
+        rm_cnt += summry.counters.indexes_removed
+        add_cnt += summry.counters.indexes_added
+        print(f"删除索引{summry.counters.indexes_removed}条, 创建索引{summry.counters.indexes_added}条")
     return rm_cnt + add_cnt
 
 
@@ -61,10 +63,13 @@ def neo4j_recreateConstraint(sess:Session,Multi_Cypher_Txt:str)->int:
     add_cnt=0
     for Cypher_Txt  in Cypher_Txt_ls:
         Cypher_Txt=Cypher_Txt.strip()
-        if not strIsEmpty(Cypher_Txt):
-            summry:ResultSummary=_neo4j_run_cypherTxt(sess,Cypher_Txt)
-            rm_cnt += summry.counters.constraints_removed
-            add_cnt += summry.counters.constraints_added
-            print(f"删除约束{summry.counters.indexes_removed}条, 创建约束{summry.counters.indexes_added}条")
+        #跳过空行、跳过注释
+        if strIsEmpty(Cypher_Txt) or Cypher_Txt.startswith("//"): continue
+            
+        print(Cypher_Txt)
+        summry:ResultSummary=_neo4j_run_cypherTxt(sess,Cypher_Txt)
+        rm_cnt += summry.counters.constraints_removed
+        add_cnt += summry.counters.constraints_added
+        print(f"删除约束{summry.counters.indexes_removed}条, 创建约束{summry.counters.indexes_added}条")
     return rm_cnt + add_cnt
 
