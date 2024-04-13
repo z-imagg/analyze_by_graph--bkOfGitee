@@ -29,7 +29,7 @@ def dbConn_inject__sqlite3_neo4j(sqlite3_dbFilePath:str, neo4j_db_entity:Neo4J_D
     try:
         with neo4j_dbDriver.session(database=neo4j_db_entity.DB_NAME) as neo4j_sess:
             return func(sq3dbConn, neo4j_sess
-                ,neo4j_dbDriver  #要不要给neo4j_dbDriver是有待考虑的
+                # ,neo4j_dbDriver  #不给neo4j_dbDriver
                 )
 
     except (Exception,) as  err1:
