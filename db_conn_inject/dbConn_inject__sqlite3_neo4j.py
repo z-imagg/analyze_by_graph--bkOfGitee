@@ -32,19 +32,19 @@ def dbConn_inject__sqlite3_neo4j(sqlite3_dbFilePath:str, neo4j_db_entity:Neo4J_D
                 # ,neo4j_dbDriver  #不给neo4j_dbDriver
                 )
 
-    except (Exception,) as  err1:
+    except (BaseException,) as  err1:
         traceback.print_exception(err1)
     finally:
         try:
             #提交sqlite3数据库
             sq3dbConn.commit()
-        except (Exception,) as  err2:
+        except (BaseException,) as  err2:
             traceback.print_exception(err2)
         finally:
             try:
                 #关闭sqlite3数据库
                 sq3dbConn.close()
-            except (Exception,) as  err3:
+            except (BaseException,) as  err3:
                 traceback.print_exception(err3)
             finally:
                 #关闭neo4j的连接
