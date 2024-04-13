@@ -107,7 +107,8 @@ SHOW   CONSTRAINTS WHERE entityType = 'NODE';
 // DROP CONSTRAINT ON (v:V_FnCallLog) ASSERT v.logId IS UNIQUE   ;
 DROP CONSTRAINT uq__V_FnCallLog__logId  IF EXISTS ;
 //删除索引
-DROP INDEX ON :V_FnCallLog(logId)  IF EXISTS ;
+// DROP INDEX ON :V_FnCallLog(logId)   ;
+DROP INDEX idx__V_FnCallLog__logId  IF EXISTS ;
 CREATE CONSTRAINT uq__V_FnCallLog__logId FOR (x:V_FnCallLog) REQUIRE x.logId IS UNIQUE ;
 """
     neo4j_recreateConstraint(sess,_Cypher__uq__V_FnCallLog__logId)
@@ -119,7 +120,8 @@ SHOW   CONSTRAINTS WHERE entityType = 'NODE';
 // DROP CONSTRAINT ON (v:V_FnCallLog) ASSERT v.tmPnt IS UNIQUE    ;
 DROP CONSTRAINT uq__V_FnCallLog__tmPnt  IF EXISTS ;
 //删除索引
-DROP INDEX ON :V_FnCallLog(tmPnt)   IF EXISTS ;
+//DROP INDEX ON :V_FnCallLog(tmPnt)   ;
+DROP INDEX idx__V_FnCallLog__tmPnt  IF EXISTS ;
 CREATE CONSTRAINT uq__V_FnCallLog__tmPnt FOR (x:V_FnCallLog) REQUIRE x.tmPnt IS UNIQUE ;
 """
     neo4j_recreateConstraint(sess,_Cypher__uq__V_FnCallLog__tmPnt)

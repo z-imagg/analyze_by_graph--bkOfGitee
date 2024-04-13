@@ -26,6 +26,8 @@ def _neo4j_run_cypherTxt(sess:Session,Cypher_Txt:str)->ResultSummary:
 
 #例子cypher语句: 删除索引、创建索引 V_Demo.logId
 Cypher_recreateIdx__V_Demo__logId="""
+// 支持以'//'开头的单行注释
+// 支持多条语句 ，每条语句末尾加 ';'，  每条语句独占一行 ，一条语句不可占用多行
 DROP INDEX idxName__V_Demo__logId IF EXISTS;
 CREATE INDEX idxName__V_Demo__logId FOR (n:V_Demo) ON (n.logId);
 show indexes;
@@ -34,7 +36,7 @@ show indexes;
 
 #neo4j重建索引（neo4j删除索引、创建索引）
 def neo4j_recreateIdx(sess:Session,Multi_Cypher_Txt:str)->int:
-    Cypher_Txt_ls=Multi_Cypher_Txt.split(";")
+    Cypher_Txt_ls=Multi_Cypher_Txt.split("\n")
     rm_cnt=0
     add_cnt=0
     for Cypher_Txt  in Cypher_Txt_ls:
@@ -51,6 +53,8 @@ def neo4j_recreateIdx(sess:Session,Multi_Cypher_Txt:str)->int:
 
 #例子cypher语句: 删除约束、创建约束 unique(V_Demo.logId)
 Cypher_recreateConstraint__V_Demo__logId="""
+// 支持以'//'开头的单行注释
+// 支持多条语句 ，每条语句末尾加 ';'，  每条语句独占一行 ，一条语句不可占用多行
 DROP CONSTRAINT uq__V_Demo__logId IF EXISTS;
 CREATE CONSTRAINT uq__V_Demo__logId FOR (x:V_Demo) REQUIRE x.logId IS UNIQUE;
 """
@@ -58,7 +62,7 @@ CREATE CONSTRAINT uq__V_Demo__logId FOR (x:V_Demo) REQUIRE x.logId IS UNIQUE;
 #neo4j重建约束（neo4j删除约束、创建约束）
 def neo4j_recreateConstraint(sess:Session,Multi_Cypher_Txt:str)->int:
 
-    Cypher_Txt_ls=Multi_Cypher_Txt.split(";")
+    Cypher_Txt_ls=Multi_Cypher_Txt.split("\n")
     rm_cnt=0
     add_cnt=0
     for Cypher_Txt  in Cypher_Txt_ls:
