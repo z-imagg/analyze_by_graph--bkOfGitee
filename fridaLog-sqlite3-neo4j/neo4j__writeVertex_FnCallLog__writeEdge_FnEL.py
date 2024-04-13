@@ -27,7 +27,7 @@ from const import Neo4j_Integer_Print
 from neo4j_db_basic import Neo4J_DB_Entity, getDriver
 from neo4j_delete_all import deleteAll
 from neo4j_index_constraint import neo4j_recreateConstraint, neo4j_recreateIdx
-from util_datetime import nowDateTimeTxt
+from util_datetime import nowDateTimeTxt, printLn
 from sqlite3_basic_Q_fnCallLog import queryFnEnterLeave
 
 # driver.close() #到最后再关闭neo4j的连接
@@ -131,7 +131,7 @@ def neo4j_wrtVFnCallLog_EFnEL_whnTrvSq3Log(sq3dbConn:sqlite3.Connection,notBalan
     for fnCallIdRow in sq3dbConn.execute(sqlTmpl_t_FnCallLog_query_fnCallId_ls):
         fnCallId=fnCallIdRow["fnCallId"]
         
-        if fnCallId % Neo4j_Integer_Print == 0 : print(f"{nowDateTimeTxt()},fnCallId={fnCallId}")
+        if fnCallId % Neo4j_Integer_Print == 0 : printLn(f"write V_FnCallLog__E_FnEL,fnCallId={fnCallId}")
         # print("开发调试打印",type(fnCallId), fnCallId.keys())
         
         assert fnCallId not in notBalancedFnCallIdLs, \

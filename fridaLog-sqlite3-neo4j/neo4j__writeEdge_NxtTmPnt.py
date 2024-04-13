@@ -14,7 +14,7 @@ import neo4j
 from const import Neo4j_Integer_Print
 
 from sqlite3_basic_Q_fnCallLog import queryFnCallLogByTmPnt
-from util_datetime import   nowDateTimeTxt
+from util_datetime import   nowDateTimeTxt, printLn
 
 
 
@@ -86,7 +86,7 @@ tmPnt_max:int,tmPnt_min:int,
     for from_tmPnt in range(tmPnt_min,tmPnt_max):
         
         #打印 进度
-        if from_tmPnt % Neo4j_Integer_Print == 0 : print(f"{nowDateTimeTxt()},from_tmPnt={from_tmPnt}")
+        if from_tmPnt % Neo4j_Integer_Print == 0 : printLn(f"write E_NxtTmPnt,from_tmPnt={from_tmPnt}")
 
         # 查询 '来源时刻点from_tmPnt' 下 仅有的一条日志
         fromLog=queryFnCallLogByTmPnt(sq3dbConn,from_tmPnt)
