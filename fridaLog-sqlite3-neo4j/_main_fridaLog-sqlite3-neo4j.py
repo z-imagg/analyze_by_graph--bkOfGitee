@@ -6,6 +6,8 @@
 #【备注】 
 #【术语】 
 
+import signal
+import sys
 import typing
 import sqlite3
 import neo4j
@@ -16,6 +18,7 @@ from neo4j__simple_visual__by_networkx import neo4j_visual__by_networkx
 from neo4j__writeVertex_FnCallLog__writeEdge_FnEL import neo4j_recreate___idx__V_FnCallLog__logId, neo4j_recreate___uq__V_FnCallLog__logId, neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId
 from sqlite3_basic_Q_fnCallLog import queryFnCallLogTmPntMaxMin
 from config import sqlite3_dbFilePath,neo4jDB_default
+from util_file import unlink_verbose
 
 
 def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.Session
@@ -81,7 +84,17 @@ tmPnt_max,tmPnt_min,
 
     return 0
 
+#退出信号处理：退出前执行清理
+def clean_before_exit(_signal:signal.Signals, frame):
+    print(f'收到信号{_signal},执行清理逻辑后正常退出')
+    unlink_verbose(sqlite3_dbFilePath)
+    sys.exit(0)
 
 
 if __name__=="__main__":
+    
+    #linux进程退出信号处理
+    signal.signal(  signal.SIGINT  , clean_before_exit)
+    signal.signal(  signal.SIGPIPE, clean_before_exit)
+    
     fnCallLogCnt:int = dbConn_inject__sqlite3_neo4j(sqlite3_dbFilePath, neo4jDB_default, func=fridaLog_to_sqlite3_to_neo4j)
