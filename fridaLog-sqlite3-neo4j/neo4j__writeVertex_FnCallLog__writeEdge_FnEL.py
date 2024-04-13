@@ -23,6 +23,7 @@ from neo4j import Driver, EagerResult, GraphDatabase, ResultSummary, Session,Res
 
 from neo4j import GraphDatabase, RoutingControl
 
+from const import Neo4j_Integer_Print
 from neo4j_db_basic import Neo4J_DB_Entity, getDriver
 from neo4j_delete_all import deleteAll
 from neo4j_index_constraint import neo4j_recreateConstraint, neo4j_recreateIdx
@@ -125,10 +126,6 @@ def neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId(sq3dbConn:sqlite3.C
 
 #### 遍历fnCallId
     #循环操作neo4j过程中,打印进度时所用的判定整数
-    Neo4j_Integer_Print=100000
-
-
-
 
     #  遍历fnCallId
     for fnCallIdRow in sq3dbConn.execute(sqlTmpl_t_FnCallLog_query_fnCallId_ls):
