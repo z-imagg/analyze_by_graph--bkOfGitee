@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #【标题】 写 neo4j 顶点(日志行号）、边（同fnCallId的进和出） 
-#【术语】 
+#【术语】 Sq3Log==Sq3FnCallLog, wrt==write,whn==when,trv==Traverse
 #【备注】 
 #【术语】 
 
@@ -23,10 +23,11 @@ from neo4j import Driver, EagerResult, GraphDatabase, ResultSummary, Session,Res
 
 from neo4j import GraphDatabase, RoutingControl
 
+from const import Neo4j_Integer_Print
 from neo4j_db_basic import Neo4J_DB_Entity, getDriver
 from neo4j_delete_all import deleteAll
 from neo4j_index_constraint import neo4j_recreateConstraint, neo4j_recreateIdx
-from util_datetime import nowDateTimeTxt
+from util_datetime import nowDateTimeTxt, printLn
 from sqlite3_basic_Q_fnCallLog import queryFnEnterLeave
 
 # driver.close() #到最后再关闭neo4j的连接
@@ -43,7 +44,7 @@ LIMIT 100000
 DETACH DELETE r
 """
     # 循环删除, 因为一次行删除 可能报内存超出
-    deleteAll(sess,Cypher_delete_E_FnEL)
+    deleteAll(sess,Cypher_delete_E_FnEL,"E_FnEL")
 
     #### 删除关系 E_NxtTmPnt
     #  E_NxtTmPnt == "Edge 时刻点TmPnt  ---> 下一个 时刻点TmPnt"
@@ -55,7 +56,7 @@ LIMIT 100000
 DETACH DELETE r
 """
     # 循环删除, 因为一次行删除 可能报内存超出
-    deleteAll(sess,Cypher_delete_E_NxtTmPnt)
+    deleteAll(sess,Cypher_delete_E_NxtTmPnt,"E_NxtTmPnt")
 
 
 
@@ -70,7 +71,7 @@ DETACH DELETE n
 """
 
     # 循环删除, 因为一次行删除 可能报内存超出
-    deleteAll(sess,Cypher_delete_V_FnCallLog)
+    deleteAll(sess,Cypher_delete_V_FnCallLog,"V_FnCallLog")
 
 
 
@@ -93,30 +94,41 @@ DELETE r
 
 #### neo4j 删除 索引 V_FnCallLog.logId
 
-# neo4j重建索引 V_FnCallLog.logId
-def neo4j_recreate___idx__V_FnCallLog__logId(sess:Session):
-    Cypher_recreateIdx_V_FnCallLog__logId=\
-    "DROP INDEX idx__V_FnCallLog__logId IF EXISTS"
-    "CREATE INDEX idx__V_FnCallLog__logId FOR (n:V_FnCallLog) ON (n.logId)"
-    neo4j_recreateIdx(sess,Cypher_recreateIdx_V_FnCallLog__logId)
 
 ### neo4j创建unique约束
     # neo4j重建unique约束 V_FnCallLog.logId
 def neo4j_recreate___uq__V_FnCallLog__logId(sess:Session):
 #### neo4j 创建  unique约束 V_FnCallLog.logId
-    _Cypher__uq__V_FnCallLog__logId=\
-    "DROP CONSTRAINT uq__V_FnCallLog__logId IF EXISTS"
-    "CREATE CONSTRAINT uq__V_FnCallLog__logId FOR (x:V_FnCallLog) REQUIRE x.logId IS UNIQUE"
+#     noe4j 查看约束 https://neo4j.com/docs/cypher-manual/4.4/constraints/examples/#administration-constraints-list-constraint
+    _Cypher__uq__V_FnCallLog__logId="""
+//查看约束
+SHOW   CONSTRAINTS WHERE entityType = 'NODE';
+//删除unique约束
+// DROP CONSTRAINT ON (v:V_FnCallLog) ASSERT v.logId IS UNIQUE   ;
+DROP CONSTRAINT uq__V_FnCallLog__logId  IF EXISTS ;
+//删除索引
+// DROP INDEX ON :V_FnCallLog(logId)   ;
+DROP INDEX idx__V_FnCallLog__logId  IF EXISTS ;
+CREATE CONSTRAINT uq__V_FnCallLog__logId FOR (x:V_FnCallLog) REQUIRE x.logId IS UNIQUE ;
+"""
     neo4j_recreateConstraint(sess,_Cypher__uq__V_FnCallLog__logId)
 #### neo4j 创建  unique约束 V_FnCallLog.tmPnt
-    _Cypher__uq__V_FnCallLog__tmPnt=\
-    "DROP CONSTRAINT uq__V_FnCallLog__tmPnt IF EXISTS"
-    "CREATE CONSTRAINT uq__V_FnCallLog__tmPnt FOR (x:V_FnCallLog) REQUIRE x.tmPnt IS UNIQUE"
+    _Cypher__uq__V_FnCallLog__tmPnt="""
+//查看约束
+SHOW   CONSTRAINTS WHERE entityType = 'NODE';
+//删除unique约束
+// DROP CONSTRAINT ON (v:V_FnCallLog) ASSERT v.tmPnt IS UNIQUE    ;
+DROP CONSTRAINT uq__V_FnCallLog__tmPnt  IF EXISTS ;
+//删除索引
+//DROP INDEX ON :V_FnCallLog(tmPnt)   ;
+DROP INDEX idx__V_FnCallLog__tmPnt  IF EXISTS ;
+CREATE CONSTRAINT uq__V_FnCallLog__tmPnt FOR (x:V_FnCallLog) REQUIRE x.tmPnt IS UNIQUE ;
+"""
     neo4j_recreateConstraint(sess,_Cypher__uq__V_FnCallLog__tmPnt)
 
 
 ### 遍历fnCallId过程中写neo4j顶点、边
-def neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId(sq3dbConn:sqlite3.Connection,notBalancedFnCallIdLs:typing.List[int],sess:Session):
+def neo4j_wrtVFnCallLog_EFnEL_whnTrvSq3Log(sq3dbConn:sqlite3.Connection,notBalancedFnCallIdLs:typing.List[int],sess:Session):
 #### sqlite3 sql语句模板
     sqlTmpl_t_FnCallLog_query_fnCallId_ls="select distinct fnCallId  from t_FnCallLog order by fnCallId asc"
     sqlTmpl_t_FnSym_query_by_address="select  *  from t_FnSym where address=?"
@@ -125,23 +137,19 @@ def neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId(sq3dbConn:sqlite3.C
 
 #### 遍历fnCallId
     #循环操作neo4j过程中,打印进度时所用的判定整数
-    Neo4j_Integer_Print=100000
-
-
-
 
     #  遍历fnCallId
     for fnCallIdRow in sq3dbConn.execute(sqlTmpl_t_FnCallLog_query_fnCallId_ls):
         fnCallId=fnCallIdRow["fnCallId"]
         
-        if fnCallId % Neo4j_Integer_Print == 0 : print(f"{nowDateTimeTxt()},fnCallId={fnCallId}")
+        if fnCallId % Neo4j_Integer_Print == 0 : printLn(f"write V_FnCallLog__E_FnEL,fnCallId={fnCallId}")
         # print("开发调试打印",type(fnCallId), fnCallId.keys())
         
         assert fnCallId not in notBalancedFnCallIdLs, \
     f"断言 遍历fnCallId 中 无应该有 不平衡的fnCallId={fnCallId}, notBalancedFnCallIdLs={notBalancedFnCallIdLs}"
 
         #按照fnCallId查询出 函数进入、函数离开 日志
-        fnEnter,fnLeave=queryFnEnterLeave(fnCallId)
+        fnEnter,fnLeave=queryFnEnterLeave(sq3dbConn,fnCallId)
 
         fnEnter_logId=fnEnter["logId"]
         fnLeave_logId=fnLeave["logId"]

@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 
 #【标题】 入口
-#【术语】 
+#【术语】 Sq3Log==Sq3FnCallLog, wrt==write,whn==when,trv==Traverse
 #【备注】 
 #【术语】 
 
+import signal
+import sys
 import typing
 import sqlite3
 import neo4j
@@ -13,9 +15,11 @@ from neo4j import Driver
 
 from db_conn_inject.dbConn_inject__sqlite3_neo4j import dbConn_inject__sqlite3_neo4j
 from neo4j__simple_visual__by_networkx import neo4j_visual__by_networkx
-from neo4j__writeVertex_FnCallLog__writeEdge_FnEL import neo4j_recreate___idx__V_FnCallLog__logId, neo4j_recreate___uq__V_FnCallLog__logId, neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId
+from neo4j__writeEdge_NxtTmPnt import neo4j_wrtENxtTmPnt_whnTrvSq3Log
+from neo4j__writeVertex_FnCallLog__writeEdge_FnEL import  neo4j_recreate___uq__V_FnCallLog__logId, neo4j_wrtVFnCallLog_EFnEL_whnTrvSq3Log
 from sqlite3_basic_Q_fnCallLog import queryFnCallLogTmPntMaxMin
 from config import sqlite3_dbFilePath,neo4jDB_default
+from util_file import unlink_verbose
 
 
 def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.Session
@@ -48,13 +52,12 @@ def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.S
 ### 删除现有顶点、边
     neo4j_del_v_e(neo4j_sess)
 ### neo4j创建索引
-    # neo4j重建索引 V_FnCallLog.logId
-    neo4j_recreate___idx__V_FnCallLog__logId(neo4j_sess)
+    # neo4j重建索引 V_FnCallLog.logId （和uniqe约束重复了，不再单独创建索引）
 ### neo4j创建unique约束
     # neo4j重建unique约束 V_FnCallLog.logId
     neo4j_recreate___uq__V_FnCallLog__logId(neo4j_sess)
 ### 遍历fnCallId过程中写neo4j顶点、边
-    neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId(sq3dbConn,notBalancedFnCallIdLs,neo4j_sess)
+    neo4j_wrtVFnCallLog_EFnEL_whnTrvSq3Log(sq3dbConn,notBalancedFnCallIdLs,neo4j_sess)
 
 
 ##  写 neo4j 边（时刻点 到 下一个 时刻点） 
@@ -66,7 +69,7 @@ def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.S
     #  to_tmPnt 取值范围为 区间[tmPnt_min+1,tmPnt_max]
 ### 跳过不平衡的 to_tmPnt
 # 遍历 时刻点TmPnt
-    neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId(
+    neo4j_wrtENxtTmPnt_whnTrvSq3Log(
 sq3dbConn,  neo4j_sess,
 notBalancedTmPntLs,
 notBalancedFnCallIdLs,
@@ -81,12 +84,17 @@ tmPnt_max,tmPnt_min,
 
     return 0
 
+#退出信号处理：退出前执行清理
+def clean_before_exit(_signal:signal.Signals, frame):
+    print(f'收到信号{_signal},执行清理逻辑后正常退出')
+    unlink_verbose(sqlite3_dbFilePath)
+    sys.exit(0)
 
 
 if __name__=="__main__":
-    from fridaLog__sqlite3_reinitDbTabDef import reinit_sq3_db_tabDef
-    from neo4j_db_basic import Neo4J_DB_Entity, getDriver
-    ### 重初始化sqlite3数据库、表结构
-    sq3dbConn:sqlite3.Connection=reinit_sq3_db_tabDef(sqlite3_dbFilePath)
-
+    
+    #linux进程退出信号处理
+    signal.signal(  signal.SIGINT  , clean_before_exit)
+    signal.signal(  signal.SIGPIPE, clean_before_exit)
+    
     fnCallLogCnt:int = dbConn_inject__sqlite3_neo4j(sqlite3_dbFilePath, neo4jDB_default, func=fridaLog_to_sqlite3_to_neo4j)

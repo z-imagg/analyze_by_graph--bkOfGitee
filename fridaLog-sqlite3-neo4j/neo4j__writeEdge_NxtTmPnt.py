@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #【标题】 写 neo4j 边（时刻点 到 下一个 时刻点） 
-#【术语】 
+#【术语】 Sq3Log==Sq3FnCallLog, wrt==write,whn==when,trv==Traverse
 #【备注】 
 #【术语】 
 
@@ -14,7 +14,7 @@ import neo4j
 from const import Neo4j_Integer_Print
 
 from sqlite3_basic_Q_fnCallLog import queryFnCallLogByTmPnt
-from util_datetime import   nowDateTimeTxt
+from util_datetime import   nowDateTimeTxt, printLn
 
 
 
@@ -77,7 +77,7 @@ def skipNotBalanced__to_tmPnt(notBalancedTmPntLs:typing.List[int],from_tmPnt:int
     # notBalancedFnCallIdLs=[1]
 
 # 遍历 时刻点TmPnt
-def neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId(
+def neo4j_wrtENxtTmPnt_whnTrvSq3Log(
 sq3dbConn:sqlite3.Connection,  neo4j_sess:neo4j.Session,
 notBalancedTmPntLs:typing.List[int],
 notBalancedFnCallIdLs:typing.List[int],
@@ -86,7 +86,7 @@ tmPnt_max:int,tmPnt_min:int,
     for from_tmPnt in range(tmPnt_min,tmPnt_max):
         
         #打印 进度
-        if from_tmPnt % Neo4j_Integer_Print == 0 : print(f"{nowDateTimeTxt()},from_tmPnt={from_tmPnt}")
+        if from_tmPnt % Neo4j_Integer_Print == 0 : printLn(f"write E_NxtTmPnt,from_tmPnt={from_tmPnt}")
 
         # 查询 '来源时刻点from_tmPnt' 下 仅有的一条日志
         fromLog=queryFnCallLogByTmPnt(sq3dbConn,from_tmPnt)
@@ -97,7 +97,7 @@ tmPnt_max:int,tmPnt_min:int,
             continue
         
         #从 来源时刻点from_tmPnt 指向 下一个时刻点to_tmPnt
-        to_tmPnt:int=skipNotBalanced__to_tmPnt(from_tmPnt)
+        to_tmPnt:int=skipNotBalanced__to_tmPnt(notBalancedTmPntLs,from_tmPnt)
 
         from_fnCallId:int=fromLog["fnCallId"]
         assert from_fnCallId not in notBalancedFnCallIdLs ,\
@@ -116,12 +116,14 @@ tmPnt_max:int,tmPnt_min:int,
         
         neo4j_sess.run(
 #'neo4j 索引 V_FnCallLog.logId' 加速 以下两个MATCH查询
-#  找到最小时刻点
-"MATCH (from_Log:V_FnCallLog {logId: $fromLogId})"
-#  找到最小时刻点
-"MATCH   (to_Log:V_FnCallLog {logId: $toLogId})"
-#创建 时刻边
-"CREATE (from_Log)-[:E_NxtTmPnt {fromLogId: $fromLogId, toLogId:$toLogId, from_fnCallId:$from_fnCallId, to_fnCallId:$to_fnCallId }]->(to_Log)",
+"""
+//  找到最小时刻点
+MATCH (from_Log:V_FnCallLog {logId: $fromLogId})
+//  找到最小时刻点
+MATCH   (to_Log:V_FnCallLog {logId: $toLogId})
+//创建 时刻边
+CREATE (from_Log)-[:E_NxtTmPnt {fromLogId: $fromLogId, toLogId:$toLogId, from_fnCallId:$from_fnCallId, to_fnCallId:$to_fnCallId }]->(to_Log)
+""",
 # 以下这些是作为 参数 parameters_ 的
 fromLogId=fromLogId, 
 toLogId=toLogId, 

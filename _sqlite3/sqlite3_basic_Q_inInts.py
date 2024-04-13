@@ -9,9 +9,9 @@
 from sqlite3 import Row as sqlite3Row
 import typing
 
-from basic_sqlite3_Q import sq3Q_2Dcts
-from basic_sqlite3_func import sq3Q
-from basic_tool import joinInts
+from sqlite3_basic_Q   import sq3Q_2Dcts
+from sqlite3_basic_func  import sq3Q
+from util_basic import joinInts
 
 
 

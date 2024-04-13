@@ -27,3 +27,7 @@ def nowDateTimeTxt():
 
     return  f"【{deltaTxt}；{_nowTxt}】"
 
+
+
+def printLn(msgLn:str):
+    print(f"{nowDateTimeTxt()}{msgLn}")

@@ -12,6 +12,8 @@ import typing
 from pathlib import Path
 import sqlite3
 
+from util_file import unlink_verbose
+
 ##  torch函数调用日志文件(frida日志文件) 装入 sqlite3 
 
 ### 重初始化sqlite3数据库、表结构
@@ -23,6 +25,7 @@ def reinit_sq3_db_tabDef(sq_db_fp:str)->sqlite3.Connection:
 
     #### 删除已有的sqlite3数据库文件
     Path(sq_db_fp).unlink(missing_ok=True)
+    unlink_verbose(sq_db_fp)
 
     #### 创建sqlite3数据库文件
     # sq3dbConn = sqlite3.connect(':memory:')

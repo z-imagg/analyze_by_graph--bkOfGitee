@@ -27,7 +27,7 @@ DETACH DELETE n
 """
 
 #neo4j逐页删除所有记录行
-def deleteAll(sess_anlz:Session,Cypher_:str)->int:
+def deleteAll(sess_anlz:Session,Cypher_:str,tilte:str="无标题")->int:
     del_node_cnt:int = 0
     del_edge_cnt:int = 0
 
@@ -40,5 +40,5 @@ def deleteAll(sess_anlz:Session,Cypher_:str)->int:
         del_node_cnt += summry.counters.nodes_deleted
         del_edge_cnt += summry.counters.relationships_deleted
         if summry.counters.nodes_deleted == 0 and summry.counters.relationships_deleted == 0:
-            print(f"一共删除{del_node_cnt+del_edge_cnt}条记录")
+            print(f"{tilte},一共删除{del_node_cnt+del_edge_cnt}条记录")
             return

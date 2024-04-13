@@ -18,7 +18,7 @@ from iterLineOfFile import iterLineF
 def sq3_wTab_FnCallLog(sq3dbConn:sqlite3.Connection):
     fnCallLogFP:str=getLogFullPath()
     print("从表t_FnCallLog删除行数 ",sq3dbConn.execute("delete from t_FnCallLog").rowcount)    
-    LogLineCnt:int=iterLineF(fnCallLogFP,LineFunc=sq3_insert_t_FnCallLog)
+    LogLineCnt:int=iterLineF(fnCallLogFP,sq3dbConn,LineFunc=sq3_insert_t_FnCallLog)
     # 从表t_FnCallLog删除行数  0
     # 即将处理第0行日志
     # 即将处理第500000行日志

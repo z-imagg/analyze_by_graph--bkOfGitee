@@ -9,8 +9,12 @@
 import typing
 from neo4j.graph import Node
 
-from neo4j_misc import update__init_deepth_as_null
-from traverse import TraverseAbs
+
+### 列表判空
+def strIsEmpty(txt:str)->bool:
+    assert type(txt)==str, "断言类型是str"
+    empty:bool = txt is None or len(txt) == 0
+    return empty
 
 ### 列表判空
 def lsIsEmpty(ls:typing.List[typing.Any])->bool:
