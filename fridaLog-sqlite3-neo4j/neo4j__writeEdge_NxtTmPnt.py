@@ -97,7 +97,7 @@ tmPnt_max:int,tmPnt_min:int,
             continue
         
         #从 来源时刻点from_tmPnt 指向 下一个时刻点to_tmPnt
-        to_tmPnt:int=skipNotBalanced__to_tmPnt(from_tmPnt)
+        to_tmPnt:int=skipNotBalanced__to_tmPnt(notBalancedTmPntLs,from_tmPnt)
 
         from_fnCallId:int=fromLog["fnCallId"]
         assert from_fnCallId not in notBalancedFnCallIdLs ,\
