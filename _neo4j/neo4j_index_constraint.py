@@ -25,10 +25,11 @@ def _neo4j_run_cypherTxt(sess:Session,Cypher_Txt:str)->ResultSummary:
 
 
 #例子cypher语句: 删除索引、创建索引 V_Demo.logId
-Cypher_recreateIdx__V_Demo__logId=\
-"DROP INDEX idxName__V_Demo__logId IF EXISTS"
-"CREATE INDEX idxName__V_Demo__logId FOR (n:V_Demo) ON (n.logId)"
-"show indexes"
+Cypher_recreateIdx__V_Demo__logId="""
+DROP INDEX idxName__V_Demo__logId IF EXISTS;
+CREATE INDEX idxName__V_Demo__logId FOR (n:V_Demo) ON (n.logId);
+show indexes;
+"""
 # "DROP INDEX ON :V_Demo(logId)" #这种index语句更直白，但不支持if exists，可以手工用，但程序里不好用
 
 #neo4j重建索引（neo4j删除索引、创建索引）
@@ -47,9 +48,10 @@ def neo4j_recreateIdx(sess:Session,Multi_Cypher_Txt:str)->int:
 
 
 #例子cypher语句: 删除约束、创建约束 unique(V_Demo.logId)
-Cypher_recreateConstraint__V_Demo__logId=\
-"DROP CONSTRAINT uq__V_Demo__logId IF EXISTS"
-"CREATE CONSTRAINT uq__V_Demo__logId FOR (x:V_Demo) REQUIRE x.logId IS UNIQUE"
+Cypher_recreateConstraint__V_Demo__logId="""
+DROP CONSTRAINT uq__V_Demo__logId IF EXISTS;
+CREATE CONSTRAINT uq__V_Demo__logId FOR (x:V_Demo) REQUIRE x.logId IS UNIQUE;
+"""
 
 #neo4j重建约束（neo4j删除约束、创建约束）
 def neo4j_recreateConstraint(sess:Session,Multi_Cypher_Txt:str)->int:
