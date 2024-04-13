@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #【标题】 写 neo4j 顶点(日志行号）、边（同fnCallId的进和出） 
-#【术语】 
+#【术语】 Sq3Log==Sq3FnCallLog, wrt==write,whn==when,trv==Traverse
 #【备注】 
 #【术语】 
 
@@ -117,7 +117,7 @@ def neo4j_recreate___uq__V_FnCallLog__logId(sess:Session):
 
 
 ### 遍历fnCallId过程中写neo4j顶点、边
-def neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId(sq3dbConn:sqlite3.Connection,notBalancedFnCallIdLs:typing.List[int],sess:Session):
+def neo4j_wrtVFnCallLog_EFnEL_whnTrvSq3Log(sq3dbConn:sqlite3.Connection,notBalancedFnCallIdLs:typing.List[int],sess:Session):
 #### sqlite3 sql语句模板
     sqlTmpl_t_FnCallLog_query_fnCallId_ls="select distinct fnCallId  from t_FnCallLog order by fnCallId asc"
     sqlTmpl_t_FnSym_query_by_address="select  *  from t_FnSym where address=?"

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #【标题】 写 neo4j 边（时刻点 到 下一个 时刻点） 
-#【术语】 
+#【术语】 Sq3Log==Sq3FnCallLog, wrt==write,whn==when,trv==Traverse
 #【备注】 
 #【术语】 
 
@@ -77,7 +77,7 @@ def skipNotBalanced__to_tmPnt(notBalancedTmPntLs:typing.List[int],from_tmPnt:int
     # notBalancedFnCallIdLs=[1]
 
 # 遍历 时刻点TmPnt
-def neo4j_writeENxtTmPnt_whenTraverseSq3FnCallId(
+def neo4j_wrtENxtTmPnt_whnTrvSq3Log(
 sq3dbConn:sqlite3.Connection,  neo4j_sess:neo4j.Session,
 notBalancedTmPntLs:typing.List[int],
 notBalancedFnCallIdLs:typing.List[int],
