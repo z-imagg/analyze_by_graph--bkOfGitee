@@ -27,6 +27,9 @@ rm -frv *.log
 
 now="$(date +%s)"
 
+#设置python的stdout无缓存（即默认flush）
+export PYTHONUNBUFFERED=1
+
 export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/_neo4j/:/fridaAnlzAp/analyze_by_graph/_sqlite3/:/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/:/fridaAnlzAp/analyze_by_graph/db_conn_inject"
 
 #fridaLog转sqlite3转neo4j
