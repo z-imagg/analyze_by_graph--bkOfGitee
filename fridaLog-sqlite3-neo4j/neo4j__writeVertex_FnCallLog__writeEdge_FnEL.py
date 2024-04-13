@@ -141,7 +141,7 @@ def neo4j_writeVFnCallLog_writeEFnEL_whenTraverseSq3FnCallId(sq3dbConn:sqlite3.C
     f"断言 遍历fnCallId 中 无应该有 不平衡的fnCallId={fnCallId}, notBalancedFnCallIdLs={notBalancedFnCallIdLs}"
 
         #按照fnCallId查询出 函数进入、函数离开 日志
-        fnEnter,fnLeave=queryFnEnterLeave(fnCallId)
+        fnEnter,fnLeave=queryFnEnterLeave(sq3dbConn,fnCallId)
 
         fnEnter_logId=fnEnter["logId"]
         fnLeave_logId=fnLeave["logId"]
