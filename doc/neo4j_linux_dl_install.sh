@@ -55,7 +55,7 @@ neo4j start
 
 
 #http://10.0.4.220:7474/browser/
-#默认用户名密码 neo4j/123456
+#neo4j-community-4.4.32默认用户名密码 neo4j/neo4j
 #web端修改密码, 输入命令 ':server change-password'
 
 
