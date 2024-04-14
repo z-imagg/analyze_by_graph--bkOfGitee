@@ -11,7 +11,7 @@ shopt -s expand_aliases
 
 LocFDlSvr="http://172.17.0.1:2111"
 
-cd /tmp/
+mkdir -p /app/pack && cd /app/
 
 F_neo4j=neo4j-community-4.4.32-unix.tar.gz
 FlPth_neo4j=/app/pack/$F_neo4j
@@ -19,7 +19,7 @@ FlPth_neo4j=/app/pack/$F_neo4j
 md5_neo4j="a88d5de65332d9a5acbe131f60893b55  $FlPth_neo4j"
 #    优先从本地文件下载服务下载 ，其次才从外网文件下载
 { echo "$md5_neo4j" | md5sum --check ;} ||  { \
-{ curl ${LocFDlSvr} &&   wget --output-document=$FlPth_neo4j ${LocFDlSvr}/$F_neo4j ;} || \
+( curl ${LocFDlSvr} &&   wget --output-document=$FlPth_neo4j ${LocFDlSvr}/$F_neo4j :) || \
 axel -n 8 --output=$FlPth_neo4j https://neo4j.com/artifact.php?name=neo4j-community-4.4.32-unix.tar.gz ;}
 
 #通过 docker镜像 'neo4j:4.4.32-community' 知道 其用的jdk11
@@ -28,7 +28,7 @@ FlPth_jdk11=/app/pack/$F_jdk11
 md5_jdk11="f13d179f8e1428a3f0f135a42b9fa75b  $FlPth_jdk11"
 #    优先从本地文件下载服务下载 ，其次才从外网文件下载
 { echo "$md5_jdk11" | md5sum --check ;} ||  { \
-{ curl ${LocFDlSvr} &&   wget --output-document=$FlPth_jdk11 ${LocFDlSvr}/$F_jdk11 ;} || \
+( curl ${LocFDlSvr} &&   wget --output-document=$FlPth_jdk11 ${LocFDlSvr}/$F_jdk11 ;) || \
 axel -n 8 --output=$FlPth_jdk11 https://cdn.azul.com/zulu/bin/zulu11.70.15-ca-jdk11.0.22-linux_x64.tar.gz ;}
 
 export JAVA_HOME=/app/zulu11.70.15-ca-jdk11.0.22-linux_x64
@@ -61,7 +61,7 @@ outF_apocAllJar=/app/neo4j-community-4.4.32/plugins/$F_apocAllJar
 md5_apocAllJar="5a42a32e12432632124acd682382c91d  $FlPth_apocAllJar"
 #    优先从本地文件下载服务下载 ，其次才从外网文件下载
 { echo "$md5_apocAllJar" | md5sum --check ;} || {  \
-{ curl ${LocFDlSvr} &&   wget --output-document=$outF_apocAllJar ${LocFDlSvr}/$F_apocAllJar ;} || \
+( curl ${LocFDlSvr} &&   wget --output-document=$outF_apocAllJar ${LocFDlSvr}/$F_apocAllJar ;) || \
 wget --output-document=$outF_apocAllJar    https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.26/apoc-4.4.0.26-all.jar  ;}
 
 
