@@ -6,17 +6,24 @@
 
 shopt -s expand_aliases
 
+#重启本地下载服务
+# { kill -9 $(ps auxf | grep python3 | grep 2111 | awk '{print $2}')  && sleep 1 ;}  ;  ( cd /app/pack/ && python3 -m http.server 2111 & )
+
+LocFDlSvr="http://172.17.0.1:2111"
+
 cd /app/
 
 F_neo4j=neo4j-community-4.4.32-unix.tar.gz
 #https://neo4j.com/deployment-center/
-md5_neo4j='a88d5de65332d9a5acbe131f60893b55  neo4j-community-4.4.32-unix.tar.gz'
-{ echo "$md5_neo4j" | md5sum --check ;} || axel -n 8 --output=$F_neo4j https://neo4j.com/artifact.php?name=neo4j-community-4.4.32-unix.tar.gz
+md5_neo4j="a88d5de65332d9a5acbe131f60893b55  $F_neo4j"
+#    优先从本地文件下载服务下载 ，其次才从外网文件下载
+{ echo "$md5_neo4j" | md5sum --check ;} ||  { curl ${LocFDlSvr} &&   wget --output-document=$F_neo4j ${LocFDlSvr}/$F_neo4j ;} ||  axel -n 8 --output=$F_neo4j https://neo4j.com/artifact.php?name=neo4j-community-4.4.32-unix.tar.gz
 
 #通过 docker镜像 'neo4j:4.4.32-community' 知道 其用的jdk11
 F_jdk11=zulu11.70.15-ca-jdk11.0.22-linux_x64.tar.gz
-md5_jdk11='f13d179f8e1428a3f0f135a42b9fa75b  zulu11.70.15-ca-jdk11.0.22-linux_x64.tar.gz'
-{ echo "$md5_jdk11" | md5sum --check ;} || axel -n 8 --output=$F_jdk11 https://cdn.azul.com/zulu/bin/zulu11.70.15-ca-jdk11.0.22-linux_x64.tar.gz
+md5_jdk11="f13d179f8e1428a3f0f135a42b9fa75b  $F_jdk11"
+#    优先从本地文件下载服务下载 ，其次才从外网文件下载
+{ echo "$md5_jdk11" | md5sum --check ;} ||  { curl ${LocFDlSvr} &&   wget --output-document=$F_jdk11 ${LocFDlSvr}/$F_jdk11 ;} || axel -n 8 --output=$F_jdk11 https://cdn.azul.com/zulu/bin/zulu11.70.15-ca-jdk11.0.22-linux_x64.tar.gz
 
 export JAVA_HOME=/app/zulu11.70.15-ca-jdk11.0.22-linux_x64
 tar -zxf $F_jdk11 -C "$(dirname  $JAVA_HOME)"
@@ -42,7 +49,12 @@ sed -i  "s/#dbms.default_listen_address=0.0.0.0/dbms.default_listen_address=0.0.
 sed -i  's/#dbms.threads.worker_count=/dbms.threads.worker_count=4/'   $F_cfg
 
 #neo4j安装apoc插件
-wget --output-document=/app/neo4j-community-4.4.32/plugins/apoc-4.4.0.26-all.jar    https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.26/apoc-4.4.0.26-all.jar
+F_apocAllJar_fullPath=/app/neo4j-community-4.4.32/plugins/apoc-4.4.0.26-all.jar
+F_apocAllJar=/app/neo4j-community-4.4.32/plugins/apoc-4.4.0.26-all.jar
+md5_apocAllJar="5a42a32e12432632124acd682382c91d  $F_apocAllJar_fullPath"
+#    优先从本地文件下载服务下载 ，其次才从外网文件下载
+{ echo "$md5_apocAllJar" | md5sum --check ;} ||  { curl ${LocFDlSvr} &&   wget --output-document=$F_apocAllJar_fullPath ${LocFDlSvr}/$F_apocAllJar ;} || wget --output-document=$F_apocAllJar_fullPath    https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.26/apoc-4.4.0.26-all.jar
+
 
 #neo4j重启
 # neo4j restart
