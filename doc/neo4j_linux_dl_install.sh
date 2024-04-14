@@ -66,6 +66,7 @@ md5_apocAllJar="5a42a32e12432632124acd682382c91d  $FlPth_apocAllJar"
 wget --output-document=$outF_apocAllJar    https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/4.4.0.26/apoc-4.4.0.26-all.jar  ;}
 
 
+export PATH=$PATH:/app/neo4j-community-4.4.32/bin
 #neo4j重启
 neo4j restart
 
