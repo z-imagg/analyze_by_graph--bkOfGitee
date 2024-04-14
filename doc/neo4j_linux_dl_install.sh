@@ -68,10 +68,10 @@ wget --quiet --output-document=$outF_apocAllJar    https://github.com/neo4j-cont
 
 export PATH=$PATH:/app/neo4j-community-4.4.32/bin
 #neo4j重启
-neo4j restart
+# neo4j restart
 
 #neo4j状态
-neo4j status
+# neo4j status
 
 #启动neo4j
 # neo4j start
