@@ -42,5 +42,8 @@ export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/
 #遍历器
 python neo4j_traverse_bz/_main_neo4j_traverse_bz.py | tee _main_neo4j_traverse_bz-${now}.log
 
+#构造喂给cytoscape的neo4j表
+python analyze_by_graph/visual/visual_main.py | tee _visual_main-${now}.log
+
 md5sum *.log > log.md5sum-${now}.txt
 
