@@ -35,7 +35,7 @@ export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/
 #fridaLog转sqlite3转neo4j
 python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py | tee fridaLog-sqlite3-neo4j-${now}.log
 
-read -p "人工执行 cypher_src/index.cypher 后 按回车则执行遍历器:"
+read -p "fridaLog转sqlite3转neo4j 已执行完毕，按回车则将执行遍历器:"
 
 export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/_neo4j/:/fridaAnlzAp/analyze_by_graph/neo4j_traverse/:/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/:/fridaAnlzAp/analyze_by_graph/db_conn_inject/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/visual/"
 

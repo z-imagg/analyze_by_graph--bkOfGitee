@@ -12,7 +12,7 @@ from util_file import readTxt
 cypher__index_create=readTxt("cypher_src/index.cypher") 
 dbConn_inject_neo4j_default(
 lambda sess: 
-    #遍历器开始前 创建索引
+    #遍历器开始前 创建索引 (执行   cypher_src/index.cypher )
     neo4j_recreateIdx(sess,cypher__index_create)
 )
 
