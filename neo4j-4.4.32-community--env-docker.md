@@ -5,7 +5,7 @@
 ```shell
 docker pull neo4j:4.4.32-community
 
-docker run -d -p 7474:7474 -p 7687:7687 --name neo4j -e "NEO4J_AUTH=neo4j/123456" neo4j:4.4.32-community
+docker run --network host -d -p 7474:7474 -p 7687:7687 --name neo4j -e "NEO4J_AUTH=neo4j/123456" neo4j:4.4.32-community
 
 #查看neo4j启动日志, 大约十多秒启动完成
 docker logs neo4j
