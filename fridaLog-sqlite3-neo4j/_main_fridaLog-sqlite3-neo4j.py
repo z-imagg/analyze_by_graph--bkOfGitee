@@ -29,10 +29,13 @@ def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.S
 ## torch函数调用日志文件(frida日志文件) 装入 sqlite3 
     from fridaLog__sqlite3_writeTabFnSym import sq3_wTab_FnSym
     from fridaLog__sqlite3_writeTabFnCallLog import sq3_wTab_FnCallLog
+    from sqlite3_basic_Q_print_queryFnGt1WCall import sq3_printFnGt1WCall
 ### 写 表 FnSym
     sq3_wTab_FnSym(sq3dbConn)
 ###  写 表FnCallLog
     sq3_wTab_FnCallLog(sq3dbConn)
+###  为了方便frida_js人工确定不重要函数，而 打印 大于1万次调用的函数们
+    sq3_printFnGt1WCall(sq3dbConn)
 ### 提交、关闭sqlite3数据库
     sq3dbConn.commit()
 
