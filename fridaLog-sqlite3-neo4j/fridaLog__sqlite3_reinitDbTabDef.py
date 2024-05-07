@@ -80,6 +80,11 @@ def reinit_sq3_db_tabDef(sq_db_fp:str)->sqlite3.Connection:
     CREATE INDEX idx__t_FnCallLog__tmPnt ON t_FnCallLog (tmPnt)
     """)
 
+    #  执行删除非该 (processId,curThreadId)时候，需要按字段t_FnCallLog.processId_curThreadId执行删除，因此该两字段得有索引
+    sq3dbConn.execute("""
+    CREATE INDEX idx__t_FnCallLog__processId_curThreadId ON t_FnCallLog (processId,curThreadId)
+    """)
+    
     #### 创建表t_FnCallLog_notBalanced
     #  创建表t_FnCallLog_notBalanced 用于存放 不平衡的 函数调用日志
     #  t_FnCallLog_notBalanced 的 结构 ==  t_FnCallLog 的 结构

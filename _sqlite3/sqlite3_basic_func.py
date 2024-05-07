@@ -6,6 +6,8 @@
 #【备注】 
 #【术语】 
 
+
+import sqlite3
 from sqlite3 import Row as sqlite3Row
 import typing
 
@@ -26,7 +28,7 @@ def sq3Q(sq3dbConn,sqlTxt,fieldName):
     return sq3Rows1Field(rowLs,fieldName)
 
 ### sq3DU: sqlite3执行sql删改 并 返回影响行数
-def sq3DU(sq3dbConn,sqlTxt):
+def sq3DU(sq3dbConn:sqlite3.Connection,sqlTxt):
     # print(sqlTxt)
     rowCnt=sq3dbConn.execute(sqlTxt).rowcount
     return rowCnt
