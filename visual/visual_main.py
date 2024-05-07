@@ -25,7 +25,7 @@ CREATE CONSTRAINT uq__V_FnCallLog_Analz__fnCallId FOR (x:V_FnCallLog_Analz) REQU
 DROP CONSTRAINT uq__V_FnCallLog_Analz__logId IF EXISTS;
 CREATE CONSTRAINT uq__V_FnCallLog_Analz__logId FOR (x:V_FnCallLog_Analz) REQUIRE x.logId IS UNIQUE;
 DROP CONSTRAINT uq__V_FnCallLog_Analz__tmPnt IF EXISTS;
-CREATE CONSTRAINT uq__V_FnCallLog_Analz__tmPnt FOR (x:V_FnCallLog_Analz) REQUIRE x.tmPnt IS UNIQUE;
+CREATE CONSTRAINT uq__V_FnCallLog_Analz__tmPnt FOR (x:V_FnCallLog_Analz) REQUIRE (x.processId,x.curThreadId,x.tmPnt) IS UNIQUE;
 """
 
 def executeDropCreateIdx(sess_anlz:Session,Cypher_:str)->int:
@@ -64,9 +64,9 @@ def _visual_main(sess:Session):
     for k,r in enumerate(rowLs):
         result:EagerResult=sess_anlz.run(
 """
-CREATE (x:V_FnCallLog_Analz {logId: $logId, tmPnt: $tmPnt, curThreadId: $curThreadId, direct:$direct, fnAdr:$fnAdr, fnCallId:$fnCallId, width:$width, deepth:$deepth,   fnSym_address:$fnSym_address, fnSym_name:$fnSym_name, fnSym_moduleName:$fnSym_moduleName, fnSym_fileName:$fnSym_fileName, fnSym_lineNumber:$fnSym_lineNumber, fnSym_column:$fnSym_column})
+CREATE (x:V_FnCallLog_Analz {logId: $logId, tmPnt: $tmPnt, processId: $processId, curThreadId: $curThreadId, direct:$direct, fnAdr:$fnAdr, fnCallId:$fnCallId, width:$width, deepth:$deepth,   fnSym_address:$fnSym_address, fnSym_name:$fnSym_name, fnSym_moduleName:$fnSym_moduleName, fnSym_fileName:$fnSym_fileName, fnSym_lineNumber:$fnSym_lineNumber, fnSym_column:$fnSym_column})
 """,
-logId=r["logId"], tmPnt=r["tmPnt"],  curThreadId=r["curThreadId"],  direct=r["direct"], 
+logId=r["logId"], tmPnt=r["tmPnt"],  processId=r["processId"],  curThreadId=r["curThreadId"],  direct=r["direct"], 
 fnAdr=r["fnAdr"], fnCallId=r["fnCallId"], width=r["width"], deepth=r["deepth"],   fnSym_address=r["fnSym_address"], fnSym_name=r["fnSym_name"], 
 fnSym_moduleName=r["fnSym_moduleName"], fnSym_fileName=r["fnSym_fileName"], fnSym_lineNumber=r["fnSym_lineNumber"], 
 fnSym_column=r["fnSym_column"],)
