@@ -22,7 +22,7 @@ join t_FnSym tSym on tFn1W.fnAdr=tSym.address
 """
     
 #打印 大于1万次调用的函数们
-def sq3_printFnGt1WCall(sq3dbConn:sqlite3.Connection)->None:
+def sq3Q_printFnGt1WCall(sq3dbConn:sqlite3.Connection)->None:
     sq3Q_print(sq3dbConn,sql_t_FnCallLog_query_fnGt1WCall,"大于1万次调用的函数们")
     return
 
@@ -36,7 +36,7 @@ sql_t_FnCallLog__del_by__not__processId_curThreadId="""
 delete from t_FnCallLog where   (processId,curThreadId) != ({processId},{curThreadId})
 """
 #打印（进程id、线程id）列表，询问保留哪一个？，执行删除
-def sq3_askKeepWhichProcessIdThreadId(sq3dbConn:sqlite3.Connection)->int:
+def sq3QD_askKeepWhichProcessIdThreadId(sq3dbConn:sqlite3.Connection)->int:
     _rowLs:typing.List[sqlite3.Row]=sq3Q_print(sq3dbConn,sql_t_FnCallLog__grp_rowCnt__processId_curThreadId,"<进程id、线程id>列表")
     _rowCnt:int=_rowLs.__len__()
     if _rowCnt <= 1:
