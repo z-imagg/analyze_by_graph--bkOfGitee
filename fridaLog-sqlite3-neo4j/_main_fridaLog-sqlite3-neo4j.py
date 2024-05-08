@@ -35,7 +35,7 @@ def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.S
     sq3_wTab_FnSym(sq3dbConn)
 ###  写 表FnCallLog
     sq3_wTab_FnCallLog(sq3dbConn)
-###  为了方便frida_js人工确定不重要函数，而 打印 大于1万次调用的函数们
+###  打印大于1万次调用的函数们（方便返工修改frida_js以跳过大量调用函数）
     sq3Q_printFnGt1WCall(sq3dbConn)
 ###  打印（进程id、线程id）列表，询问保留哪一个？，执行删除
     sq3QD_askKeepWhichProcessIdThreadId(sq3dbConn)
