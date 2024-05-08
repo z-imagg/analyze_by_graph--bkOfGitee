@@ -106,6 +106,9 @@ tmPnt_max:int,tmPnt_min:int,
                 
         # 查询 '下一个时刻点to_tmPnt' 下 仅有的一条日志
         toLog=queryFnCallLogByTmPnt(sq3dbConn,to_tmPnt)
+        if toLog is None:
+            print(f"skip, toLog is null, from_tmPnt={from_tmPnt},to_tmPnt={to_tmPnt}")
+            continue
         
         fromLogId=fromLog["logId"]
         toLogId=toLog["logId"]
