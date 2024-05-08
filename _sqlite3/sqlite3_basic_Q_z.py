@@ -43,3 +43,14 @@ def sq3_askKeepWhichProcessIdThreadId(sq3dbConn:sqlite3.Connection)->int:
     sqlTxt=sql_t_FnCallLog__del_by__not__processId_curThreadId.format(processId=row_keep['processId'],curThreadId=row_keep['curThreadId'])
     rowCnt_del:int=sq3DU(sq3dbConn,sqlTxt)
     return rowCnt_del
+
+
+if __name__=="__main__":
+    #测试代码
+    sq_db_fp="/home/z/FnCallLog.db"
+    sq3dbConn:sqlite3.Connection = sqlite3.connect(sq_db_fp)
+    #  设置sqlite3.connect.execute.fetchall返回字典列表而非tuple列表
+    origin_sq3dbConn_row_factory=sq3dbConn.row_factory #先备份
+    sq3dbConn.row_factory = sqlite3.Row #再修改
+    sq3_printFnGt1WCall(sq3dbConn)
+    sq3_askKeepWhichProcessIdThreadId(sq3dbConn)
