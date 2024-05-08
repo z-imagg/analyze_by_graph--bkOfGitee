@@ -33,7 +33,7 @@ select processId,curThreadId, count(logId) as logCnt from t_FnCallLog group by p
 """
 #删除非该进程id、线程id的日志
 sql_t_FnCallLog__del_by__not__processId_curThreadId="""
-delete from t_FnCallLog where  not ( processId={processId} and curThreadId={curThreadId} )
+delete from t_FnCallLog where   (processId,curThreadId) != ({processId},{curThreadId})
 """
 #打印（进程id、线程id）列表，询问保留哪一个？，执行删除
 def sq3_askKeepWhichProcessIdThreadId(sq3dbConn:sqlite3.Connection)->int:
