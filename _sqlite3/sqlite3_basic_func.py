@@ -44,4 +44,28 @@ def sq3Rows2Dcts(_rowLs:typing.List[sqlite3Row])->typing.List[typing.Dict]:
     dctLs=[ {**r} for r in _rowLs ]
     return dctLs
 
+# 打印记录列表
+def sq3RowsPrint(_rowLs:typing.List[sqlite3Row],title:str)->None:
+    #若空结果集合，则提示并直接返回
+    if lsIsEmpty(_rowLs): 
+        print(f"空结果集[{title}]")
+        return
+    
+    
+    print(f"打印结果集[{title}]")
+        
+    #字段名列表
+    # 取第0条记录的字段名列表
+    row0:sqlite3Row=_rowLs[0]
+    fieldNameLs:typing.List[str]=row0.keys()
+    #打印字段名列表
+    print(",".join(fieldNameLs))
+    
+    #打印记录列表
+    for rowK in _rowLs:
+        #打印第k条记录行
+        rowK_str=[str(valI) for valI in rowK]
+        print(",".join(rowK_str))
+    
+    return
 

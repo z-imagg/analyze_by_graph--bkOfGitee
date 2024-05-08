@@ -10,6 +10,7 @@
 import sqlite3
 from sqlite3_basic_Q   import sq3Q_2Dcts
 from sqlite3_basic_func import sq3DU
+from sqlite3_basic_func import sq3RowsPrint
 
 
 #大于1万次调用的函数们
@@ -22,7 +23,8 @@ join t_FnSym tSym on tFn1W.fnAdr=tSym.address
 #打印 大于1万次调用的函数们
 def sq3_printFnGt1WCall(sq3dbConn:sqlite3.Connection)->None:
     _rowLs=sq3dbConn.execute(sql_t_FnCallLog_query_fnGt1WCall).fetchall()
-    print("大于1万次调用的函数们",_rowLs)
+    row:sqlite3.Row=_rowLs[0]
+    sq3RowsPrint(_rowLs,"大于1万次调用的函数们")
     return
 
 
