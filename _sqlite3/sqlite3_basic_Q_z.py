@@ -52,6 +52,7 @@ def sq3_askKeepWhichProcessIdThreadId(sq3dbConn:sqlite3.Connection)->int:
     curThreadId_keep:int=row_keep['curThreadId']
     sqlTxt_del=sql_t_FnCallLog__del_by__not__processId_curThreadId.format(processId=processId_keep,curThreadId=curThreadId_keep)
     rowCnt_del:int=sq3DU(sq3dbConn,sqlTxt_del)
+    print(f"保留<进程id、线程id>为<{processId_keep},{curThreadId_keep}>,引起删除t_FnCallLog记录行数为{rowCnt_del}")
     return rowCnt_del
 
 
