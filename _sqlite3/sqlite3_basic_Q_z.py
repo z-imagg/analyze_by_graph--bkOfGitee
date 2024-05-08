@@ -48,7 +48,9 @@ def sq3_askKeepWhichProcessIdThreadId(sq3dbConn:sqlite3.Connection)->int:
     _promptTxt:str=f"保留哪个<进程id、线程id>？请输入 _rowK '{_min_rowK}~{_max_rowK}' : "
     rowK_keep:int=pyinputplus.inputInt(prompt=_promptTxt,min=_min_rowK,max=_max_rowK)
     row_keep=_rowLs[rowK_keep]
-    sqlTxt_del=sql_t_FnCallLog__del_by__not__processId_curThreadId.format(processId=row_keep['processId'],curThreadId=row_keep['curThreadId'])
+    processId_keep:int=row_keep['processId']
+    curThreadId_keep:int=row_keep['curThreadId']
+    sqlTxt_del=sql_t_FnCallLog__del_by__not__processId_curThreadId.format(processId=processId_keep,curThreadId=curThreadId_keep)
     rowCnt_del:int=sq3DU(sq3dbConn,sqlTxt_del)
     return rowCnt_del
 
