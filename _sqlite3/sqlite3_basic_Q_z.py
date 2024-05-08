@@ -9,9 +9,8 @@
 
 import typing
 import sqlite3
-from sqlite3_basic_Q   import sq3Q_2Dcts, sq3Q_print
+from sqlite3_basic_Q   import  sq3Q_print
 from sqlite3_basic_func import sq3DU
-from sqlite3_basic_func import sq3RowsPrint
 import pyinputplus
 
 #大于1万次调用的函数们
