@@ -64,3 +64,5 @@ if __name__=="__main__":
     sq3dbConn.row_factory = sqlite3.Row #再修改
     sq3_printFnGt1WCall(sq3dbConn)
     sq3_askKeepWhichProcessIdThreadId(sq3dbConn)
+    sq3dbConn.commit()
+    sq3dbConn.close()
