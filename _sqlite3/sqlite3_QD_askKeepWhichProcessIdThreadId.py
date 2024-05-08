@@ -13,17 +13,6 @@ from sqlite3_basic_Q   import  sq3Q_print
 from sqlite3_basic_func import sq3DU
 import pyinputplus
 
-#大于1万次调用的函数们
-sql_t_FnCallLog_query_fnGt1WCall="""
-select * from 
-(select fnAdr, count(fnAdr) as logCnt from t_FnCallLog group by fnAdr HAVING logCnt>10000 order by logCnt desc ) tFn1W
-join t_FnSym tSym on tFn1W.fnAdr=tSym.address
-"""
-    
-#打印 大于1万次调用的函数们
-def sq3Q_printFnGt1WCall(sq3dbConn:sqlite3.Connection)->None:
-    sq3Q_print(sq3dbConn,sql_t_FnCallLog_query_fnGt1WCall,"大于1万次调用的函数们")
-    return
 
 
 #按进程Id、线程Id分组统计日志行数

@@ -1,7 +1,7 @@
 { "version": "0.2.0",  "configurations": [
 
-//配置项 sqlite3_basic_Q_z测试入口
-{ "name": "sqlite3测试验证", "type": "debugpy",   "request": "launch",  "program": "_sqlite3/sqlite3_basic_Q_z__test_main.py",  "console": "integratedTerminal",
+//配置项 sqlite3__问保留哪个ProcessIdThreadId测试入口
+{ "name": "sqlite3__问保留哪个ProcessIdThreadId测试入口", "type": "debugpy",   "request": "launch",  "program": "_sqlite3/sqlite3_QD_askKeepWhichProcessIdThreadId__test_main.py",  "console": "integratedTerminal",
 "args": [  ],
 "env": {
 "PYTHONPATH": "${workspaceFolder}:/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/_neo4j/:/fridaAnlzAp/analyze_by_graph/_sqlite3/"

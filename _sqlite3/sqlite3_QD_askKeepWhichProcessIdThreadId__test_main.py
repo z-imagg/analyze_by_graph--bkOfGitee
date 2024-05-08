@@ -9,7 +9,8 @@
 
 import sqlite3
 
-from sqlite3_basic_Q_z import sq3QD_askKeepWhichProcessIdThreadId, sq3Q_printFnGt1WCall
+from sqlite3_QD_askKeepWhichProcessIdThreadId import sq3QD_askKeepWhichProcessIdThreadId
+from sqlite3_Q_printFnGt1WCall import sq3Q_printFnGt1WCall
 
 
 if __name__=="__main__":

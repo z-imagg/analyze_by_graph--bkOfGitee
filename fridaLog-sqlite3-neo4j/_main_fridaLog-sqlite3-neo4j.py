@@ -29,7 +29,8 @@ def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.S
 ## torch函数调用日志文件(frida日志文件) 装入 sqlite3 
     from fridaLog__sqlite3_writeTabFnSym import sq3_wTab_FnSym
     from fridaLog__sqlite3_writeTabFnCallLog import sq3_wTab_FnCallLog
-    from sqlite3_basic_Q_z import sq3Q_printFnGt1WCall,sq3QD_askKeepWhichProcessIdThreadId
+    from sqlite3_Q_printFnGt1WCall import sq3Q_printFnGt1WCall
+    from sqlite3_QD_askKeepWhichProcessIdThreadId import sq3QD_askKeepWhichProcessIdThreadId
 ### 写 表 FnSym
     sq3_wTab_FnSym(sq3dbConn)
 ###  写 表FnCallLog
