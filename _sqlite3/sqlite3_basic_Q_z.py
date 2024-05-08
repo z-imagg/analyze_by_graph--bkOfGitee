@@ -55,15 +55,3 @@ def sq3_askKeepWhichProcessIdThreadId(sq3dbConn:sqlite3.Connection)->int:
     print(f"保留<进程id、线程id>为<{processId_keep},{curThreadId_keep}>,引起删除t_FnCallLog记录行数为{rowCnt_del}. sqlTxt_del=[{sqlTxt_del}]")
     return rowCnt_del
 
-
-if __name__=="__main__":
-    #测试代码
-    sq_db_fp="/home/z/FnCallLog.db"
-    sq3dbConn:sqlite3.Connection = sqlite3.connect(sq_db_fp)
-    #  设置sqlite3.connect.execute.fetchall返回字典列表而非tuple列表
-    origin_sq3dbConn_row_factory=sq3dbConn.row_factory #先备份
-    sq3dbConn.row_factory = sqlite3.Row #再修改
-    sq3_printFnGt1WCall(sq3dbConn)
-    sq3_askKeepWhichProcessIdThreadId(sq3dbConn)
-    sq3dbConn.commit()
-    sq3dbConn.close()
