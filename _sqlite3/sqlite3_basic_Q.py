@@ -6,10 +6,10 @@
 #【备注】 
 #【术语】 
 
-from sqlite3 import Row as sqlite3Row
+import sqlite3
 import typing
 
-from sqlite3_basic_func import sq3Rows2Dcts
+from sqlite3_basic_func import sq3Rows2Dcts, sq3RowsPrint
 from util_basic import lsIsEmpty
 
 
@@ -26,3 +26,10 @@ def sq3Q_2Dcts(sq3dbConn,sqlTxt):
 ##调用举例
 # sq3Q_2Dcts(sq3dbConn,"select  tmPnt,fnCallId from t_FnCallLog  limit 2 "     )
 # [{'tmPnt': 1, 'fnCallId': 1}, {'tmPnt': 2, 'fnCallId': 2}]
+
+
+#打印 sql语句查询结果
+def sq3Q_print(sq3dbConn:sqlite3.Connection,sqlTxt:str,title:str)->typing.List[sqlite3.Row]:
+    _rowLs:typing.List[sqlite3.Row]=sq3dbConn.execute(sqlTxt).fetchall()
+    sq3RowsPrint(_rowLs,title)
+    return _rowLs
