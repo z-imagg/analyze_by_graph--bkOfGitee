@@ -153,23 +153,23 @@ def neo4j_wrtVFnCallLog_EFnEL_whnTrvSq3Log(sq3dbConn:sqlite3.Connection,notBalan
 
         fnEnter_logId=fnEnter["logId"]
         fnLeave_logId=fnLeave["logId"]
-        assert fnEnter_logId != fnLeave_logId, "断言 函数进入、函数离开 日志 中的 logId 是 不相同的"
+        assert fnEnter_logId != fnLeave_logId, f"断言 函数进入、函数离开 日志 中的 logId 是 不相同的. fnCallId={fnCallId}, fnEnter_logId={fnEnter_logId},fnLeave_logId={fnLeave_logId} ."
         
         fnEnter_tmPnt=fnEnter["tmPnt"]
         fnLeave_tmPnt=fnLeave["tmPnt"]
-        assert fnEnter_tmPnt != fnLeave_tmPnt, "断言 函数进入、函数离开 日志 中的 tmPnt 是 不相同的"
+        assert fnEnter_tmPnt != fnLeave_tmPnt, f"断言 函数进入、函数离开 日志 中的 tmPnt 是 不相同的. fnCallId={fnCallId},fnEnter_tmPnt={fnEnter_tmPnt},fnLeave_tmPnt={fnLeave_tmPnt} ."
         
         fnEnter_fnAdr=fnEnter["fnAdr"]
         fnLeave_fnAdr=fnLeave["fnAdr"]
-        assert fnEnter_fnAdr == fnLeave_fnAdr, "断言 函数进入、函数离开 日志 中的 函数地址 是 相同的"
+        assert fnEnter_fnAdr == fnLeave_fnAdr, f"断言 函数进入、函数离开 日志 中的 函数地址 是 相同的. fnCallId={fnCallId},fnEnter_fnAdr={fnEnter_fnAdr},fnLeave_fnAdr={fnLeave_fnAdr} ."
         
         fnEnter_curThreadId=fnEnter["curThreadId"]
         fnLeave_curThreadId=fnLeave["curThreadId"]
-        assert fnEnter_curThreadId == fnLeave_curThreadId, "断言 函数进入、函数离开 日志 中的 curThreadId 是 相同的"
+        assert fnEnter_curThreadId == fnLeave_curThreadId, f"断言 函数进入、函数离开 日志 中的 curThreadId 是 相同的. fnCallId={fnCallId},fnEnter_curThreadId={fnEnter_curThreadId},fnLeave_curThreadId={fnLeave_curThreadId} ."
         
         fnEnter_direct=fnEnter["direct"]
         fnLeave_direct=fnLeave["direct"]
-        assert fnEnter_direct != fnLeave_direct, "断言 函数进入、函数离开 日志 中的 direct 是 不相同的"
+        assert fnEnter_direct != fnLeave_direct, f"断言 函数进入、函数离开 日志 中的 direct 是 不相同的. fnCallId={fnCallId},fnEnter_direct={fnEnter_direct},fnLeave_direct={fnLeave_direct} ."
         
         # print(fnEnter["fnAdr"]) #开发调试语句
         # break
