@@ -59,13 +59,15 @@ def sq3RowsPrint(_rowLs:typing.List[sqlite3Row],title:str)->None:
     row0:sqlite3Row=_rowLs[0]
     fieldNameLs:typing.List[str]=row0.keys()
     #打印字段名列表
-    print(",".join(fieldNameLs))
+    fieldNamesTxt:str=",".join(fieldNameLs)
+    print(f"_rowK;{fieldNamesTxt}")
     
     #打印记录列表
-    for rowK in _rowLs:
+    for k,rowK in enumerate( _rowLs ):
         #打印第k条记录行
-        rowK_str=[str(valI) for valI in rowK]
-        print(",".join(rowK_str))
+        rowK_strArr=[str(valI) for valI in rowK]
+        rowKTxt:str=",".join(rowK_strArr)
+        print(f"{k};{rowKTxt}")
     
     return
 

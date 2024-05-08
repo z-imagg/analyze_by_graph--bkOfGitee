@@ -23,7 +23,6 @@ join t_FnSym tSym on tFn1W.fnAdr=tSym.address
 #打印 大于1万次调用的函数们
 def sq3_printFnGt1WCall(sq3dbConn:sqlite3.Connection)->None:
     _rowLs=sq3dbConn.execute(sql_t_FnCallLog_query_fnGt1WCall).fetchall()
-    row:sqlite3.Row=_rowLs[0]
     sq3RowsPrint(_rowLs,"大于1万次调用的函数们")
     return
 
