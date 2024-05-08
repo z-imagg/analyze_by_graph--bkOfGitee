@@ -6,6 +6,8 @@
 #【备注】 
 #【术语】 
 
+
+import sqlite3
 from sqlite3 import Row as sqlite3Row
 import typing
 
@@ -26,7 +28,7 @@ def sq3Q(sq3dbConn,sqlTxt,fieldName):
     return sq3Rows1Field(rowLs,fieldName)
 
 ### sq3DU: sqlite3执行sql删改 并 返回影响行数
-def sq3DU(sq3dbConn,sqlTxt):
+def sq3DU(sq3dbConn:sqlite3.Connection,sqlTxt):
     # print(sqlTxt)
     rowCnt=sq3dbConn.execute(sqlTxt).rowcount
     return rowCnt
@@ -42,4 +44,30 @@ def sq3Rows2Dcts(_rowLs:typing.List[sqlite3Row])->typing.List[typing.Dict]:
     dctLs=[ {**r} for r in _rowLs ]
     return dctLs
 
+# 打印记录列表
+def sq3RowsPrint(_rowLs:typing.List[sqlite3Row],title:str)->None:
+    #若空结果集合，则提示并直接返回
+    if lsIsEmpty(_rowLs): 
+        print(f"空结果集[{title}]")
+        return
+    
+    
+    print(f"打印结果集[{title}]")
+        
+    #字段名列表
+    # 取第0条记录的字段名列表
+    row0:sqlite3Row=_rowLs[0]
+    fieldNameLs:typing.List[str]=row0.keys()
+    #打印字段名列表
+    fieldNamesTxt:str=",".join(fieldNameLs)
+    print(f"_rowK;{fieldNamesTxt}")
+    
+    #打印记录列表
+    for k,rowK in enumerate( _rowLs ):
+        #打印第k条记录行
+        rowK_strArr=[str(valI) for valI in rowK]
+        rowKTxt:str=",".join(rowK_strArr)
+        print(f"{k};{rowKTxt}")
+    
+    return
 
