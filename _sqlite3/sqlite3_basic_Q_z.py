@@ -33,7 +33,7 @@ select processId,curThreadId, count(logId) as logCnt from t_FnCallLog group by p
 """
 #删除非该进程id、线程id的日志
 sql_t_FnCallLog__del_by__not__processId_curThreadId="""
-delete from t_FnCallLog where  (processId,curThreadId)!=({processId},{curThreadId})
+delete from t_FnCallLog where  not ( processId={processId} and curThreadId={curThreadId} )
 """
 #打印（进程id、线程id）列表，询问保留哪一个？，执行删除
 def sq3_askKeepWhichProcessIdThreadId(sq3dbConn:sqlite3.Connection)->int:
@@ -52,7 +52,7 @@ def sq3_askKeepWhichProcessIdThreadId(sq3dbConn:sqlite3.Connection)->int:
     curThreadId_keep:int=row_keep['curThreadId']
     sqlTxt_del=sql_t_FnCallLog__del_by__not__processId_curThreadId.format(processId=processId_keep,curThreadId=curThreadId_keep)
     rowCnt_del:int=sq3DU(sq3dbConn,sqlTxt_del)
-    print(f"保留<进程id、线程id>为<{processId_keep},{curThreadId_keep}>,引起删除t_FnCallLog记录行数为{rowCnt_del}")
+    print(f"保留<进程id、线程id>为<{processId_keep},{curThreadId_keep}>,引起删除t_FnCallLog记录行数为{rowCnt_del}. sqlTxt_del=[{sqlTxt_del}]")
     return rowCnt_del
 
 
