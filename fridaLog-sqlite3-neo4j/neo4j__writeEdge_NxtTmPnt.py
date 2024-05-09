@@ -106,6 +106,8 @@ tmPnt_max:int,tmPnt_min:int,
                 
         # 查询 '下一个时刻点to_tmPnt' 下 仅有的一条日志
         toLog=queryFnCallLogByTmPnt(sq3dbConn,to_tmPnt)
+        assert toLog is not None,\
+    f"断言下时刻点必有日志, 此时刻from_tmPnt={from_tmPnt}的下一时刻点to_tmPnt={to_tmPnt}的日志toLog不应该为None【toLog={toLog}】. 解决: 要么提供【tmPnt=={to_tmPnt}】的日志到文件/fridaAnlzAp/frida_js/appOut-*.log、要么将【tmPnt=={to_tmPnt}】放入【变量notBalancedTmPntLs 即sqlite3表t_FnCallLog_notBalanced】"
         
         fromLogId=fromLog["logId"]
         toLogId=toLog["logId"]
