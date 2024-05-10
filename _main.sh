@@ -30,19 +30,24 @@ now="$(date +%s)"
 #设置python的stdout无缓存（即默认flush）
 export PYTHONUNBUFFERED=1
 
-export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/_neo4j/:/fridaAnlzAp/analyze_by_graph/_sqlite3/:/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/:/fridaAnlzAp/analyze_by_graph/db_conn_inject"
+_PyDirCommon="/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/_neo4j/:/fridaAnlzAp/analyze_by_graph/db_conn_inject"
+
+export PYTHONPATH="$_PyDirCommon:/fridaAnlzAp/analyze_by_graph/_sqlite3/:/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/:"
 
 #fridaLog转sqlite3转neo4j
-python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py | tee fridaLog-sqlite3-neo4j-${now}.log
+_errMsg1="_main_fridaLog-sqlite3-neo4j.py报错，请解决后，重新执行此脚本analyze_by_graph/_main.sh,退出代码"
+python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py | tee fridaLog-sqlite3-neo4j-${now}.log || { _exitCode1=$? ; echo "${_errMsg1} ${_exitCode1}" ; exit $_exitCode1 ;}
 
 read -p "fridaLog转sqlite3转neo4j 已执行完毕，按回车则将执行遍历器:"
 
-export PYTHONPATH="/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/_neo4j/:/fridaAnlzAp/analyze_by_graph/neo4j_traverse/:/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/:/fridaAnlzAp/analyze_by_graph/db_conn_inject/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/visual/"
+export PYTHONPATH="$_PyDirCommon:/fridaAnlzAp/analyze_by_graph/neo4j_traverse/:/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/:/fridaAnlzAp/analyze_by_graph/visual/"
 
 #遍历器
 python neo4j_traverse_bz/_main_neo4j_traverse_bz.py | tee _main_neo4j_traverse_bz-${now}.log
 
 #构造喂给cytoscape的neo4j表
+read -p "遍历器执行完毕, 请你人工修改  query__链条_宽_宽1深.cypher(被visual_main.py调) 以在单线程的全链条中挑选一个链条:"
+
 python visual/visual_main.py | tee _visual_main-${now}.log
 
 md5sum *.log > log.md5sum-${now}.txt
