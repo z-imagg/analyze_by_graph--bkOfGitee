@@ -17,5 +17,5 @@ FnCallLogFP="/gain/frida-out/PureNow.log"
 #  举例 appName=='qemu-system-x86_64--v8.2.2'
 appName=followFilePathSoftLink_getDirName_assert(FnCallLogFP,"appName--")
 
-sqlite3_dbFilePath='/gain/analyze_by_graph-out/FnCallLog.db'
+sqlite3_dbFilePath=f'/gain/analyze_by_graph-out/FnCallLog--{appName}.db'
 neo4jDB_default= Neo4J_DB_Entity(URI="neo4j://localhost:7687", AUTH_user="neo4j", AUTH_pass="123456", DB_NAME="neo4j")
