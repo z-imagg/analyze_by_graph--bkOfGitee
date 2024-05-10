@@ -20,8 +20,6 @@ from util_file import unlink_verbose
 
 def reinit_sq3_db_tabDef(sq_db_fp:str)->sqlite3.Connection: 
 
-    # sq_db_fp='./FnCallLog.db'
-
 
     #### 删除已有的sqlite3数据库文件
     Path(sq_db_fp).unlink(missing_ok=True)

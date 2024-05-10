@@ -11,14 +11,15 @@ import typing
 
 from pathlib import Path
 import sqlite3
-from fridaLog_fullPath_get import getLogFullPath
+from config import FnCallLogFP
 from iterLineOfFile import iterLineF
+from util_path import assertFilePathExisted
 
 ## torch函数调用日志文件(frida日志文件) 装入 sqlite3 
 
 ### 写 表 FnSym
 def sq3_wTab_FnSym(sq3dbConn:sqlite3.Connection):
-    fnCallLogFP:str=getLogFullPath()
+    fnCallLogFP:str=assertFilePathExisted(FnCallLogFP)
     print("从表t_FnSym删除行数 ",sq3dbConn.execute("delete from t_FnSym").rowcount)
     iterLineF(fnCallLogFP,sq3dbConn,LineFunc=sq3_insert_t_FnSym)
     # 从表t_FnSym删除行数  0

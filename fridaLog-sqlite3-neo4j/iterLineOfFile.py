@@ -18,7 +18,8 @@ import typing
 import typing
 import json
 
-from fridaLog_fullPath_get import getLogFullPath
+from config import FnCallLogFP
+from util_path import assertFilePathExisted
 #FirstLineFunc 只在开发时用
 # LogFP==TorchFnCallLogFP
 def iterLineF(LogFP:str,sq3dbConn:sqlite3.Connection,
@@ -67,7 +68,7 @@ if __name__ == "__main__":
         lnEnd_json=lnK_json
             
     
-    TorchFnCallLogFP=getLogFullPath()
+    TorchFnCallLogFP=assertFilePathExisted(FnCallLogFP)
     iterLineF(TorchFnCallLogFP,assignEveryLn)
 
     print("最后一行",type(lnEnd_json), "\n",lnEnd_json)

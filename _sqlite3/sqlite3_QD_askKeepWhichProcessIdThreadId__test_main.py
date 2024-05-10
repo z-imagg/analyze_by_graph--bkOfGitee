@@ -15,7 +15,7 @@ from sqlite3_Q_printFnGt1WCall import sq3Q_printFnGt1WCall
 
 if __name__=="__main__":
     #测试代码
-    sq_db_fp="/home/z/FnCallLog.db"
+    sq_db_fp="/tmp/FnCallLog.db"
     sq3dbConn:sqlite3.Connection = sqlite3.connect(sq_db_fp)
     #  设置sqlite3.connect.execute.fetchall返回字典列表而非tuple列表
     origin_sq3dbConn_row_factory=sq3dbConn.row_factory #先备份

@@ -20,7 +20,6 @@ def dbConn_inject__sqlite3_neo4j(sqlite3_dbFilePath:str, neo4j_db_entity:Neo4J_D
     ]
 )->MyT:
 
-    # sq_db_fp='./FnCallLog.db'
     ### 重初始化sqlite3数据库、表结构
     sq3dbConn:sqlite3.Connection=reinit_sq3_db_tabDef(sqlite3_dbFilePath)
 
