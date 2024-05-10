@@ -35,7 +35,7 @@ class LoopTraverse( ):
 
         
         root_fnCallId:int=min_fnCallId
-        while root_fnCallId!=max_fnCallId:
+        while root_fnCallId is not None and root_fnCallId!=max_fnCallId:
 
             assert root_fnCallId < max_fnCallId, "frida_js有逻辑错误， frida_js生成的fnCallId应该沿着链条递增"
 
