@@ -25,6 +25,15 @@ def followFilePathSoftLink_getDirName_assert(fPTxt:str,assertWord:str)->str:
     #断言 目录名包含 assertWord
     assert assertWord is not None and _dirName.__contains__(assertWord)
     
-    dirName=_dirName.replace(_dirName,assertWord)
+    dirName=_dirName.replace(assertWord,"")
     
     return   dirName
+
+#创建给定文件路径的父目录
+def make_parentDirOfFilePath(fPTxt:str)->None:
+    fP=Path(fPTxt)
+    targetFP=fP.resolve().absolute()
+    _dir=targetFP.parent
+    if not _dir.exists() :
+        _dir.mkdir(parents=True,exist_ok=True)
+    return
