@@ -4,6 +4,11 @@
 #【返回类型说明】  
 #【备注】  
 
+#'-e': 任一语句异常将导致此脚本终止; '-u': 使用未声明变量将导致异常; '-o pipefail': 管道不吃错误代码
+#         'set -o pipefail ; errCmd | tee my.log || echo ErrMsg' : 管道不吃错误代码, errCmd的错误将透过tee传递到 ||后的echo 因此显示'ErrMsg'
+#         'set +o pipefail ; errCmd | tee my.log || echo ErrMsg' : 管道吃错误代码,  errCmd的错误传到tee, 而tee正常执行,因此||后的echo不对执行, 因此不显示'ErrMsg'
+set -e -u -o pipefail
+
 function get_bash_en_dbg() {
   bash_en_dbg=false; [[ $- == *x* ]] && bash_en_dbg=true #记录bash是否启用了调试模式
 }
