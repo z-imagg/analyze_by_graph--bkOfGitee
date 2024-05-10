@@ -30,3 +30,5 @@ cypher_tmpl_reander_out/**
 log.md5sum*.txt
 
 visual/raphamorim--treeData.js/
+
+visual/cytoscape__testdisk_qphotorec/qemu_t0_chain0.cys
