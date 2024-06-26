@@ -50,6 +50,11 @@ def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.S
 ### 删除不平衡的fnCallId的记录行(移到他表)
     sq3_move_notBalanced_fnCallCallLog(sq3dbConn,notBalancedFnCallIdLs)
 
+## 只需要存入sqlite3 （不需要存入neo4j）么？
+    import os
+    if os.environ.get("envVar__analyze_by_graph__fridaLog_to_sqlite3_only","Empty")=="True":
+        return -1;
+
 ## neo4j 社区版 安装、启动
 #  neo4j_community_install_boot.md
 
