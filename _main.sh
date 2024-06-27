@@ -58,28 +58,21 @@ md5sum *.log > log.md5sum-${now}.txt
 function _fridaLog_to_sqlite3_to_neo4j(){
 local _errMsg1="_main_fridaLog-sqlite3-neo4j.py报错，请解决后，重新执行此脚本analyze_by_graph/_main.sh,退出代码"
 
-export PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j"
 
 # fridaLog文件路径 == '配置文件 config.py / FnCallLogFP'
 #                                               'set -o pipefail': 管道后的tee不吃错误代码 
-python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-neo4j-${now}.log || { _exitCode1=$? ; echo "${_errMsg1} ${_exitCode1}" ; exit $_exitCode1 ;}
-
+PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j" python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-neo4j-${now}.log || { _exitCode1=$? ; echo "${_errMsg1} ${_exitCode1}" ; exit $_exitCode1 ;}
 }
 
 
 #neo4j遍历器算法
 function _neo4j_traverse(){
-export PYTHONPATH="$_PYTHONPATH__neo4j_traverse"
-
 #遍历器
-python neo4j_traverse_bz/_main_neo4j_traverse_bz.py 2>&1 | tee _main_neo4j_traverse_bz-${now}.log
-
+PYTHONPATH="$_PYTHONPATH__neo4j_traverse"  python neo4j_traverse_bz/_main_neo4j_traverse_bz.py 2>&1 | tee _main_neo4j_traverse_bz-${now}.log
 }
 
 
 #初步可视化
 function _visual_main(){
-export PYTHONPATH="$_PYTHONPATH__basic_visual_main"
-python visual/visual_main.py 2>&1 | tee _visual_main-${now}.log
-
+PYTHONPATH="$_PYTHONPATH__basic_visual_main"  python visual/visual_main.py 2>&1 | tee _visual_main-${now}.log
 }
