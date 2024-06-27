@@ -11,13 +11,15 @@ unlink $fridaLogLink ; \
 ln -s $fridaLogReal $fridaLogLink ; \
 ls -lh $fridaLogLink
 ```
-
-### (例) 查找openjdk-24(java)的fridaLog中调用次数大于1万次的函数们
-
-
 行尾的续行符 不是必须的， 只是为了方便，    当你整体复制 在终端下执行后,  按上箭头 获得的历史命令 将是 在单行 ， 而不是分散在几行，这样方便
 
-#### 2. fridaLog转sqlite3 (查找fridaLog中调用次数大于1万的函数们)
+### (例2A) 查找fridaLog中调用次数大于1万次的函数们
+
+诉求：  查找openjdk-24(java)的fridaLog中调用次数大于1万次的函数们， 从而 方便开发者 修改 frida_js脚本 屏蔽掉这些 频繁调用函数 ， 以 迫使 openjdk-24(java) 更快运行完  且 产生的 fridaLog更小
+
+实现过程是 : fridaLog转sqlite3 、sqlite3中查询调用次数大于1万的函数们
+
+ 
 
 ```shell
 source /fridaAnlzAp/analyze_by_graph/_pythonpath_disableBuffered.sh
@@ -27,7 +29,9 @@ envVar__analyze_by_graph__fridaLog_to_sqlite3_only=True python fridaLog-sqlite3-
 ```
 
 
-### (例) 一键正常使用 (fridaLog转sqlite3转neo4j 、 neo4j遍历器算法 、初步可视化)
+### (例2B) 一键正常使用
+ 
+ 一键 执行 **fridaLog转sqlite3转neo4j 、 neo4j遍历器算法 、初步可视化**
 
 ```shell
 bash /fridaAnlzAp/analyze_by_graph/_main.sh
@@ -36,27 +40,27 @@ bash /fridaAnlzAp/analyze_by_graph/_main.sh
 [_main.sh](http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/src/branch/release/_main.sh)
 
 
-### (例) 分步正常使用 
+### (例2C) 分步正常使用 
 
-#### 0. 前置
+#### 2C.0、 前置
 ```shell
 source /fridaAnlzAp/analyze_by_graph/_pythonpath_disableBuffered.sh
 cd /fridaAnlzAp/analyze_by_graph/
 ```
 
-#### 1. fridaLog转sqlite3转neo4j
+#### 2C.1、 fridaLog转sqlite3转neo4j
 
 ```shell
 PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j" python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-neo4j.log
 ```
 
-#### 2. neo4j遍历器算法
+#### 2C.2、 neo4j遍历器算法
 
 ```shell
 PYTHONPATH="$_PYTHONPATH__neo4j_traverse" python  neo4j_traverse_bz/_main_neo4j_traverse_bz.py 2>&1 | tee _main_neo4j_traverse_bz.log
 ```
 
-#### 3. 初步可视化
+#### 2C.3、 初步可视化
 
 ```shell
 PYTHONPATH="$_PYTHONPATH__basic_visual_main" python  visual/visual_main.py
