@@ -45,7 +45,7 @@ ls -lh $fridaLogLink
 source /fridaAnlzAp/analyze_by_graph/_pythonpath_disableBuffered.sh
 
 #做完 fridaLog转sqlite3 后， 不做 sqlite3转neo4j, 但要求 neo4j实例 得在运行
-envVar__analyze_by_graph__fridaLog_to_sqlite3_only=True  PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j"   $_CondaPy fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-java.log
+envVar__analyze_by_graph__fridaLog_to_sqlite3_only=True  PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j"   $_CondaPy $_PrjHome/fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-java.log
 ```
 
 
@@ -71,17 +71,17 @@ cd /fridaAnlzAp/analyze_by_graph/
 #### 2C.1、 fridaLog转sqlite3转neo4j
 
 ```shell
-PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j" $_CondaPy fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-neo4j.log
+PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j" $_CondaPy $_PrjHome/fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-neo4j.log
 ```
 
 #### 2C.2、 neo4j遍历器算法
 
 ```shell
-PYTHONPATH="$_PYTHONPATH__neo4j_traverse" $_CondaPy  neo4j_traverse_bz/_main_neo4j_traverse_bz.py 2>&1 | tee _main_neo4j_traverse_bz.log
+PYTHONPATH="$_PYTHONPATH__neo4j_traverse" $_CondaPy  $_PrjHome/neo4j_traverse_bz/_main_neo4j_traverse_bz.py 2>&1 | tee _main_neo4j_traverse_bz.log
 ```
 
 #### 2C.3、 初步可视化
 
 ```shell
-PYTHONPATH="$_PYTHONPATH__basic_visual_main" $_CondaPy  visual/visual_main.py
+PYTHONPATH="$_PYTHONPATH__basic_visual_main" $_CondaPy  $_PrjHome/visual/visual_main.py
 ```
