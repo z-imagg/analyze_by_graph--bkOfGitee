@@ -31,12 +31,23 @@ def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.S
     from fridaLog__sqlite3_writeTabFnCallLog import sq3_wTab_FnCallLog
     from sqlite3_Q_printFnGt1WCall import sq3Q_printFnGt1WCall
     from sqlite3_QD_askKeepWhichProcessIdThreadId import sq3QD_askKeepWhichProcessIdThreadId
+## 只需要存入sqlite3 （不需要存入neo4j）么？
+    import os
+    fridaLog_to_sqlite3_only:bool=os.environ.get("envVar__analyze_by_graph__fridaLog_to_sqlite3_only","Empty")=="True"
+
 ### 写 表 FnSym
     sq3_wTab_FnSym(sq3dbConn)
 ###  写 表FnCallLog
     sq3_wTab_FnCallLog(sq3dbConn)
 ###  打印大于1万次调用的函数们（方便返工修改frida_js以跳过大量调用函数）
     sq3Q_printFnGt1WCall(sq3dbConn)
+## 只需要存入sqlite3 （不需要存入neo4j）么？
+    if fridaLog_to_sqlite3_only:
+###    提交、关闭sqlite3数据库
+            sq3dbConn.commit()
+###    退出
+            return -1
+
 ###  打印（进程id、线程id）列表，询问保留哪一个？，执行删除
     sq3QD_askKeepWhichProcessIdThreadId(sq3dbConn)
 ### 提交、关闭sqlite3数据库
@@ -49,11 +60,6 @@ def fridaLog_to_sqlite3_to_neo4j(sq3dbConn:sqlite3.Connection,neo4j_sess:neo4j.S
     notBalancedFnCallIdLs, notBalancedTmPntLs=qeury_notBalanced_fnCallIdLs_tmPntLs(sq3dbConn)
 ### 删除不平衡的fnCallId的记录行(移到他表)
     sq3_move_notBalanced_fnCallCallLog(sq3dbConn,notBalancedFnCallIdLs)
-
-## 只需要存入sqlite3 （不需要存入neo4j）么？
-    import os
-    if os.environ.get("envVar__analyze_by_graph__fridaLog_to_sqlite3_only","Empty")=="True":
-        return -1;
 
 ## neo4j 社区版 安装、启动
 #  neo4j_community_install_boot.md
