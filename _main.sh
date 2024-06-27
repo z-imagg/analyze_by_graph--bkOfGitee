@@ -38,6 +38,7 @@ _PyDirCommon="/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/util/
 export PYTHONPATH="$_PyDirCommon:/fridaAnlzAp/analyze_by_graph/_sqlite3/:/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/:"
 
 #fridaLog转sqlite3转neo4j
+# fridaLog文件路径 == '配置文件 config.py / FnCallLogFP'
 _errMsg1="_main_fridaLog-sqlite3-neo4j.py报错，请解决后，重新执行此脚本analyze_by_graph/_main.sh,退出代码"
 #                                               'set -o pipefail': 管道后的tee不吃错误代码 
 python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-neo4j-${now}.log || { _exitCode1=$? ; echo "${_errMsg1} ${_exitCode1}" ; exit $_exitCode1 ;}
