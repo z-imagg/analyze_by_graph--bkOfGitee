@@ -42,9 +42,9 @@ ls -lh $fridaLogLink
  
 
 ```shell
-source /fridaAnlzAp/analyze_by_graph/_pythonpath_disableBuffered.sh
-
+#以source  加载PYTHONPATH配置  、 设置python的stdout无缓存（即默认flush）
 #做完 fridaLog转sqlite3 后， 不做 sqlite3转neo4j, 但要求 neo4j实例 得在运行
+source /fridaAnlzAp/analyze_by_graph/_pythonpath_disableBuffered.sh ; \
 envVar__analyze_by_graph__fridaLog_to_sqlite3_only=True  PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j"   $_CondaPy $_PrjHome/fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-java.log
 ```
 
