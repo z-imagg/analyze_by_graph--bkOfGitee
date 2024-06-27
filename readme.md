@@ -15,5 +15,6 @@
       
       人工在该线程的多个链条中挑选一个链条(人工修改 被visual_main.py 调用的 query__链条_宽_宽1深.cypher)
 
+[使用手册](http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/src/branch/release/usage.md)
 
 [旧readme](http://giteaz:3000/frida_analyze_app_src/analyze_by_graph/src/commit/54075657a427e61201e06bd4f2da265b02d6d37b/readme.md)

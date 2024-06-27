@@ -14,49 +14,72 @@ shopt -s expand_aliases
 
 #加载alias(临时禁止bash调试) (bashTmpDisDbgBegin_alias,bashTmpDisDbgEnd_alias)
 source /app/bash-simplify/alias__bashTmpDisDbg.sh
-
-cd /fridaAnlzAp/analyze_by_graph/
-
 # wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py310_22.11.1-1-Linux-x86_64.sh
 # 临时禁止bash调试 以抑制 miniconda  的 activate 脚本 的大量输出
 bashTmpDisDbgBegin_alias ; source /app/Miniconda3-py310_22.11.1-1/bin/activate ; bashTmpDisDbgEnd_alias
 
+cd /fridaAnlzAp/analyze_by_graph/
+
+#PYTHONPATH配置  、 设置python的stdout无缓存（即默认flush）
+source _pythonpath_disableBuffered.sh
+
 #安装依赖
 pip install -r requirements.txt
-
 
 #删除旧日志
 rm -frv *.log
 
 now="$(date +%s)"
 
-#设置python的stdout无缓存（即默认flush）
-export PYTHONUNBUFFERED=1
-
-_PyDirCommon="/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/_neo4j/:/fridaAnlzAp/analyze_by_graph/db_conn_inject"
-
-export PYTHONPATH="$_PyDirCommon:/fridaAnlzAp/analyze_by_graph/_sqlite3/:/fridaAnlzAp/analyze_by_graph/fridaLog-sqlite3-neo4j/:"
 
 #fridaLog转sqlite3转neo4j
-# fridaLog文件路径 == '配置文件 config.py / FnCallLogFP'
-_errMsg1="_main_fridaLog-sqlite3-neo4j.py报错，请解决后，重新执行此脚本analyze_by_graph/_main.sh,退出代码"
-#                                               'set -o pipefail': 管道后的tee不吃错误代码 
-python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-neo4j-${now}.log || { _exitCode1=$? ; echo "${_errMsg1} ${_exitCode1}" ; exit $_exitCode1 ;}
+_fridaLog_to_sqlite3_to_neo4j
 
 read -p "fridaLog转sqlite3转neo4j 已执行完毕， 请输入 [ t :遍历器 ] (继续执行遍历器) 、 [ 空|q : 退出 ] (现在退出,即 只需要fridaLog转sqlite3) :"  act
 
 #现在退出,即 只需要fridaLog转sqlite3
 [[ $act == "q" || $act == "" ]] && exit 0
 
-export PYTHONPATH="$_PyDirCommon:/fridaAnlzAp/analyze_by_graph/neo4j_traverse/:/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/:/fridaAnlzAp/analyze_by_graph/visual/"
-
-#遍历器
-python neo4j_traverse_bz/_main_neo4j_traverse_bz.py 2>&1 | tee _main_neo4j_traverse_bz-${now}.log
+#neo4j遍历器算法
+_neo4j_traverse
 
 #构造喂给cytoscape的neo4j表
 read -p "遍历器执行完毕, 请你人工修改  query__链条_宽_宽1深.cypher(被visual_main.py调) 以在单线程的全链条中挑选一个链条:"
 
-python visual/visual_main.py 2>&1 | tee _visual_main-${now}.log
+#初步可视化
+_visual_main
 
 md5sum *.log > log.md5sum-${now}.txt
 
+
+#########
+
+#fridaLog转sqlite3转neo4j
+function _fridaLog_to_sqlite3_to_neo4j(){
+local _errMsg1="_main_fridaLog-sqlite3-neo4j.py报错，请解决后，重新执行此脚本analyze_by_graph/_main.sh,退出代码"
+
+export PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j"
+
+# fridaLog文件路径 == '配置文件 config.py / FnCallLogFP'
+#                                               'set -o pipefail': 管道后的tee不吃错误代码 
+python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-neo4j-${now}.log || { _exitCode1=$? ; echo "${_errMsg1} ${_exitCode1}" ; exit $_exitCode1 ;}
+
+}
+
+
+#neo4j遍历器算法
+function _neo4j_traverse(){
+export PYTHONPATH="$_PYTHONPATH__neo4j_traverse"
+
+#遍历器
+python neo4j_traverse_bz/_main_neo4j_traverse_bz.py 2>&1 | tee _main_neo4j_traverse_bz-${now}.log
+
+}
+
+
+#初步可视化
+function _visual_main(){
+export PYTHONPATH="$_PYTHONPATH__basic_visual_main"
+python visual/visual_main.py 2>&1 | tee _visual_main-${now}.log
+
+}
