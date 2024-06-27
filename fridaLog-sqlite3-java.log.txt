@@ -1,0 +1,137 @@
+【不存在】 文件种类【非文件、非目录】 路径【/gain/analyze_by_graph-out/FnCallLog--_app2_jdk-jdk-24-0_build_home_jdk_bin_java.db】，删除后, 该路径【不存在】  
+None
+从表t_FnSym删除行数  0
+即将处理第0行日志
+即将处理第500000行日志
+即将处理第1000000行日志
+...
+即将处理第17500000行日志
+已处理,文件/gain/frida-out/PureNow.log共17776233行
+
+
+sqlite3 --readonly  /gain/analyze_by_graph-out/FnCallLog--_app2_jdk-jdk-24-0_build_home_jdk_bin_java.db
+执行以下sql ，直接获得 大于1万次调用的 函数名字符串js数组, 再 人工 去掉 形如  *VarDecl*destroy* 、 *destroy*VarDecl*、 *VarDecl*Destroy*、 *Destroy*VarDecl*
+select '"' || name  || '",'  from 
+(select fnAdr, count(fnAdr) as logCnt from t_FnCallLog group by fnAdr HAVING logCnt>10000 order by logCnt desc ) tFn1W
+join t_FnSym tSym on tFn1W.fnAdr=tSym.address;
+
+打印结果集[大于1万次调用的函数们]
+_rowK;fnAdr,logCnt,address,name,moduleName,fileName,lineNumber,column
+0;0x7fffe6884670,2005728,0x7fffe6884670,_ZNSt15basic_streambufIcSt11char_traitsIcEE6xsputnEPKcl,libjvm.so,,0,0
+1;0x7fffe6874bc0,2005728,0x7fffe6874bc0,_ZNSo6sentryC1ERSo,libjvm.so,,0,0
+2;0x7fffe6875620,1749504,0x7fffe6875620,_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_l,libjvm.so,,0,0
+3;0x7fffe6875ae0,1647909,0x7fffe6875ae0,_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc,libjvm.so,,0,0
+4;0x7fffe67f2020,497360,0x7fffe67f2020,_ZNK9__gnu_cxx17__normal_iteratorIP9__VarDeclSt6vectorIS1_SaIS1_EEE4baseEv,libjvm.so,,0,0
+5;0x7fffe6800700,474726,0x7fffe6800700,_ZNKSt6locale2id5_M_idEv,libjvm.so,,0,0
+6;0x7fffe6886300,408864,0x7fffe6886300,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEED2Ev,libjvm.so,,0,0
+7;0x7fffe67fe920,344954,0x7fffe67fe920,_Znwm,libjvm.so,,0,0
+8;0x7fffe67fce70,340238,0x7fffe67fce70,_ZdlPv,libjvm.so,,0,0
+9;0x7fffe67f1c90,332548,0x7fffe67f1c90,_ZN9__VarDeclD2Ev,libjvm.so,,0,0
+10;0x7fffe6885a90,256920,0x7fffe6885a90,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_M_createERmm,libjvm.so,,0,0
+11;0x7fffe6865c10,256224,0x7fffe6865c10,_ZNKSt7num_putIcSt19ostreambuf_iteratorIcSt11char_traitsIcEEE13_M_insert_intIlEES3_S3_RSt8ios_basecT_,libjvm.so,,0,0
+12;0x7fffe6865b50,256224,0x7fffe6865b50,_ZSt13__int_to_charIcmEiPT_T0_PKS0_St13_Ios_Fmtflagsb,libjvm.so,,0,0
+13;0x7fffe68624a0,256224,0x7fffe68624a0,_ZNKSt11__use_cacheISt16__numpunct_cacheIcEEclERKSt6locale.isra.0,libjvm.so,,0,0
+14;0x7fffe67f2c90,217184,0x7fffe67f2c90,_ZN9__gnu_cxx17__normal_iteratorIP9__VarDeclSt6vectorIS1_SaIS1_EEEC2ERKS2_,libjvm.so,,0,0
+15;0x7fffe67f2860,204084,0x7fffe67f2860,_ZSt12__niter_baseIP9__VarDeclET_S2_,libjvm.so,,0,0
+16;0x7fffe6875ce0,203186,0x7fffe6875ce0,_ZNSo9_M_insertIlEERSoT_,libjvm.so,,0,0
+17;0x7fffe6865f50,203186,0x7fffe6865f50,_ZNKSt7num_putIcSt19ostreambuf_iteratorIcSt11char_traitsIcEEE6do_putES3_RSt8ios_basecl,libjvm.so,,0,0
+18;0x7fffe68860b0,185114,0x7fffe68860b0,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1Ev,libjvm.so,,0,0
+19;0x7fffe6875f60,178908,0x7fffe6875f60,_ZNSolsEi,libjvm.so,,0,0
+20;0x7fffe67f2cb0,154630,0x7fffe67f2cb0,_ZN9__gnu_cxxneIP9__VarDeclSt6vectorIS1_SaIS1_EEEEbRKNS_17__normal_iteratorIT_T0_EESB_,libjvm.so,,0,0
+21;0x7fffe67f2570,136056,0x7fffe67f2570,_ZNKSt6vectorI9__VarDeclSaIS0_EE4sizeEv,libjvm.so,,0,0
+22;0x7fffe6888fd0,131094,0x7fffe6888fd0,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1ERKS4_,libjvm.so,,0,0
+23;0x7fffe6888f10,131094,0x7fffe6888f10,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE12_M_constructIPcEEvT_S7_St20forward_iterator_tag,libjvm.so,,0,0
+24;0x7fffe67f1e10,131094,0x7fffe67f1e10,_ZN9__VarDeclC2ERKS_,libjvm.so,,0,0
+25;0x7fffe67f1c00,131094,0x7fffe67f1c00,_ZN9__VarDeclC2Ev,libjvm.so,,0,0
+26;0x7fffe6802a90,121390,0x7fffe6802a90,_ZNSt6localeC1Ev,libjvm.so,,0,0
+27;0x7fffe68029c0,121390,0x7fffe68029c0,_ZNSt6locale13_S_initializeEv,libjvm.so,,0,0
+28;0x7fffe68004b0,121386,0x7fffe68004b0,_ZNSt6localeD1Ev,libjvm.so,,0,0
+29;0x7fffe67f1de0,108592,0x7fffe67f1de0,_ZNSt6vectorI9__VarDeclSaIS0_EE3endEv,libjvm.so,,0,0
+30;0x7fffe67f1db0,108592,0x7fffe67f1db0,_ZNSt6vectorI9__VarDeclSaIS0_EE5beginEv,libjvm.so,,0,0
+31;0x7fffe6886330,107798,0x7fffe6886330,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEaSERKS4_,libjvm.so,,0,0
+32;0x7fffe6885e00,107798,0x7fffe6885e00,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_M_assignERKS4_,libjvm.so,,0,0
+33;0x7fffe67f2d00,106076,0x7fffe67f2d00,_ZNK9__gnu_cxx17__normal_iteratorIP9__VarDeclSt6vectorIS1_SaIS1_EEEdeEv,libjvm.so,,0,0
+34;0x7fffe67f2d60,106074,0x7fffe67f2d60,_ZN9__gnu_cxx17__normal_iteratorIP9__VarDeclSt6vectorIS1_SaIS1_EEEppEv,libjvm.so,,0,0
+35;0x7fffe67f26d0,102042,0x7fffe67f26d0,_ZNKSt15__new_allocatorI9__VarDeclE11_M_max_sizeEv,libjvm.so,,0,0
+36;0x7fffe68892b0,101594,0x7fffe68892b0,_ZStlsIcSt11char_traitsIcESaIcEERSt13basic_ostreamIT_T0_ES7_RKNSt7__cxx1112basic_stringIS4_S5_T1_EE,libjvm.so,,0,0
+37;0x7fffe67f2480,94048,0x7fffe67f2480,_ZNSt12_Vector_baseI9__VarDeclSaIS0_EE19_M_get_Tp_allocatorEv,libjvm.so,,0,0
+38;0x7fffe6863520,72834,0x7fffe6863520,_ZSt9has_facetISt5ctypeIcEEbRKSt6locale,libjvm.so,,0,0
+39;0x7fffe6861850,72834,0x7fffe6861850,_ZSt9use_facetISt5ctypeIcEERKT_RKSt6locale,libjvm.so,,0,0
+40;0x7fffe685f580,72834,0x7fffe685f580,_ZSt9has_facetISt7num_putIcSt19ostreambuf_iteratorIcSt11char_traitsIcEEEEbRKSt6locale,libjvm.so,,0,0
+41;0x7fffe685f570,72834,0x7fffe685f570,_ZSt9has_facetISt7num_getIcSt19istreambuf_iteratorIcSt11char_traitsIcEEEEbRKSt6locale,libjvm.so,,0,0
+42;0x7fffe685f540,72834,0x7fffe685f540,_ZSt9use_facetISt7num_putIcSt19ostreambuf_iteratorIcSt11char_traitsIcEEEERKT_RKSt6locale,libjvm.so,,0,0
+43;0x7fffe685f510,72834,0x7fffe685f510,_ZSt9use_facetISt7num_getIcSt19istreambuf_iteratorIcSt11char_traitsIcEEEERKT_RKSt6locale,libjvm.so,,0,0
+44;0x7fffe6853920,72834,0x7fffe6853920,_ZNSt8ios_base7_M_initEv,libjvm.so,,0,0
+45;0x7fffe6852b10,72834,0x7fffe6852b10,_ZNSt9basic_iosIcSt11char_traitsIcEE4initEPSt15basic_streambufIcS1_E,libjvm.so,,0,0
+46;0x7fffe6852990,72834,0x7fffe6852990,_ZNSt9basic_iosIcSt11char_traitsIcEE15_M_cache_localeERKSt6locale,libjvm.so,,0,0
+47;0x7fffe6800400,72834,0x7fffe6800400,_ZNSt6localeaSERKS_,libjvm.so,,0,0
+48;0x7fffe6886110,71108,0x7fffe6886110,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1EOS4_,libjvm.so,,0,0
+49;0x7fffe67f2910,71108,0x7fffe67f2910,_ZN9__VarDeclC2EOS_,libjvm.so,,0,0
+50;0x7fffe67f27f0,68028,0x7fffe67f27f0,_ZSt14__relocate_a_1IP9__VarDeclS1_SaIS0_EET0_T_S4_S3_RT1_,libjvm.so,,0,0
+51;0x7fffe67f2790,68028,0x7fffe67f2790,_ZSt12__relocate_aIP9__VarDeclS1_SaIS0_EET0_T_S4_S3_RT1_,libjvm.so,,0,0
+52;0x7fffe67f26b0,68028,0x7fffe67f26b0,_ZNKSt15__new_allocatorI9__VarDeclE8max_sizeEv,libjvm.so,,0,0
+53;0x7fffe67f2670,68028,0x7fffe67f2670,_ZSt3minImERKT_S2_S2_,libjvm.so,,0,0
+54;0x7fffe67f2650,68028,0x7fffe67f2650,_ZNSt16allocator_traitsISaI9__VarDeclEE8max_sizeERKS1_,libjvm.so,,0,0
+55;0x7fffe67f2640,68028,0x7fffe67f2640,_ZNKSt12_Vector_baseI9__VarDeclSaIS0_EE19_M_get_Tp_allocatorEv,libjvm.so,,0,0
+56;0x7fffe67f25e0,68028,0x7fffe67f25e0,_ZNSt6vectorI9__VarDeclSaIS0_EE11_S_max_sizeERKS1_,libjvm.so,,0,0
+57;0x7fffe67f2540,68028,0x7fffe67f2540,_ZNKSt6vectorI9__VarDeclSaIS0_EE8max_sizeEv,libjvm.so,,0,0
+58;0x7fffe67f2440,68028,0x7fffe67f2440,_ZNSt6vectorI9__VarDeclSaIS0_EE11_S_relocateEPS0_S3_S3_RS1_,libjvm.so,,0,0
+59;0x7fffe67f1fd0,60036,0x7fffe67f1fd0,_ZN9__gnu_cxxmiIP9__VarDeclSt6vectorIS1_SaIS1_EEEENS_17__normal_iteratorIT_T0_E15difference_typeERKS9_SC_,libjvm.so,,0,0
+60;0x7fffe67f24f0,60034,0x7fffe67f24f0,_ZNSt12_Vector_baseI9__VarDeclSaIS0_EE13_M_deallocateEPS0_m,libjvm.so,,0,0
+61;0x7fffe67f22d0,53778,0x7fffe67f22d0,_ZNSt15__new_allocatorI9__VarDeclE9constructIS0_JRKS0_EEEvPT_DpOT0_,libjvm.so,,0,0
+62;0x7fffe67f2030,53778,0x7fffe67f2030,_ZNSt16allocator_traitsISaI9__VarDeclEE9constructIS0_JRKS0_EEEvRS1_PT_DpOT0_,libjvm.so,,0,0
+63;0x7fffe67f1c20,53778,0x7fffe67f1c20,_ZNSt6vectorI9__VarDeclSaIS0_EE9push_backERKS0_,libjvm.so,,0,0
+64;0x7fffe6886350,53038,0x7fffe6886350,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEaSEOS4_,libjvm.so,,0,0
+65;0x7fffe6876440,53038,0x7fffe6876440,_ZNSolsEb,libjvm.so,,0,0
+66;0x7fffe6876200,53038,0x7fffe6876200,_ZNSo9_M_insertIbEERSoT_,libjvm.so,,0,0
+67;0x7fffe6865f60,53038,0x7fffe6865f60,_ZNKSt7num_putIcSt19ostreambuf_iteratorIcSt11char_traitsIcEEE6do_putES3_RSt8ios_basecb,libjvm.so,,0,0
+68;0x7fffe67f2d20,53038,0x7fffe67f2d20,_ZN9__VarDeclaSEOS_,libjvm.so,,0,0
+// 69;0x7fffe67f29e0,53036,0x7fffe67f29e0,_ZSt8_DestroyI9__VarDeclEvPT_,libjvm.so,,0,0
+70;0x7fffe687c6a0,49830,0x7fffe687c6a0,_ZNSt7__cxx1115basic_stringbufIcSt11char_traitsIcESaIcEE8overflowEi,libjvm.so,,0,0
+71;0x7fffe687c0a0,49830,0x7fffe687c0a0,_ZNSt7__cxx1115basic_stringbufIcSt11char_traitsIcESaIcEE8_M_pbumpEPcS5_l,libjvm.so,,0,0
+72;0x7fffe6886f40,49828,0x7fffe6886f40,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE10_M_replaceEmmPKcm,libjvm.so,,0,0
+// 73;0x7fffe67f2950,46830,0x7fffe67f2950,_ZNSt15__new_allocatorI9__VarDeclE7destroyIS0_EEvPT_,libjvm.so,,0,0
+74;0x7fffe67f28e0,46830,0x7fffe67f28e0,_ZNSt15__new_allocatorI9__VarDeclE9constructIS0_JS0_EEEvPT_DpOT0_,libjvm.so,,0,0
+75;0x7fffe67f28b0,46830,0x7fffe67f28b0,_ZNSt16allocator_traitsISaI9__VarDeclEE9constructIS0_JS0_EEEvRS1_PT_DpOT0_,libjvm.so,,0,0
+76;0x7fffe67f2870,46830,0x7fffe67f2870,_ZSt19__relocate_object_aI9__VarDeclS0_SaIS0_EEvPT_PT0_RT1_,libjvm.so,,0,0
+// 77;0x7fffe67f2490,46830,0x7fffe67f2490,_ZNSt16allocator_traitsISaI9__VarDeclEE7destroyIS0_EEvRS1_PT_,libjvm.so,,0,0
+78;0x7fffe67f2720,34014,0x7fffe67f2720,_ZNSt15__new_allocatorI9__VarDeclE8allocateEmPKv,libjvm.so,,0,0
+79;0x7fffe67f26f0,34014,0x7fffe67f26f0,_ZNSt16allocator_traitsISaI9__VarDeclEE8allocateERS1_m,libjvm.so,,0,0
+80;0x7fffe67f25a0,34014,0x7fffe67f25a0,_ZSt3maxImERKT_S2_S2_,libjvm.so,,0,0
+81;0x7fffe67f23f0,34014,0x7fffe67f23f0,_ZNSt12_Vector_baseI9__VarDeclSaIS0_EE11_M_allocateEm,libjvm.so,,0,0
+82;0x7fffe67f2300,34014,0x7fffe67f2300,_ZNKSt6vectorI9__VarDeclSaIS0_EE12_M_check_lenEmPKc,libjvm.so,,0,0
+83;0x7fffe67f2060,34014,0x7fffe67f2060,_ZNSt6vectorI9__VarDeclSaIS0_EE17_M_realloc_insertIJRKS0_EEEvN9__gnu_cxx17__normal_iteratorIPS0_S2_EEDpOT_,libjvm.so,,0,0
+84;0x7fffe67f2a30,33488,0x7fffe67f2a30,_ZNSt15__new_allocatorI9__VarDeclE10deallocateEPS0_m,libjvm.so,,0,0
+85;0x7fffe67f2a00,33488,0x7fffe67f2a00,_ZNSt16allocator_traitsISaI9__VarDeclEE10deallocateERS1_PS0_m,libjvm.so,,0,0
+86;0x7fffe67f2e80,27010,0x7fffe67f2e80,TL_TmPnt__get,libjvm.so,,0,0
+87;0x7fffe67f1f80,27010,0x7fffe67f1f80,_ZNSt15__new_allocatorI9__VarDeclEC2Ev,libjvm.so,,0,0
+88;0x7fffe67f1f50,27010,0x7fffe67f1f50,_ZNSt12_Vector_baseI9__VarDeclSaIS0_EE17_Vector_impl_dataC2Ev,libjvm.so,,0,0
+89;0x7fffe67f1f30,27010,0x7fffe67f1f30,_ZNSaI9__VarDeclEC2Ev,libjvm.so,,0,0
+90;0x7fffe67f1f00,27010,0x7fffe67f1f00,_ZNSt12_Vector_baseI9__VarDeclSaIS0_EE12_Vector_implC2Ev,libjvm.so,,0,0
+91;0x7fffe67f1ee0,27010,0x7fffe67f1ee0,_ZNSt12_Vector_baseI9__VarDeclSaIS0_EEC2Ev,libjvm.so,,0,0
+92;0x7fffe67f1be0,27010,0x7fffe67f1be0,_ZNSt6vectorI9__VarDeclSaIS0_EEC2Ev,libjvm.so,,0,0
+93;0x7fffe67f1bb0,27010,0x7fffe67f1bb0,_ZN11__VarDeclLsC2Ev,libjvm.so,,0,0
+94;0x7fffe67f1fc0,26022,0x7fffe67f1fc0,_ZSt19__iterator_categoryIN9__gnu_cxx17__normal_iteratorIP9__VarDeclSt6vectorIS2_SaIS2_EEEEENSt15iterator_traitsIT_E17iterator_categoryERKS9_,libjvm.so,,0,0
+95;0x7fffe67f1f90,26022,0x7fffe67f1f90,_ZSt10__distanceIN9__gnu_cxx17__normal_iteratorIP9__VarDeclSt6vectorIS2_SaIS2_EEEEENSt15iterator_traitsIT_E15difference_typeES9_S9_St26random_access_iterator_tag,libjvm.so,,0,0
+96;0x7fffe67f1d70,26022,0x7fffe67f1d70,_ZSt8distanceIN9__gnu_cxx17__normal_iteratorIP9__VarDeclSt6vectorIS2_SaIS2_EEEEENSt15iterator_traitsIT_E15difference_typeES9_S9_,libjvm.so,,0,0
+97;0x7fffe67f2e20,26020,0x7fffe67f2e20,_ZNSt15__new_allocatorI9__VarDeclED2Ev,libjvm.so,,0,0
+98;0x7fffe67f2e00,26020,0x7fffe67f2e00,_ZNSaI9__VarDeclED2Ev,libjvm.so,,0,0
+99;0x7fffe67f2de0,26020,0x7fffe67f2de0,_ZNSt12_Vector_baseI9__VarDeclSaIS0_EE12_Vector_implD2Ev,libjvm.so,,0,0
+100;0x7fffe67f2d80,26020,0x7fffe67f2d80,_ZNSt12_Vector_baseI9__VarDeclSaIS0_EED2Ev,libjvm.so,,0,0
+// 101;0x7fffe67f29a0,26020,0x7fffe67f29a0,_ZNSt12_Destroy_auxILb0EE9__destroyIP9__VarDeclEEvT_S4_,libjvm.so,,0,0
+// 102;0x7fffe67f2970,26020,0x7fffe67f2970,_ZSt8_DestroyIP9__VarDeclEvT_S2_,libjvm.so,,0,0
+// 103;0x7fffe67f24c0,26020,0x7fffe67f24c0,_ZSt8_DestroyIP9__VarDeclS0_EvT_S2_RSaIT0_E,libjvm.so,,0,0
+104;0x7fffe67f1eb0,26020,0x7fffe67f1eb0,_ZN11__VarDeclLsD2Ev,libjvm.so,,0,0
+105;0x7fffe67f1e50,26020,0x7fffe67f1e50,_ZNSt6vectorI9__VarDeclSaIS0_EED2Ev,libjvm.so,,0,0
+106;0x7fffe6887c70,25552,0x7fffe6887c70,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE4swapERS4_,libjvm.so,,0,0
+107;0x7fffe6886570,25552,0x7fffe6886570,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7reserveEm,libjvm.so,,0,0
+108;0x7fffe687c3b0,25552,0x7fffe687c3b0,_ZNSt7__cxx1115basic_stringbufIcSt11char_traitsIcESaIcEE7_M_syncEPcmm,libjvm.so,,0,0
+109;0x7fffe687f640,24278,0x7fffe687f640,_ZNSt7__cxx1118basic_stringstreamIcSt11char_traitsIcESaIcEEC1Ev,libjvm.so,,0,0
+110;0x7fffe6875f20,24278,0x7fffe6875f20,_ZNSolsEl,libjvm.so,,0,0
+111;0x7fffe6853a20,24278,0x7fffe6853a20,_ZNSt8ios_baseC2Ev,libjvm.so,,0,0
+112;0x7fffe6885ee0,24276,0x7fffe6885ee0,_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_M_mutateEmmPKcm,libjvm.so,,0,0
+113;0x7fffe6880560,24276,0x7fffe6880560,_ZNKSt7__cxx1118basic_stringstreamIcSt11char_traitsIcESaIcEE3strEv,libjvm.so,,0,0
+114;0x7fffe687b6f0,24276,0x7fffe687b6f0,_ZNSt7__cxx1118basic_stringstreamIcSt11char_traitsIcESaIcEED1Ev,libjvm.so,,0,0
+115;0x7fffe6853d50,24276,0x7fffe6853d50,_ZNSt8ios_baseD2Ev,libjvm.so,,0,0
+116;0x7fffe6853cf0,24276,0x7fffe6853cf0,_ZNSt8ios_base20_M_dispose_callbacksEv,libjvm.so,,0,0
+117;0x7fffe6853ca0,24276,0x7fffe6853ca0,_ZNSt8ios_base17_M_call_callbacksENS_5eventE,libjvm.so,,0,0
