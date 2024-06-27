@@ -16,9 +16,21 @@ import typing
 
 
 import typing
-import json
 
 from config import FnCallLogFP
+
+#json解析行文本 包装
+#   包装原因 ：因为有异常处理 为了使得调用方代码整洁
+def _json__loads_lineK(_title:str, lineNumK:int, lineK:str)->typing.Union[typing.Dict,typing.List]:
+    import json
+    try:
+        lineK_json:typing.Union[typing.Dict,typing.List]=json.loads(lineK)
+        return lineK_json
+    except Exception as e:
+        _errMsg:str=f"[json解析错误],行文本为json发生错误,不是合法json? {_title}, 行号[{lineNumK}],行文本“{lineK}” "
+        print(_errMsg)
+        raise e
+    
 #FirstLineFunc 只在开发时用
 # LogFP==TorchFnCallLogFP
 def iterLineF(LogFP:str,sq3dbConn:sqlite3.Connection,
@@ -33,13 +45,13 @@ def iterLineF(LogFP:str,sq3dbConn:sqlite3.Connection,
     #如果指定了FirstLineFunc, 则表明现在是开发状态,只看第一行后结束循环
     if hasFrtLnFunc and not hasLineFunc:
         k,lnK=0,LogF.readline()
-        ln0_json=json.loads(lnK)
+        ln0_json=_json__loads_lineK(k,lnK)
         FirstLineFunc_onlyDevelop(k,ln0_json,sq3dbConn)
     elif hasLineFunc:        
         for k,lnK in enumerate( LogF ):
             if k % 500000 == 0 :  print(f"即将处理第{k}行日志")
     
-            lnK_json=json.loads(lnK)
+            lnK_json=_json__loads_lineK(f"文件路径[{LogFP}]",k,lnK)
     
             #对每行 都执行回调行数
             LineFunc(k,lnK_json,sq3dbConn)
