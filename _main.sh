@@ -42,7 +42,10 @@ _errMsg1="_main_fridaLog-sqlite3-neo4j.py报错，请解决后，重新执行此
 #                                               'set -o pipefail': 管道后的tee不吃错误代码 
 python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-neo4j-${now}.log || { _exitCode1=$? ; echo "${_errMsg1} ${_exitCode1}" ; exit $_exitCode1 ;}
 
-read -p "fridaLog转sqlite3转neo4j 已执行完毕，按回车则将执行遍历器:"
+read -p "fridaLog转sqlite3转neo4j 已执行完毕， 请输入 [ t :遍历器 ] (继续执行遍历器) 、 [ 空|q : 退出 ] (现在退出,即 只需要fridaLog转sqlite3) :"  act
+
+#现在退出,即 只需要fridaLog转sqlite3
+[[ $act == "q" || $act == "" ]] && exit 0
 
 export PYTHONPATH="$_PyDirCommon:/fridaAnlzAp/analyze_by_graph/neo4j_traverse/:/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/:/fridaAnlzAp/analyze_by_graph/visual/"
 
