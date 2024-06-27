@@ -26,3 +26,5 @@ _PYTHONPATH__neo4j_traverse="$_PyDirCommon:/fridaAnlzAp/analyze_by_graph/neo4j_t
 
 #初步可视化
 _PYTHONPATH__basic_visual_main="$_PyDirCommon:/fridaAnlzAp/analyze_by_graph/visual/"
+#上下 ， 哪一个是对的需要确认
+# _PYTHONPATH__basic_visual_main="/fridaAnlzAp/analyze_by_graph/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/_neo4j/:/fridaAnlzAp/analyze_by_graph/neo4j_traverse/:/fridaAnlzAp/analyze_by_graph/neo4j_traverse_bz/:/fridaAnlzAp/analyze_by_graph/db_conn_inject/:/fridaAnlzAp/analyze_by_graph/util/:/fridaAnlzAp/analyze_by_graph/visual/"
