@@ -12,13 +12,13 @@ set -e -u -o pipefail
 #bash允许alias展开
 shopt -s expand_aliases   
 
-#临时禁止bash调试
-alias bashTmpDisDbgBegin_alias='___do_bashTmpDisDbg=false; [[ $- == *x* ]] && { set +x ;  ___do_bashTmpDisDbg=true;}'
-alias bashTmpDisDbgEnd_alias='$___do_bashTmpDisDbg && set -x'
+#加载alias(临时禁止bash调试) (bashTmpDisDbgBegin_alias,bashTmpDisDbgEnd_alias)
+source /app/bash-simplify/alias__bashTmpDisDbg.sh
 
 cd /fridaAnlzAp/analyze_by_graph/
 
 # wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py310_22.11.1-1-Linux-x86_64.sh
+# 临时禁止bash调试 以抑制 miniconda  的 activate 脚本 的大量输出
 bashTmpDisDbgBegin_alias ; source /app/Miniconda3-py310_22.11.1-1/bin/activate ; bashTmpDisDbgEnd_alias
 
 #安装依赖
