@@ -27,7 +27,7 @@ _CondaPy=$_CondaBin/python
 
 ```shell
 fridaLogLink=/gain/frida-out/PureNow.log ; \
-fridaLogReal=/fridaAnlzAp/frida_js/InterceptFnSym-java.log ; \
+fridaLogReal=/gain/frida-out/appName--_app2_jdk-jdk-24-0_build_home_jdk_bin_java/Pure-1719459478.log ; \
 unlink $fridaLogLink ; \
 ln -s $fridaLogReal $fridaLogLink ; \
 ls -lh $fridaLogLink
@@ -45,7 +45,7 @@ ls -lh $fridaLogLink
 source /fridaAnlzAp/analyze_by_graph/_pythonpath_disableBuffered.sh
 
 #做完 fridaLog转sqlite3 后， 不做 sqlite3转neo4j, 但要求 neo4j实例 得在运行
-envVar__analyze_by_graph__fridaLog_to_sqlite3_only=True $_CondaPy fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-java.log
+envVar__analyze_by_graph__fridaLog_to_sqlite3_only=True  PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j"   $_CondaPy fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-java.log
 ```
 
 
