@@ -12,13 +12,22 @@ set -e -u -o pipefail
 #bash允许alias展开
 shopt -s expand_aliases   
 
-#加载alias(临时禁止bash调试) (bashTmpDisDbgBegin_alias,bashTmpDisDbgEnd_alias)
-source /app/bash-simplify/alias__bashTmpDisDbg.sh
+#加载依赖脚本
+source /app/bash-simplify/condaEnvActivate_pipInstallRequirements.sh
+
+_CondaHome=/app/Miniconda3-py310_22.11.1-1
+_PrjHome=/fridaAnlzAp/analyze_by_graph/
+# miniconda激活环境、pip安装项目目录下的requirements.txt依赖
+_condaEnvActivate_pipInstallRequirements  $_CondaHome  $_PrjHome
+_CondaBin=$_CondaHome/bin
+# _CondaPip=$_CondaBin/pip
+_CondaPy=$_CondaBin/python
+
 # wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py310_22.11.1-1-Linux-x86_64.sh
 # 临时禁止bash调试 以抑制 miniconda  的 activate 脚本 的大量输出
 bashTmpDisDbgBegin_alias ; source /app/Miniconda3-py310_22.11.1-1/bin/activate ; bashTmpDisDbgEnd_alias
 
-cd /fridaAnlzAp/analyze_by_graph/
+cd $_PrjHome
 
 #PYTHONPATH配置  、 设置python的stdout无缓存（即默认flush）
 source _pythonpath_disableBuffered.sh
@@ -61,18 +70,18 @@ local _errMsg1="_main_fridaLog-sqlite3-neo4j.py报错，请解决后，重新执
 
 # fridaLog文件路径 == '配置文件 config.py / FnCallLogFP'
 #                                               'set -o pipefail': 管道后的tee不吃错误代码 
-PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j" python fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-neo4j-${now}.log || { _exitCode1=$? ; echo "${_errMsg1} ${_exitCode1}" ; exit $_exitCode1 ;}
+PYTHONPATH="$_PYTHONPATH__fridaLog_to_sqlite3_to_neo4j" $_CondaPy fridaLog-sqlite3-neo4j/_main_fridaLog-sqlite3-neo4j.py 2>&1 | tee fridaLog-sqlite3-neo4j-${now}.log || { _exitCode1=$? ; echo "${_errMsg1} ${_exitCode1}" ; exit $_exitCode1 ;}
 }
 
 
 #neo4j遍历器算法
 function _neo4j_traverse(){
 #遍历器
-PYTHONPATH="$_PYTHONPATH__neo4j_traverse"  python neo4j_traverse_bz/_main_neo4j_traverse_bz.py 2>&1 | tee _main_neo4j_traverse_bz-${now}.log
+PYTHONPATH="$_PYTHONPATH__neo4j_traverse"  $_CondaPy neo4j_traverse_bz/_main_neo4j_traverse_bz.py 2>&1 | tee _main_neo4j_traverse_bz-${now}.log
 }
 
 
 #初步可视化
 function _visual_main(){
-PYTHONPATH="$_PYTHONPATH__basic_visual_main"  python visual/visual_main.py 2>&1 | tee _visual_main-${now}.log
+PYTHONPATH="$_PYTHONPATH__basic_visual_main"  $_CondaPy visual/visual_main.py 2>&1 | tee _visual_main-${now}.log
 }
